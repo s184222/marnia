@@ -32,10 +32,12 @@ public class MarniaWorld {
 
 		for (int xt = 5; xt < 10; xt++)
 			setTile(xt, 10, Tile.SOLID_TILE);
-
-		for(int xt = 9; xt <14; xt++){
-			setTile(xt,14-(xt-9), Tile.SOLID_TILE);
-		}
+		for(int xt = 9; xt < 14; xt++)
+			setTile(xt, 14 - (xt - 9), Tile.SOLID_TILE);
+		for (int xt = 20; xt < 25; xt++)
+			setTile(xt, 5, Tile.SOLID_TILE);
+		for (int xt = 30; xt < 35; xt++)
+			setTile(xt, 1, Tile.SOLID_TILE);
 
 		KeyInput left = new KeySingleInput("left", KeyEvent.VK_A, KeyEvent.VK_LEFT);
 		KeyInput right = new KeySingleInput("right", KeyEvent.VK_D, KeyEvent.VK_RIGHT);
@@ -79,11 +81,9 @@ public class MarniaWorld {
 		int x1 = MathUtils.min(WORLD_WIDTH - 1, (int)(xOffset + camera.getViewWidth() + 0.5f));
 		int y1 = MathUtils.min(WORLD_HEIGHT - 1, (int)(yOffset + camera.getViewHeight() + 0.5f));
 	
-		for (int xt = x0; xt <= x1; xt++) {
-			for (int yt = y0; yt <= y1; yt++) {
+		for (int xt = x0; xt <= x1; xt++)
+			for (int yt = y0; yt <= y1; yt++)
 				getTile(xt, yt).render(this, xt, yt, renderer, dt, camera);
-			}
-		}
 	}
 
 	public List<AABB> getCollidingHitboxes(AABB hitbox) {

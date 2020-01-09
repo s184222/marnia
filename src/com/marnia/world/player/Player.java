@@ -50,15 +50,15 @@ public class Player {
 		
 		List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(vel.x, vel.y));
 		
-		float moveX = vel.x;
-		for (AABB aabb : hitboxes)
-			moveX = aabb.clipX(hitbox, moveX);
-		hitbox.move(moveX, 0.0f);
-		
 		float moveY = vel.y;
 		for (AABB aabb : hitboxes)
 			moveY = aabb.clipY(hitbox, moveY);
 		hitbox.move(0.0f, moveY);
+
+		float moveX = vel.x;
+		for (AABB aabb : hitboxes)
+			moveX = aabb.clipX(hitbox, moveX);
+		hitbox.move(moveX, 0.0f);
 
 		hitVertical = !MathUtils.nearZero(vel.y - moveY);
 		hitHorizontal = !MathUtils.nearZero(vel.x - moveX);

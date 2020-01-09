@@ -21,11 +21,15 @@ public class ClientController implements IController {
 	
 	@Override
 	public void update(Player player) {
+		boolean moving = false;
 		if (left.isPressed()) {
 			player.vel.x -= 0.15f;
+			moving = true;
 		}
+		
 		if (right.isPressed()) {
 			player.vel.x += 0.15f;
+			moving = true;
 		}
 
 		if (player.isOnGround())
@@ -46,7 +50,7 @@ public class ClientController implements IController {
 		}
 
 
-		player.vel.mul(0.8f);
+		player.vel.mul(moving || !player.isOnGround() ? 0.8f : 0.6f, 0.8f);
 		player.move();
 	}
 }
