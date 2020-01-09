@@ -75,8 +75,8 @@ public class Player {
 		
 		int xp = CameraUtil.getPixelX(ix, camera, dt);
 		int yp = CameraUtil.getPixelY(iy, camera, dt);
-		int w = CameraUtil.getScaledSize(hitbox.x1 - hitbox.x0, camera, dt);
-		int h = CameraUtil.getScaledSize(hitbox.y1 - hitbox.y0, camera, dt);
+		int w = CameraUtil.getPixelX(ix + hitbox.x1 - hitbox.x0, camera, dt) - xp;
+		int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
 		
 		renderer.setColor(GColor.HOT_PINK);
 		renderer.fillRect(xp, yp, w, h);

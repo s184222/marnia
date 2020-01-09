@@ -1,6 +1,7 @@
 package com.marnia.util;
 
 import com.g4mesoft.camera.DynamicCamera;
+import com.g4mesoft.math.MathUtils;
 import com.marnia.world.MarniaWorld;
 
 public final class CameraUtil {
@@ -9,14 +10,14 @@ public final class CameraUtil {
 	}
 	
 	public static int getPixelX(float xt, DynamicCamera camera, float dt) {
-		return (int)((xt - camera.getXOffset(dt)) * camera.getScale(dt) * MarniaWorld.TILE_SIZE);
+		return MathUtils.round((xt - camera.getXOffset(dt)) * camera.getScale(dt) * MarniaWorld.TILE_SIZE + MathUtils.EPSILON);
 	}
 
 	public static int getPixelY(float yt, DynamicCamera camera, float dt) {
-		return (int)((yt - camera.getYOffset(dt)) * camera.getScale(dt) * MarniaWorld.TILE_SIZE);
+		return MathUtils.round((yt - camera.getYOffset(dt)) * camera.getScale(dt) * MarniaWorld.TILE_SIZE + MathUtils.EPSILON);
 	}
 	
 	public static int getScaledSize(float size, DynamicCamera camera, float dt) {
-		return (int)(size * camera.getScale(dt) * MarniaWorld.TILE_SIZE);
+		return MathUtils.round(size * camera.getScale(dt) * MarniaWorld.TILE_SIZE + MathUtils.EPSILON);
 	}
 }
