@@ -24,7 +24,7 @@ public class MarniaApp extends Application {
 		                        true, true, 
 		                        DisplayMode.NORMAL, 
 		                        true,
-		                        DisplayConfig.NO_ICON_PATH));
+		                        "/icon.png"));
 	}
 	
 	@Override

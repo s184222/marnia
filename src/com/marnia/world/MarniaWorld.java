@@ -13,7 +13,6 @@ import com.g4mesoft.math.MathUtils;
 import com.g4mesoft.world.phys.AABB;
 import com.marnia.world.player.ClientController;
 import com.marnia.world.player.Player;
-import com.marnia.world.tile.SolidTile;
 import com.marnia.world.tile.Tile;
 
 public class MarniaWorld {
