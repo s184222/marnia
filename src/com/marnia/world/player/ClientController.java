@@ -4,11 +4,14 @@ import com.g4mesoft.input.key.KeyInput;
 
 public class ClientController implements IController {
 
+	private static final int MAX_JUMP_TIME = 8;
+
 	private final KeyInput left;
 	private final KeyInput right;
 	private final KeyInput jump;
 
 	private boolean canDoubleJump;
+	private int jumpTimer;
 	
 	public ClientController(KeyInput l, KeyInput r, KeyInput j) {
 		left = l;
@@ -25,16 +28,24 @@ public class ClientController implements IController {
 			player.vel.x += 0.15f;
 		}
 
-		player.vel.y += 0.25f;
-
 		if (player.isOnGround())
 			canDoubleJump = true;
-		
+
 		if(jump.isClicked() && canDoubleJump) {
-			player.vel.y = -2.5f;
+			jumpTimer = player.isOnGround() ? MAX_JUMP_TIME : 1;
 			canDoubleJump = player.isOnGround();
+			player.vel.y = -1.25f;
+		} else if (!jump.isPressed() || player.hitVerticalHitbox()) {
+			jumpTimer = 0;
 		}
-		
+
+		if (jumpTimer > 0) {
+			jumpTimer--;
+		} else {
+			player.vel.y += 0.25f;
+		}
+
+
 		player.vel.mul(0.8f);
 		player.move();
 	}

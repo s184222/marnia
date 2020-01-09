@@ -35,8 +35,6 @@ public class MarniaApp extends Application {
 		
 		camera = new DynamicCamera();
 		camera.setBounds(0.0f, 0.0f, MarniaWorld.WORLD_WIDTH, MarniaWorld.WORLD_HEIGHT);
-
-		setMinimumFps(Double.MAX_VALUE);
 	}
 	
 	@Override
@@ -56,7 +54,8 @@ public class MarniaApp extends Application {
 		camera.setScreenSize(dtw, dth);
 
         Player player = world.getPlayer();
-		camera.setCenter(player.getCenterX(), player.getCenterY());
+        camera.setCenterX((camera.getCenterX() + player.getCenterX()) * 0.5f);
+        camera.setCenterY((camera.getCenterY() + player.getCenterY()) * 0.5f);
 	}
 
 	@Override

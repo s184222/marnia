@@ -22,8 +22,11 @@ public class Player {
 	public final Vec2f vel;
 
 	private final AABB hitbox;
+
 	private boolean onGround;
-	
+	private boolean hitHorizontal;
+	private boolean hitVertical;
+
 	public Player(MarniaWorld world, IController controller) {
 		this.world = world;
 		this.controller = controller;
@@ -57,8 +60,8 @@ public class Player {
 			moveY = aabb.clipY(hitbox, moveY);
 		hitbox.move(0.0f, moveY);
 
-		boolean hitVertical = !MathUtils.nearZero(vel.y - moveY);
-		boolean hitHorizontal = !MathUtils.nearZero(vel.x - moveX);
+		hitVertical = !MathUtils.nearZero(vel.y - moveY);
+		hitHorizontal = !MathUtils.nearZero(vel.x - moveX);
 
 		pos.set(hitbox.x0, hitbox.y0);
 		onGround = vel.y > 0.0f && hitVertical;
@@ -92,5 +95,13 @@ public class Player {
 
 	public boolean isOnGround() {
 		return onGround;
+	}
+
+	public boolean hitHorizontalHitbox() {
+		return hitHorizontal;
+	}
+
+	public boolean hitVerticalHitbox() {
+		return hitVertical;
 	}
 }
