@@ -52,8 +52,6 @@ public class MarniaApp extends Application {
 
 		camera.setScreenSize(dtw, dth);
 		camera.setYOffset(MarniaWorld.WORLD_HEIGHT - camera.getViewHeight());
-		
-		camera.addZoom(1.0f);
 	}
 
 	@Override

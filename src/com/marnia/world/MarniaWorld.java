@@ -1,8 +1,15 @@
 package com.marnia.world;
 
+import java.awt.event.KeyEvent;
+
+import com.g4mesoft.Application;
 import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.IRenderer2D;
+import com.g4mesoft.input.key.KeyInput;
+import com.g4mesoft.input.key.KeySingleInput;
 import com.g4mesoft.math.MathUtils;
+import com.marnia.world.player.ClientController;
+import com.marnia.world.player.Player;
 import com.marnia.world.tile.Tile;
 
 public class MarniaWorld {
@@ -11,13 +18,21 @@ public class MarniaWorld {
 	public static final int WORLD_HEIGHT = 20;
 	public static final int TILE_SIZE = 32;
 	
-	private int[] tiles;
+	private final int[] tiles;
+	private Player player;
 	
 	public MarniaWorld() {
 		tiles = new int[WORLD_WIDTH * WORLD_HEIGHT];
-	
+		
 		for (int xt = 0; xt < WORLD_WIDTH; xt++)
 			setTile(xt, WORLD_HEIGHT - 1, Tile.SOLID_TILE);
+
+		KeyInput left = new KeySingleInput("left", KeyEvent.VK_A, KeyEvent.VK_LEFT);
+		KeyInput right = new KeySingleInput("right", KeyEvent.VK_D, KeyEvent.VK_RIGHT);
+		KeyInput jump = new KeySingleInput("jump", KeyEvent.VK_W, KeyEvent.VK_SPACE, KeyEvent.VK_UP);
+		Application.addKeys(left, right, jump);
+		
+		player = new Player(this, new ClientController(left, right, jump));
 	}
 	
 	public boolean isInBounds(int xt, int yt) {
@@ -36,10 +51,13 @@ public class MarniaWorld {
 	}
 	
 	public void tick() {
+		player.tick();
 	}
 	
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
 		renderTiles(renderer, dt, camera);
+		
+		player.render(renderer, dt, camera);
 	}
 	
 	private void renderTiles(IRenderer2D renderer, float dt, DynamicCamera camera) {
