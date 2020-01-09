@@ -23,7 +23,7 @@ public class ClientController implements IController {
 			player.vel.x += 0.1f;
 		}
 
-		player.vel.add(0.0f, 1.0f);
+		player.vel.y += 0.5f;
 		
 		//Jump
 		
