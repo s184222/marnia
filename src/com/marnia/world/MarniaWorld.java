@@ -1,6 +1,8 @@
 package com.marnia.world;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.g4mesoft.Application;
 import com.g4mesoft.camera.DynamicCamera;
@@ -8,6 +10,7 @@ import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.input.key.KeyInput;
 import com.g4mesoft.input.key.KeySingleInput;
 import com.g4mesoft.math.MathUtils;
+import com.g4mesoft.world.phys.AABB;
 import com.marnia.world.player.ClientController;
 import com.marnia.world.player.Player;
 import com.marnia.world.tile.Tile;
@@ -74,5 +77,17 @@ public class MarniaWorld {
 				getTile(xt, yt).render(this, xt, yt, renderer, dt, camera);
 			}
 		}
+	}
+
+	public List<AABB> getCollidingHitboxes(AABB hitbox) {
+		List<AABB> hitboxes = new ArrayList<AABB>();
+		
+		int x1 = (int)hitbox.x1;
+		int y1 = (int)hitbox.y1;
+		for (int xt = (int)hitbox.x0; xt <= x1; xt++)
+			for (int yt = (int)hitbox.y0; yt <= y1; yt++)
+				getTile(xt, yt).getHitboxes(this, xt, yt, hitboxes);
+		
+		return hitboxes;
 	}
 }

@@ -1,7 +1,6 @@
 package com.marnia.world.player;
 
 import com.g4mesoft.input.key.KeyInput;
-import com.g4mesoft.math.Vec2f;
 
 public class ClientController implements IController {
 
@@ -16,17 +15,19 @@ public class ClientController implements IController {
 	}
 	
 	@Override
-	public void updatePos(Vec2f pos) {
+	public void update(Player player) {
 		if (left.isPressed()) {
-			pos.x -= 1.f;
+			player.vel.x -= 0.1f;
 		}
 		if (right.isPressed()) {
-			pos.x += 1.f;
+			player.vel.x += 0.1f;
 		}
-		//Jump
-	}
-	
-	
-	
 
+		player.vel.add(0.0f, 1.0f);
+		
+		//Jump
+		
+		player.vel.mul(0.9f);
+		player.move(player.vel);
+	}
 }

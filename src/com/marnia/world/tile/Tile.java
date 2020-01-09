@@ -1,5 +1,7 @@
 package com.marnia.world.tile;
 
+import java.util.List;
+
 import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.world.phys.AABB;
@@ -26,15 +28,14 @@ public class Tile {
 	public void render(MarniaWorld world, int xt, int yt, IRenderer2D renderer, float dt, DynamicCamera camera) {
 	}
 
-	public AABB getHitbox(MarniaWorld world, int xt, int yt) {
-		return new AABB(xt, yt, xt + 1.0f, yt + 1.0f);
-	}
-	
 	public int getIndex() {
 		return index;
 	}
 
 	public static Tile getTile(int index) {
 		return (index < 0 || index >= tiles.length) ? AIR_TILE : tiles[index];
+	}
+
+	public void getHitboxes(MarniaWorld world, int xt, int yt, List<AABB> hitboxes) {
 	}
 }
