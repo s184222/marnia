@@ -41,21 +41,29 @@ public class Player {
 		controller.update(this);
 	}
 	
-	public void move(Vec2f dp) {
-		List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(dp.x, dp.y));
+	public void move() {
+		List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(vel.x, vel.y));
 		
-		float moveX = dp.x;
+		float moveX = vel.x;
 		for (AABB aabb : hitboxes)
 			moveX = aabb.clipX(hitbox, moveX);
 		hitbox.move(moveX, 0.0f);
 		
-		float moveY = dp.y;
+		float moveY = vel.y;
 		for (AABB aabb : hitboxes)
 			moveY = aabb.clipY(hitbox, moveY);
 		hitbox.move(0.0f, moveY);
-		
+
+		boolean hitVertical = !MathUtils.nearZero(vel.y - moveY);
+		boolean hitHorizontal = !MathUtils.nearZero(vel.x - moveX);
+
 		pos.set(hitbox.x0, hitbox.y0);
-		onGround = dp.y > 0.0f && !MathUtils.nearZero(dp.y - moveY);
+		onGround = vel.y > 0.0f && hitVertical;
+
+		if (hitHorizontal)
+			vel.x = 0.0f;
+		if (hitVertical)
+			vel.y = 0.0f;
 	}
 	
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
