@@ -42,6 +42,9 @@ public class Player {
 	}
 	
 	public void move() {
+		// Ensure we do not move out of bounds.
+		vel.x = MathUtils.clamp(vel.x, -hitbox.x0, MarniaWorld.WORLD_WIDTH - hitbox.x1);
+		
 		List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(vel.x, vel.y));
 		
 		float moveX = vel.x;
