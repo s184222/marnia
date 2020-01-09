@@ -13,6 +13,7 @@ import com.g4mesoft.math.MathUtils;
 import com.g4mesoft.world.phys.AABB;
 import com.marnia.world.player.ClientController;
 import com.marnia.world.player.Player;
+import com.marnia.world.tile.SolidTile;
 import com.marnia.world.tile.Tile;
 
 public class MarniaWorld {
@@ -29,6 +30,13 @@ public class MarniaWorld {
 		
 		for (int xt = 0; xt < WORLD_WIDTH; xt++)
 			setTile(xt, WORLD_HEIGHT - 1, Tile.SOLID_TILE);
+
+		for (int xt = 5; xt < 10; xt++)
+			setTile(xt, 10, Tile.SOLID_TILE);
+
+		for(int xt = 9; xt <14; xt++){
+			setTile(xt,14-(xt-9), Tile.SOLID_TILE);
+		}
 
 		KeyInput left = new KeySingleInput("left", KeyEvent.VK_A, KeyEvent.VK_LEFT);
 		KeyInput right = new KeySingleInput("right", KeyEvent.VK_D, KeyEvent.VK_RIGHT);
@@ -89,5 +97,9 @@ public class MarniaWorld {
 				getTile(xt, yt).getHitboxes(this, xt, yt, hitboxes);
 		
 		return hitboxes;
+	}
+
+	public Player getPlayer(){
+		return player;
 	}
 }

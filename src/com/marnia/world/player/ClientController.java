@@ -19,20 +19,23 @@ public class ClientController implements IController {
 	@Override
 	public void update(Player player) {
 		if (left.isPressed()) {
-			player.vel.x -= 0.1f;
+			player.vel.x -= 0.15f;
 		}
 		if (right.isPressed()) {
-			player.vel.x += 0.1f;
+			player.vel.x += 0.15f;
 		}
 
 		player.vel.y += 0.25f;
 
-		if(jump.isClicked() && (player.isOnGround() || canDoubleJump)) {
-			player.vel.y = -2.0f;
+		if (player.isOnGround())
+			canDoubleJump = true;
+		
+		if(jump.isClicked() && canDoubleJump) {
+			player.vel.y = -2.5f;
 			canDoubleJump = player.isOnGround();
 		}
 		
-		player.vel.mul(0.9f);
+		player.vel.mul(0.8f);
 		player.move();
 	}
 }

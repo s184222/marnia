@@ -33,7 +33,7 @@ public class Player {
 	
 		vel = new Vec2f();
 		
-		hitbox = new AABB(0.0f, 0.0f, 1.0f, 1.0f);
+		hitbox = new AABB(0.0f, 0.0f, 0.8f, 1.0f);
 	}
 	
 	public void tick() {
@@ -81,7 +81,15 @@ public class Player {
 		renderer.setColor(GColor.HOT_PINK);
 		renderer.fillRect(xp, yp, w, h);
 	}
-	
+
+	public float getCenterX() {
+		return (hitbox.x0 + hitbox.x1)/2;
+	}
+
+	public float getCenterY() {
+		return (hitbox.y0 + hitbox.y1)/2;
+	}
+
 	public boolean isOnGround() {
 		return onGround;
 	}

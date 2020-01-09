@@ -8,6 +8,7 @@ import com.g4mesoft.graphic.DisplayMode;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.marnia.world.MarniaWorld;
+import com.marnia.world.player.Player;
 
 public class MarniaApp extends Application {
 
@@ -34,6 +35,8 @@ public class MarniaApp extends Application {
 		
 		camera = new DynamicCamera();
 		camera.setBounds(0.0f, 0.0f, MarniaWorld.WORLD_WIDTH, MarniaWorld.WORLD_HEIGHT);
+
+		setMinimumFps(Double.MAX_VALUE);
 	}
 	
 	@Override
@@ -51,7 +54,9 @@ public class MarniaApp extends Application {
 		float dth = (float)display.getHeight() / MarniaWorld.TILE_SIZE;
 
 		camera.setScreenSize(dtw, dth);
-		camera.setYOffset(MarniaWorld.WORLD_HEIGHT - camera.getViewHeight());
+
+        Player player = world.getPlayer();
+		camera.setCenter(player.getCenterX(), player.getCenterY());
 	}
 
 	@Override
