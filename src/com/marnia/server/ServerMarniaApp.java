@@ -7,15 +7,15 @@ import com.g4mesoft.Application;
 import com.g4mesoft.graphic.DisplayConfig;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.marnia.MarniaApp;
-import com.marnia.server.world.ServerMarniaWorld;
-import com.marnia.world.MarniaWorld;
+import com.marnia.server.net.ServerLobbyArea;
 
 public class ServerMarniaApp extends MarniaApp {
 
-	private static final String ADDRESS = "192.0.0.1";
+	private static final String ADDRESS = "127.0.0.1";
 	private static final String PORT = "42069";
 	
 	private SpaceRepository spaceRepo;
+	private ServerLobbyArea lobbyArea;
 	
 	public ServerMarniaApp() {
 		super(DisplayConfig.INVISIBLE_DISPLAY_CONFIG);
@@ -32,16 +32,20 @@ public class ServerMarniaApp extends MarniaApp {
 		spaceRepo.add(LOBBY_SPACE_NAME, lobbySpace);
 		spaceRepo.add(GAMEPLAY_SPACE_NAME, gameplaySpace);
 		spaceRepo.addGate(getGateAddress(ADDRESS, PORT));
+	
+		lobbyArea = new ServerLobbyArea(lobbySpace);
+		lobbyArea.start();
 	}
 	
 	@Override
-	protected MarniaWorld initWorlds() {
-		return new ServerMarniaWorld();
+	public void stop() {
+		lobbyArea.stop();
+
+		super.stop();
 	}
 	
 	@Override
 	public void tick() {
-		super.tick();
 	}
 	
 	@Override

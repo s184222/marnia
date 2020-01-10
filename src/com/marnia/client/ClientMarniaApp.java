@@ -13,18 +13,26 @@ import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.marnia.MarniaApp;
 import com.marnia.client.menu.ConnectMenu;
+import com.marnia.client.menu.LobbyMenu;
+import com.marnia.client.net.ClientLobbyArea;
+import com.marnia.client.net.ILobbyEventListener;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.world.entity.ClientPlayer;
 import com.marnia.world.MarniaWorld;
 
-public class ClientMarniaApp extends MarniaApp {
+public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 	private static final String TITLE = "Marnia App";
 	private static final String ICON_PATH = "/icon.png";
 
 	private static final float MAX_VIEW_WIDTH = 20.0f;
 	
-	private DynamicCamera camera;
+	private ClientLobbyArea lobbyArea;
+	private LobbyMenu lobbyMenu;
+	private boolean connected;
+	
+	private ClientMarniaWorld world;
+	private DynamicCamera camera;	
 	
 	public ClientMarniaApp() {
 		super(new DisplayConfig(TITLE, 720, 454, 100, 100, 
@@ -39,6 +47,9 @@ public class ClientMarniaApp extends MarniaApp {
 		lobbySpace = null;
 		gameplaySpace = null;
 		
+		lobbyArea = null;
+		lobbyMenu = null;
+		
 		camera = new DynamicCamera();
 		
 		// Ensure that camera does not move out of bounds.
@@ -48,23 +59,33 @@ public class ClientMarniaApp extends MarniaApp {
 		setRootComposition(new ConnectMenu(this));
 	}
 	
-	public void connectToServer(String address, String port) throws IOException {
-		lobbySpace = new RemoteSpace(getGateAddress(address, port, LOBBY_SPACE_NAME));
-		gameplaySpace = new RemoteSpace(getGateAddress(address, port, GAMEPLAY_SPACE_NAME));
-	
-		// TODO: send some connection packets.
-	}
-	
-	@Override
-	protected MarniaWorld initWorlds() {
-		return new ClientMarniaWorld();
+	public boolean connectToServer(String address, String port, String username) {
+		connected = false;
+
+		try {	
+			lobbySpace = new RemoteSpace(getGateAddress(address, port, LOBBY_SPACE_NAME));
+			gameplaySpace = new RemoteSpace(getGateAddress(address, port, GAMEPLAY_SPACE_NAME));
+		} catch (IOException e) {
+			return false;
+		}
+
+		lobbyArea = new ClientLobbyArea(lobbySpace);
+		lobbyArea.addEventListener(this);
+		lobbyArea.start(username);
+		
+		return true;
 	}
 	
 	@Override
 	public void tick() {
-		updateCamera();
-
-		super.tick();
+		if (world != null) {
+			updateCamera();
+			
+			world.tick();
+		}
+		
+		if (lobbyArea != null)
+			lobbyArea.tick();
 	}
 	
 	private void updateCamera() {
@@ -87,9 +108,31 @@ public class ClientMarniaApp extends MarniaApp {
 		renderer.setColor(GColor.WHITE);
 		renderer.clear();
 	
-		((ClientMarniaWorld)world).render(renderer, dt, camera);
+		if (world != null)
+			world.render(renderer, dt, camera);
 	}
 	
+	@Override
+	public void onLobbyClosed() {
+		if (connected) {
+			lobbyArea.stop();
+			lobbyMenu = null;
+		}
+	}
+
+	@Override
+	public void onConnectionSuccessful() {
+		connected = true;
+		lobbyMenu = new LobbyMenu();
+		setRootComposition(lobbyMenu);
+	}
+
+	@Override
+	public void onNewPlayer() {
+		if (lobbyMenu != null)
+			lobbyMenu.setNames(lobbyArea.getPlayers());
+	}
+
 	public static void main(String[] args) throws Exception {
 		Application.start(args, ClientMarniaApp.class);
 	}

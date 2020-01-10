@@ -5,7 +5,6 @@ import org.jspace.Space;
 
 import com.g4mesoft.Application;
 import com.g4mesoft.graphic.DisplayConfig;
-import com.marnia.world.MarniaWorld;
 
 public abstract class MarniaApp extends Application {
 
@@ -15,8 +14,6 @@ public abstract class MarniaApp extends Application {
 	protected Space lobbySpace;
 	protected Space gameplaySpace;
 	protected Space localSpace;
-	
-	protected MarniaWorld world;
 	
 	public MarniaApp(DisplayConfig config) {
 		super(config);
@@ -28,10 +25,8 @@ public abstract class MarniaApp extends Application {
 
 		localSpace = new SequentialSpace();
 		
-		world = initWorlds();
+		setDebug(false);
 	}
-	
-	protected abstract MarniaWorld initWorlds();
 
 	public String getGateAddress(String address, String port) {
 		return getGateAddress(address, port, "");
@@ -39,11 +34,6 @@ public abstract class MarniaApp extends Application {
 	
 	public String getGateAddress(String address, String port, String spaceName) {
 		return "tcp://" + address + ":" + port + "/" + spaceName + "?keep";
-	}
-
-	@Override
-	protected void tick() {
-		world.tick();
 	}
 	
 	public Space getGameplaySpace() {
