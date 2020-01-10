@@ -12,6 +12,7 @@ import com.g4mesoft.graphic.DisplayMode;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.marnia.MarniaApp;
+import com.marnia.client.menu.ConnectMenu;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.world.entity.ClientPlayer;
 import com.marnia.world.MarniaWorld;
@@ -40,6 +41,8 @@ public class ClientMarniaApp extends MarniaApp {
 		
 		// Ensure that camera does not move out of bounds.
 		camera.setBounds(0.0f, 0.0f, MarniaWorld.WORLD_WIDTH, MarniaWorld.WORLD_HEIGHT);
+		
+		setRootComposition(new ConnectMenu(this));
 	}
 	
 	public void connectToServer(String address, String port) throws IOException {
