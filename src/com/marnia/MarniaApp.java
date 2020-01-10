@@ -1,72 +1,56 @@
 package com.marnia;
 
+import org.jspace.SequentialSpace;
+import org.jspace.Space;
+
 import com.g4mesoft.Application;
-import com.g4mesoft.camera.DynamicCamera;
-import com.g4mesoft.graphic.Display;
 import com.g4mesoft.graphic.DisplayConfig;
-import com.g4mesoft.graphic.DisplayMode;
-import com.g4mesoft.graphic.GColor;
-import com.g4mesoft.graphic.IRenderer2D;
 import com.marnia.world.MarniaWorld;
-import com.marnia.world.player.Player;
 
-public class MarniaApp extends Application {
+public abstract class MarniaApp extends Application {
 
-	private static final String TITLE = "Marnia App";
+	protected static final String LOBBY_SPACE_NAME = "lobby";
+	protected static final String GAMEPLAY_SPACE_NAME = "gameplay";
 	
-	private MarniaWorld world;
-	private DynamicCamera camera;
+	protected Space lobbySpace;
+	protected Space gameplaySpace;
+	protected Space localSpace;
 	
-	public MarniaApp() {
-		super(new DisplayConfig(TITLE, 
-		                        720, 454, 
-		                        100, 100, 
-		                        true, true, 
-		                        DisplayMode.NORMAL, 
-		                        true,
-		                        "/icon.png"));
+	protected MarniaWorld world;
+	
+	public MarniaApp(DisplayConfig config) {
+		super(config);
 	}
 	
 	@Override
 	public void init() {
 		super.init();
+
+		localSpace = new SequentialSpace();
 		
-		world = new MarniaWorld();
-		
-		camera = new DynamicCamera();
-		camera.setBounds(0.0f, 0.0f, MarniaWorld.WORLD_WIDTH, MarniaWorld.WORLD_HEIGHT);
+		world = initWorlds();
 	}
 	
+	protected abstract MarniaWorld initWorlds();
+
+	public String getGateAddress(String address, String port) {
+		return getGateAddress(address, port, "");
+	}
+	
+	public String getGateAddress(String address, String port, String spaceName) {
+		return "tcp://" + address + ":" + port + "/" + spaceName + "?keep";
+	}
+
 	@Override
 	protected void tick() {
-		updateDisplay();
-
 		world.tick();
 	}
 	
-	private void updateDisplay() {
-		camera.update();
-
-		Display display = getDisplay();
-		float dtw = (float)display.getWidth() / MarniaWorld.TILE_SIZE;
-		float dth = (float)display.getHeight() / MarniaWorld.TILE_SIZE;
-
-		camera.setScreenSize(dtw, dth);
-
-        Player player = world.getPlayer();
-        camera.setCenterX((camera.getCenterX() + player.getCenterX()) * 0.5f);
-        camera.setCenterY((camera.getCenterY() + player.getCenterY()) * 0.5f);
+	public Space getGameplaySpace() {
+		return gameplaySpace;
 	}
 
-	@Override
-	protected void render(IRenderer2D renderer, float dt) {
-		renderer.setColor(GColor.WHITE);
-		renderer.clear();
-	
-		world.render(renderer, dt, camera);
-	}
-	
-	public static void main(String[] args) throws Exception {
-		Application.start(args, MarniaApp.class);
+	public Space getLobbySpace() {
+		return lobbySpace;
 	}
 }

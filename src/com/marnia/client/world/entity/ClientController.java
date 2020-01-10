@@ -1,6 +1,8 @@
-package com.marnia.world.player;
+package com.marnia.client.world.entity;
 
 import com.g4mesoft.input.key.KeyInput;
+import com.marnia.entity.Entity;
+import com.marnia.entity.IController;
 
 public class ClientController implements IController {
 
@@ -20,37 +22,37 @@ public class ClientController implements IController {
 	}
 	
 	@Override
-	public void update(Player player) {
+	public void update(Entity entity) {
 		boolean moving = false;
 		if (left.isPressed()) {
-			player.vel.x -= 0.15f;
+			entity.vel.x -= 0.15f;
 			moving = true;
 		}
 		
 		if (right.isPressed()) {
-			player.vel.x += 0.15f;
+			entity.vel.x += 0.15f;
 			moving = true;
 		}
 
-		if (player.isOnGround())
+		if (entity.isOnGround())
 			canDoubleJump = true;
 
 		if(jump.isClicked() && canDoubleJump) {
-			jumpTimer = player.isOnGround() ? MAX_JUMP_TIME : 1;
-			canDoubleJump = player.isOnGround();
-			player.vel.y = -1.25f;
-		} else if (!jump.isPressed() || player.hitVerticalHitbox()) {
+			jumpTimer = entity.isOnGround() ? MAX_JUMP_TIME : 1;
+			canDoubleJump = entity.isOnGround();
+			entity.vel.y = -1.25f;
+		} else if (!jump.isPressed() || entity.hitVerticalHitbox()) {
 			jumpTimer = 0;
 		}
 
 		if (jumpTimer > 0) {
 			jumpTimer--;
 		} else {
-			player.vel.y += 0.25f;
+			entity.vel.y += 0.25f;
 		}
 
 
-		player.vel.mul(moving || !player.isOnGround() ? 0.8f : 0.6f, 0.8f);
-		player.move();
+		entity.vel.mul(moving || !entity.isOnGround() ? 0.8f : 0.6f, 0.8f);
+		entity.move();
 	}
 }

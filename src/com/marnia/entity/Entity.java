@@ -1,33 +1,29 @@
-package com.marnia.world.player;
+package com.marnia.entity;
 
 import java.util.List;
 
-import com.g4mesoft.camera.DynamicCamera;
-import com.g4mesoft.graphic.GColor;
-import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.MathUtils;
 import com.g4mesoft.math.Vec2f;
 import com.g4mesoft.world.phys.AABB;
-import com.marnia.util.CameraUtil;
 import com.marnia.world.MarniaWorld;
 
-public class Player {
-	
+public class Entity {
+
 	public final MarniaWorld world;
-	private final IController controller;
+	protected final IController controller;
 	
-	private final Vec2f prevPos;
+	protected final Vec2f prevPos;
 	public final Vec2f pos;
 
 	public final Vec2f vel;
 
-	private final AABB hitbox;
+	protected final AABB hitbox;
 
-	private boolean onGround;
-	private boolean hitHorizontal;
-	private boolean hitVertical;
-
-	public Player(MarniaWorld world, IController controller) {
+	protected boolean onGround;
+	protected boolean hitHorizontal;
+	protected boolean hitVertical;
+	
+	public Entity(MarniaWorld world, IController controller) {
 		this.world = world;
 		this.controller = controller;
 	
@@ -72,19 +68,6 @@ public class Player {
 			vel.y = 0.0f;
 	}
 	
-	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		float ix = prevPos.x + (pos.x - prevPos.x) * dt;
-		float iy = prevPos.y + (pos.y - prevPos.y) * dt;
-		
-		int xp = CameraUtil.getPixelX(ix, camera, dt);
-		int yp = CameraUtil.getPixelY(iy, camera, dt);
-		int w = CameraUtil.getPixelX(ix + hitbox.x1 - hitbox.x0, camera, dt) - xp;
-		int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
-		
-		renderer.setColor(GColor.HOT_PINK);
-		renderer.fillRect(xp, yp, w, h);
-	}
-
 	public float getCenterX() {
 		return (hitbox.x0 + hitbox.x1)/2;
 	}

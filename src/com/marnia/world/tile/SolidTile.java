@@ -6,7 +6,7 @@ import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.world.phys.AABB;
-import com.marnia.util.CameraUtil;
+import com.marnia.client.util.CameraUtil;
 import com.marnia.world.MarniaWorld;
 
 public class SolidTile extends Tile {

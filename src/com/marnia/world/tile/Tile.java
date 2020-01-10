@@ -26,6 +26,7 @@ public class Tile {
 	}
 	
 	public void render(MarniaWorld world, int xt, int yt, IRenderer2D renderer, float dt, DynamicCamera camera) {
+		// TODO: Move this method away from server.
 	}
 
 	public int getIndex() {
