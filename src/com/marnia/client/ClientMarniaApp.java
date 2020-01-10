@@ -22,6 +22,8 @@ public class ClientMarniaApp extends MarniaApp {
 	private static final String TITLE = "Marnia App";
 	private static final String ICON_PATH = "/icon.png";
 
+	private static final float MAX_VIEW_WIDTH = 20.0f;
+	
 	private DynamicCamera camera;
 	
 	public ClientMarniaApp() {
@@ -41,6 +43,7 @@ public class ClientMarniaApp extends MarniaApp {
 		
 		// Ensure that camera does not move out of bounds.
 		camera.setBounds(0.0f, 0.0f, MarniaWorld.WORLD_WIDTH, MarniaWorld.WORLD_HEIGHT);
+		camera.setZoomToCenter(true);
 		
 		setRootComposition(new ConnectMenu(this));
 	}
@@ -72,6 +75,7 @@ public class ClientMarniaApp extends MarniaApp {
 		float dth = (float)display.getHeight() / ClientMarniaWorld.TILE_SIZE;
 
 		camera.setScreenSize(dtw, dth);
+		camera.setScale(dtw / MAX_VIEW_WIDTH);
 
         ClientPlayer player = ((ClientMarniaWorld)world).getPlayer();
         camera.setCenterX((camera.getCenterX() + player.getCenterX()) * 0.5f);
