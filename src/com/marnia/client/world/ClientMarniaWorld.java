@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 
 import com.g4mesoft.Application;
 import com.g4mesoft.camera.DynamicCamera;
+import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.input.key.KeyInput;
 import com.g4mesoft.input.key.KeySingleInput;
@@ -14,7 +15,6 @@ import com.marnia.client.world.entity.ClientPlayer;
 import com.marnia.world.MarniaWorld;
 import com.marnia.world.WorldStorage;
 import com.marnia.world.tile.Tile;
-import com.sun.javafx.scene.CameraHelper;
 
 public class ClientMarniaWorld extends MarniaWorld {
 
@@ -71,6 +71,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 		int x1 = MathUtils.min(getWidth() - 1, (int)(xOffset + camera.getViewWidth() + 0.5f));
 		int y1 = MathUtils.min(getHeight() - 1, (int)(yOffset + camera.getViewHeight() + 0.5f));
 	
+		renderer.setColor(GColor.AQUAMARINE);
 		for (int xt = x0; xt <= x1; xt++) {
 			for (int yt = y0; yt <= y1; yt++) {
 				if (getTile(xt, yt) != Tile.AIR_TILE) {
@@ -79,7 +80,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 					int w = CameraUtil.getPixelX(xt + 1, camera, dt) - xp;
 					int h = CameraUtil.getPixelY(yt + 1, camera, dt) - yp;
 					
-					
+					renderer.fillRect(xp, yp, w, h);
 				}
 			}
 		}

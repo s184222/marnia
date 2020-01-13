@@ -44,10 +44,10 @@ public final class WorldLoader {
 		WorldStorage storage = new WorldStorage(width, height);
 
 		for(int yt = 0; yt < height; yt++) {
-			String[] cells = rows.get(yt).split(Character.toString(SEPARATOR_CHAR));
+			String[] cells = rows.get(yt).split(Character.toString(SEPARATOR_CHAR), -1);
 			if (cells.length != width)
 				throw new IOException("Invalid number of cells at row: " + yt);
-
+			
 			for(int xt = 0; xt < width; xt++) {
 				if(!cells[xt].isEmpty()){
 					int tileId;

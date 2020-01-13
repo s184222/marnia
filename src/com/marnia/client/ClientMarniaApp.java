@@ -18,6 +18,7 @@ import com.marnia.client.net.ClientLobbyArea;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.world.entity.ClientPlayer;
 import com.marnia.net.ILobbyEventListener;
+import com.marnia.server.world.gen.WorldLoader;
 
 public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
@@ -57,6 +58,13 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		//setRootComposition(new ConnectMenu(this));
 	
 		world = new ClientMarniaWorld();
+		
+		try {
+			// Sneak peak of world 1.
+			world.setWorldStorage(WorldLoader.loadFromFile("/worlds/world1.csv"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
