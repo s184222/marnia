@@ -15,9 +15,9 @@ import com.marnia.MarniaApp;
 import com.marnia.client.menu.ConnectMenu;
 import com.marnia.client.menu.LobbyMenu;
 import com.marnia.client.net.ClientLobbyArea;
-import com.marnia.client.net.ILobbyEventListener;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.world.entity.ClientPlayer;
+import com.marnia.net.ILobbyEventListener;
 import com.marnia.world.MarniaWorld;
 
 public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
@@ -71,7 +71,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 		lobbyArea = new ClientLobbyArea(lobbySpace);
 		lobbyArea.addEventListener(this);
-		lobbyArea.start(username);
+		lobbyArea.setUsername(username);
+		lobbyArea.start();
 		
 		return true;
 	}
@@ -113,24 +114,24 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	}
 	
 	@Override
-	public void onLobbyClosed() {
-		if (connected) {
-			lobbyArea.stop();
-			lobbyMenu = null;
+	public void onLobbyEvent(int eventId) {
+		switch (eventId) {
+		case ClientLobbyArea.LOBBY_CLOSED_EVENT:
+			if (connected) {
+				lobbyArea.stop();
+				lobbyMenu = null;
+			}
+			break;
+		case ClientLobbyArea.CONNECTION_SUCCESSFUL_EVENT:
+			connected = true;
+			lobbyMenu = new LobbyMenu();
+			setRootComposition(lobbyMenu);
+			break;
+		case ClientLobbyArea.PLAYER_ADDED_EVENT:
+			if (lobbyMenu != null)
+				lobbyMenu.setNames(lobbyArea.getPlayers());
+			break;
 		}
-	}
-
-	@Override
-	public void onConnectionSuccessful() {
-		connected = true;
-		lobbyMenu = new LobbyMenu();
-		setRootComposition(lobbyMenu);
-	}
-
-	@Override
-	public void onNewPlayer() {
-		if (lobbyMenu != null)
-			lobbyMenu.setNames(lobbyArea.getPlayers());
 	}
 
 	public static void main(String[] args) throws Exception {

@@ -2,7 +2,6 @@ package com.marnia.util;
 
 import org.jspace.ActualField;
 import org.jspace.FormalField;
-import org.jspace.TemplateField;
 
 public final class SpaceHelper {
 
