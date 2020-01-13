@@ -18,9 +18,8 @@ public final class WorldLoader {
 
 	public static WorldStorage loadFromFile(String path) throws IOException {
 		InputStream is = WorldLoader.class.getResourceAsStream(path);
-		if (is == null) {
+		if (is == null)
 			throw new IOException("World file does not exist!");
-		}
 
 		List<String> rows = new ArrayList<String>();
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
@@ -49,13 +48,13 @@ public final class WorldLoader {
 			if (cells.length != width)
 				throw new IOException("Invalid number of cells at row: " + yt);
 
-			for(int xt = 0; xt<width; xt++) {
+			for(int xt = 0; xt < width; xt++) {
 				if(!cells[xt].isEmpty()){
 					int tileId;
 					try {
 						tileId = Integer.parseInt(cells[xt]);
 					} catch (NumberFormatException e) {
-						throw new IOException("Invalid integer at column, row:" + xt + ", " + yt);
+						throw new IOException("Invalid integer at (column, row): (" + xt + ", " + yt + ")");
 					}
 
 					storage.setTileIndex(xt, yt, tileId);
