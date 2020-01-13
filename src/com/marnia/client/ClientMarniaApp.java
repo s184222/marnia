@@ -1,5 +1,6 @@
 package com.marnia.client;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import org.jspace.RemoteSpace;
@@ -12,6 +13,8 @@ import com.g4mesoft.graphic.DisplayConfig;
 import com.g4mesoft.graphic.DisplayMode;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
+import com.g4mesoft.input.key.KeyInput;
+import com.g4mesoft.input.key.KeySingleInput;
 import com.marnia.MarniaApp;
 import com.marnia.client.menu.LobbyMenu;
 import com.marnia.client.net.ClientLobbyArea;
@@ -25,7 +28,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private static final String TITLE = "Marnia App";
 	private static final String ICON_PATH = "/icon.png";
 
-	private static final float MAX_VIEW_WIDTH = 20.0f;
+	private static final float MAX_VIEW_WIDTH = 25.0f;
+	private static final float MAX_VIEW_ABOVE = 10.0f;
 	
 	private ClientLobbyArea lobbyArea;
 	private LobbyMenu lobbyMenu;
@@ -33,6 +37,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	
 	private ClientMarniaWorld world;
 	private DynamicCamera camera;	
+	
+	private KeyInput fullscreenKey;
 	
 	public ClientMarniaApp() {
 		super(new DisplayConfig(TITLE, 720, 454, 100, 100, 
@@ -65,6 +71,11 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		fullscreenKey = new KeySingleInput("fullscreen", KeyEvent.VK_F11);
+		Application.addKey(fullscreenKey);
+		
+		setMinimumFps(120.0);
 	}
 	
 	@Override
@@ -126,6 +137,17 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		
 		if (lobbyArea != null)
 			lobbyArea.tick();
+		
+		if (fullscreenKey.isClicked()) {
+			Display display = getDisplay();
+			if (display.isFullscreen()) {
+				display.setDisplayMode(DisplayMode.NORMAL);
+			} else {
+				display.setDisplayMode(DisplayMode.FULLSCREEN_BORDERLESS);
+			}
+			
+			fullscreenKey.reset();
+		}
 	}
 	
 	private void updateCamera() {
@@ -139,7 +161,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		camera.setScale(dtw / MAX_VIEW_WIDTH);
 
 		// TODO: listeners for this.
-		camera.setBounds(0.0f, 0.0f, world.getWidth(), world.getHeight());
+		camera.setBounds(0.0f, -MAX_VIEW_ABOVE, world.getWidth(), world.getHeight());
 
         ClientPlayer player = ((ClientMarniaWorld)world).getPlayer();
         camera.setCenterX((camera.getCenterX() + player.getCenterX()) * 0.5f);
