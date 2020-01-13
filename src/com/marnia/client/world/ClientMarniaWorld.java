@@ -8,10 +8,13 @@ import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.input.key.KeyInput;
 import com.g4mesoft.input.key.KeySingleInput;
 import com.g4mesoft.math.MathUtils;
+import com.marnia.client.util.CameraUtil;
 import com.marnia.client.world.entity.ClientController;
 import com.marnia.client.world.entity.ClientPlayer;
 import com.marnia.world.MarniaWorld;
 import com.marnia.world.WorldStorage;
+import com.marnia.world.tile.Tile;
+import com.sun.javafx.scene.CameraHelper;
 
 public class ClientMarniaWorld extends MarniaWorld {
 
@@ -70,7 +73,14 @@ public class ClientMarniaWorld extends MarniaWorld {
 	
 		for (int xt = x0; xt <= x1; xt++) {
 			for (int yt = y0; yt <= y1; yt++) {
-				// TODO: render stuff..
+				if (getTile(xt, yt) != Tile.AIR_TILE) {
+					int xp = CameraUtil.getPixelX(xt, camera, dt);
+					int yp = CameraUtil.getPixelY(yt, camera, dt);
+					int w = CameraUtil.getPixelX(xt + 1, camera, dt) - xp;
+					int h = CameraUtil.getPixelY(yt + 1, camera, dt) - yp;
+					
+					
+				}
 			}
 		}
 	}
