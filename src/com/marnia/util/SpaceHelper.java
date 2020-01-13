@@ -1,5 +1,7 @@
 package com.marnia.util;
 
+import java.util.UUID;
+
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 
@@ -13,6 +15,8 @@ public final class SpaceHelper {
 	public static final FormalField BOOLEAN_MATCH = new FormalField(Boolean.class);
 	public static final FormalField CHAR_MATCH = new FormalField(Character.class);
 	public static final FormalField BYTE_MATCH = new FormalField(Byte.class);
+	
+	public static final FormalField UUID_MATCH = new FormalField(UUID.class);
 	
 	public static final String LOCK = "lock";
 	public static final ActualField LOCK_MATCH = new ActualField(LOCK);
