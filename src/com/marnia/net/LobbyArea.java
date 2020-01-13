@@ -86,6 +86,14 @@ public abstract class LobbyArea {
 		}
 	}
 	
+	public boolean isRunning() {
+		try {
+			return localLobbySpace.queryp(LOCAL_STATUS_MATCH, RUNNING_MATCH) != null;
+		} catch (InterruptedException e) {
+		}
+		return false;
+	}
+	
 	public void tick() {
 		try {
 			localLobbySpace.get(SpaceHelper.LOCK_MATCH);

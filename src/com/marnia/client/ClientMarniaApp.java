@@ -3,6 +3,7 @@ package com.marnia.client;
 import java.io.IOException;
 
 import org.jspace.RemoteSpace;
+import org.jspace.Space;
 
 import com.g4mesoft.Application;
 import com.g4mesoft.camera.DynamicCamera;
@@ -59,6 +60,13 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		setRootComposition(new ConnectMenu(this));
 	}
 	
+	@Override
+	protected void stop() {
+		super.stop();
+	
+		disconnectFromServer();
+	}
+	
 	public boolean connectToServer(String address, String port, String username) {
 		connected = false;
 
@@ -75,6 +83,30 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		lobbyArea.start();
 		
 		return true;
+	}
+	
+	public void disconnectFromServer() {
+		if (lobbyArea != null && lobbyArea.isRunning()) {
+			lobbyArea.stop();
+			lobbyArea = null;
+		}
+
+		closeRemoteSpace(lobbySpace);
+		closeRemoteSpace(gameplaySpace);
+		
+		lobbySpace = gameplaySpace = null;
+		
+		connected = false;
+	}
+	
+	private void closeRemoteSpace(Space remoteSpace) {
+		if (remoteSpace != null) {
+			try {
+				((RemoteSpace)remoteSpace).getGate().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override
@@ -121,7 +153,11 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		case ClientLobbyArea.LOBBY_CLOSED_EVENT:
 			if (connected) {
 				lobbyArea.stop();
+				lobbyArea = null;
 				lobbyMenu = null;
+			} else {
+				// We have to reconnect.
+				disconnectFromServer();
 			}
 			break;
 		case ClientLobbyArea.CONNECTION_SUCCESSFUL_EVENT:
