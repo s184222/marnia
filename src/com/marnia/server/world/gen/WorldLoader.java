@@ -47,7 +47,7 @@ public final class WorldLoader {
 		for(int yt = 0; yt < height; yt++) {
 			String[] cells = rows.get(yt).split(Character.toString(SEPARATOR_CHAR));
 			if (cells.length != width)
-				throw new IOException("Invalind number of cells at row: " + yt);
+				throw new IOException("Invalid number of cells at row: " + yt);
 
 			for(int xt = 0; xt<width; xt++) {
 				if(!cells[xt].isEmpty()){
