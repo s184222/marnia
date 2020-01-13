@@ -1,11 +1,11 @@
 package com.marnia.client.net;
 
 import org.jspace.ActualField;
+import org.jspace.FormalField;
 import org.jspace.Space;
 
 import com.marnia.net.LobbyArea;
 import com.marnia.net.LobbyThread;
-import com.marnia.util.SpaceHelper;
 
 public class ClientLobbyThread extends LobbyThread {
 
@@ -19,11 +19,17 @@ public class ClientLobbyThread extends LobbyThread {
 		this.usernameMatch = new ActualField(username);
 	}
 
-	private int getServerEvent() throws InterruptedException {
+	@SuppressWarnings("unchecked")
+	private <T> T getServerResponse(Class<T> clazz) throws InterruptedException {
 		Object[] resp = publicLobbySpace.get(LobbyArea.SERVER_RESPONSE_MATCH, 
-				usernameMatch, SpaceHelper.INTEGER_MATCH);
+				usernameMatch, new FormalField(clazz));
 		// Response is null in the case where the server closes.
-		return (resp == null) ? -1 : (Integer)resp[2];
+		return (resp == null) ? null : (T)resp[2];
+	}
+	
+	private int getServerEvent() throws InterruptedException {
+		Integer eventId = getServerResponse(Integer.class);
+		return (eventId == null) ? -1 : eventId.intValue();
 	}
 	
 	private boolean connectToLobby() throws InterruptedException {
@@ -43,12 +49,11 @@ public class ClientLobbyThread extends LobbyThread {
 				int serverEvent;
 				while((serverEvent = getServerEvent()) != -1) {
 					if (serverEvent == LobbyArea.PLAYER_JOINED_TYPE) {
-						Object[] newPlayerInfo = publicLobbySpace.get(LobbyArea.SERVER_RESPONSE_MATCH,
-								usernameMatch, SpaceHelper.STRING_MATCH);
-						
+						String playerName = getServerResponse(String.class);
 						// Server closed
-						if (newPlayerInfo == null)
+						if (playerName == null)
 							break;
+						addPlayerToLobby(playerName);
 					} else {
 						System.out.println("Received invalid event from server: " + serverEvent);
 					}

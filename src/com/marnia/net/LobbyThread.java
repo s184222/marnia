@@ -27,7 +27,7 @@ public abstract class LobbyThread extends Thread {
 	}
 	
 	protected boolean isPlayerInLobby(String username) throws InterruptedException {
-		return localLobbySpace.queryp(LobbyArea.LOCAL_STATUS_MATCH, LobbyArea.RUNNING_MATCH) != null;
+		return localLobbySpace.queryp(LobbyArea.LOCAL_PLAYER_MATCH, new ActualField(username)) != null;
 	}
 
 	protected void addPlayerToLobby(String username) throws InterruptedException {
