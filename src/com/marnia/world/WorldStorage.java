@@ -1,13 +1,13 @@
-package com.marnia.world.gen;
+package com.marnia.world;
 
 import com.marnia.world.tile.Tile;
 
 public class WorldStorage {
 
-	private final int width;
-	private final int height;
+	private int width;
+	private int height;
 
-	private final int[] tiles;
+	private int[] tiles;
 
 	public WorldStorage(int width, int height) {
 		this(width, height, new int[width * height]);
@@ -22,6 +22,13 @@ public class WorldStorage {
 		this.tiles = tiles;
 	}
 
+	public void copy(WorldStorage other) {
+		width = other.width;
+		height = other.height;
+		tiles = new int[width * height];
+		System.arraycopy(other.tiles, 0, tiles, 0, width * height);
+	}
+	
 	public boolean isInBounds(int xt, int yt) {
 		return xt >= 0 && xt < width && yt >= 0 && yt < height;
 	}

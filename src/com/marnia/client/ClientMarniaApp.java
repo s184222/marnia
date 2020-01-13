@@ -13,13 +13,11 @@ import com.g4mesoft.graphic.DisplayMode;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.marnia.MarniaApp;
-import com.marnia.client.menu.ConnectMenu;
 import com.marnia.client.menu.LobbyMenu;
 import com.marnia.client.net.ClientLobbyArea;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.world.entity.ClientPlayer;
 import com.marnia.net.ILobbyEventListener;
-import com.marnia.world.MarniaWorld;
 
 public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
@@ -54,7 +52,6 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		camera = new DynamicCamera();
 		
 		// Ensure that camera does not move out of bounds.
-		camera.setBounds(0.0f, 0.0f, MarniaWorld.WORLD_WIDTH, MarniaWorld.WORLD_HEIGHT);
 		camera.setZoomToCenter(true);
 		
 		//setRootComposition(new ConnectMenu(this));
@@ -132,6 +129,9 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 		camera.setScreenSize(dtw, dth);
 		camera.setScale(dtw / MAX_VIEW_WIDTH);
+
+		// TODO: listeners for this.
+		camera.setBounds(0.0f, 0.0f, world.getWidth(), world.getHeight());
 
         ClientPlayer player = ((ClientMarniaWorld)world).getPlayer();
         camera.setCenterX((camera.getCenterX() + player.getCenterX()) * 0.5f);

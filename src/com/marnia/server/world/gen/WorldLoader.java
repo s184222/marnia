@@ -1,4 +1,4 @@
-package com.marnia.world.gen;
+package com.marnia.server.world.gen;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.marnia.world.WorldStorage;
 
 public final class WorldLoader {
 

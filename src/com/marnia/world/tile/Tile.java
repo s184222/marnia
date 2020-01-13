@@ -2,8 +2,6 @@ package com.marnia.world.tile;
 
 import java.util.List;
 
-import com.g4mesoft.camera.DynamicCamera;
-import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.world.phys.AABB;
 import com.marnia.world.MarniaWorld;
 
@@ -12,7 +10,7 @@ public class Tile {
 	private static final Tile[] tiles = new Tile[2];
 
 	public static final Tile AIR_TILE = new Tile(0);
-	public static final Tile SOLID_TILE = new SolidTile(1);
+	public static final Tile SOLID_TILE = new EarthTile(1);
 
 	private final int index;
 	
@@ -25,10 +23,6 @@ public class Tile {
 		tiles[tileIndex] = this;
 	}
 	
-	public void render(MarniaWorld world, int xt, int yt, IRenderer2D renderer, float dt, DynamicCamera camera) {
-		// TODO: Move this method away from server.
-	}
-
 	public int getIndex() {
 		return index;
 	}
@@ -38,5 +32,9 @@ public class Tile {
 	}
 
 	public void getHitboxes(MarniaWorld world, int xt, int yt, List<AABB> hitboxes) {
+	}
+
+	public byte getSpriteData(MarniaWorld world, int xt, int yt) {
+		return 0;
 	}
 }
