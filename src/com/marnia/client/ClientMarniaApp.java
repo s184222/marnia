@@ -57,7 +57,9 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		camera.setBounds(0.0f, 0.0f, MarniaWorld.WORLD_WIDTH, MarniaWorld.WORLD_HEIGHT);
 		camera.setZoomToCenter(true);
 		
-		setRootComposition(new ConnectMenu(this));
+		//setRootComposition(new ConnectMenu(this));
+	
+		world = new ClientMarniaWorld();
 	}
 	
 	@Override
