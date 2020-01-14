@@ -76,6 +76,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		rightKey = new KeySingleInput("right", KeyEvent.VK_D, KeyEvent.VK_RIGHT);
 		jumpKey = new KeySingleInput("jump", KeyEvent.VK_W, KeyEvent.VK_SPACE, KeyEvent.VK_UP);
 		fullscreenKey = new KeySingleInput("fullscreen", KeyEvent.VK_F11);
+
 		Application.addKeys(leftKey, rightKey, jumpKey, fullscreenKey);
 		
 		setMinimumFps(120.0);
