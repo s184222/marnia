@@ -38,9 +38,6 @@ public class EarthTile extends Tile {
 			if (world.getTile(xt - 1, yt - 1) != Tile.AIR_TILE)
 				sx += 3;
 		}
-		
-		
-
 
 		return SpriteHelper.getSpriteDataAt(sx, sy);
 	}
