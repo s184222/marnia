@@ -54,7 +54,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 		int index = 0;
 		for (int yt = 0; yt < storage.getHeight(); yt++)
 			for (int xt = 0; xt < storage.getWidth(); xt++)
-				spriteData[index] = getTile(xt, yt).getSpriteData(this, xt, yt);
+				spriteData[index++] = getTile(xt, yt).getSpriteData(this, xt, yt);
 	}
 	
 	@Override
