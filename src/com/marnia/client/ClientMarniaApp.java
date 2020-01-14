@@ -134,7 +134,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private void closeRemoteSpace(Space remoteSpace) {
 		if (remoteSpace != null) {
 			try {
-				((RemoteSpace)remoteSpace).getGate().close();
+				((RemoteSpace)remoteSpace).close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

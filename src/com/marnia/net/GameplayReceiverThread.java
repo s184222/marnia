@@ -1,5 +1,6 @@
 package com.marnia.net;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.jspace.ActualField;
@@ -20,17 +21,7 @@ public class GameplayReceiverThread<H extends INetworkHandler> extends GameplayN
 		identifierMatch = new ActualField(identifier);
 	}
 
-	@Override
-	public boolean processPacket() throws InterruptedException {
-		Object[] packetTypeInfo = publicSpace.get(identifierMatch, SpaceHelper.UUID_MATCH,
-				SpaceHelper.INTEGER_MATCH);
-
-		if (packetTypeInfo == null)
-			return false;
-		
-		UUID senderIdentifier = (UUID)packetTypeInfo[1];
-		int packetType = ((Integer)packetTypeInfo[2]).intValue();
-	
+	private void handlePacket(UUID senderIdentifier, int packetType) {
 		IPacket<H> packet = manager.getPacketByType(packetType);
 		if (packet != null) {
 			try {
@@ -39,6 +30,21 @@ public class GameplayReceiverThread<H extends INetworkHandler> extends GameplayN
 			} catch (Exception e) {
 				// Some error occurred whilst decoding...
 			}
+		}
+	}
+	
+	@Override
+	public boolean processPacket() throws InterruptedException {
+		List<Object[]> packetsInfo = publicSpace.getAll(identifierMatch, SpaceHelper.UUID_MATCH,
+				SpaceHelper.INTEGER_MATCH);
+
+		if (packetsInfo == null)
+			return false;
+		
+		for (Object[] packetTypeInfo : packetsInfo) {
+			UUID senderIdentifier = (UUID)packetTypeInfo[1];
+			int packetType = ((Integer)packetTypeInfo[2]).intValue();
+			handlePacket(senderIdentifier, packetType);
 		}
 		
 		return true;

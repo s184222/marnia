@@ -23,13 +23,11 @@ public class ServerGameplayNetworkManager extends GameplayNetworkManager<IServer
 	}
 
 	public void addPlayer(UUID identifier, GameplaySession session) {
-		
+		sessions.put(identifier, session);
 	}
 	
 	@Override
 	protected void handlePacket(UUID sender, IPacket<IServerNetworkHandler> packet) {
-		// TODO: add some check for client validity..
-		
 		GameplaySession session = sessions.get(sender);
 		if (session != null)
 			packet.handlePacket(sender, session);
