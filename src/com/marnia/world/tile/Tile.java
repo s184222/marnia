@@ -7,7 +7,7 @@ import com.marnia.world.MarniaWorld;
 
 public class Tile {
 	
-	private static final Tile[] tiles = new Tile[3];
+	private static final Tile[] tiles = new Tile[4];
 
 	public static final Tile AIR_TILE = new Tile(0);
 	public static final Tile SOLID_TILE = new EarthTile(1);
