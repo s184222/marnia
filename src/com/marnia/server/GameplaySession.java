@@ -36,7 +36,7 @@ public class GameplaySession implements IServerNetworkHandler {
 	public boolean startGame() {
 		WorldStorage storage = null;
 		try {
-			storage = WorldLoader.loadFromFile("/worlds/world1.csv");
+			storage = WorldLoader.loadFromFile("/worlds/world2.csv");
 		} catch (IOException e) {
 		}
 		

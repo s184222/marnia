@@ -16,7 +16,5 @@ public class PacketEncoder extends PacketCoder {
 		data[1] = sender;
 		System.arraycopy(packetData, 0, data, PACKET_OVERHEAD, packetData.length);
 		space.put(data);
-		
-		space.put(receiver, sender, 0, 0, new int[0]);
 	}
 }
