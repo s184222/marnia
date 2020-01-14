@@ -117,8 +117,8 @@ public abstract class GameplayNetworkManager<H extends INetworkHandler> {
 			return null;
 		
 		try {
-			return (IPacket<H>)packetClazz.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
+			return (IPacket<H>)packetClazz.getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
 			System.err.println("Unable to initialize " + packetClazz + " is the constructor private?");
 		}
 		

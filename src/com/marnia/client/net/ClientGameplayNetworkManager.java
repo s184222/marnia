@@ -4,10 +4,13 @@ import java.util.UUID;
 
 import org.jspace.Space;
 
-import com.marnia.client.net.packet.C01AddPlayersPacket;
-import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.net.packet.C00WorldDataPacket;
+import com.marnia.client.net.packet.C01AddPlayersPacket;
+import com.marnia.client.net.packet.C04EntityPositionPacket;
+import com.marnia.client.world.ClientMarniaWorld;
+import com.marnia.client.world.entity.DrawableEntity;
+import com.marnia.entity.Entity;
 import com.marnia.net.GameplayNetworkManager;
 import com.marnia.net.NetworkSide;
 import com.marnia.net.PacketRegistry;
@@ -29,7 +32,7 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	@Override
 	protected void handlePacket(UUID sender, IPacket<IClientNetworkHandler> packet) {
 		if (sender.equals(serverIdentifier))
-			packet.handlePacket(this);
+			packet.handlePacket(sender, this);
 	}
 	
 	@Override
@@ -41,11 +44,27 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	
 	@Override
 	public void onAddPlayersPacket(C01AddPlayersPacket addPlayersPacket) {
+		ClientMarniaWorld world = app.getWorld();
 		
+		for (UUID identifier : addPlayersPacket.getIdentifiers()) {
+			if (!getIdentifier().equals(identifier))
+				world.addEntity(new DrawableEntity(world, identifier));
+		}
 	}
+	
+	@Override
+	public void onEntityPosition(C04EntityPositionPacket positionPacket) {
+		Entity entity = app.getWorld().getEntity(positionPacket.getIdentifier());
+		if (entity != null)
+			entity.pos.set(positionPacket.getX(), positionPacket.getY());
+	}
+
+	
+	
 	
 	@Override
 	public NetworkSide getNetworkSide() {
 		return NetworkSide.CLIENT;
 	}
+
 }

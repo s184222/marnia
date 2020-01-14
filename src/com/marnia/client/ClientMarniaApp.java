@@ -236,7 +236,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		networkManager.start();
 		
 		world = new ClientMarniaWorld();
-		player = new ClientPlayer(world, new ClientController(leftKey, rightKey, jumpKey));
+		player = new ClientPlayer(world, identifier, new ClientController(leftKey, rightKey, jumpKey));
 		world.addEntity(player);
 	}
 	

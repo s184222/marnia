@@ -1,6 +1,7 @@
 package com.marnia.entity;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.g4mesoft.math.MathUtils;
 import com.g4mesoft.math.Vec2f;
@@ -10,7 +11,7 @@ import com.marnia.world.MarniaWorld;
 public class Entity {
 
 	public final MarniaWorld world;
-	protected final IController controller;
+	public final UUID identifier;
 	
 	protected final Vec2f prevPos;
 	public final Vec2f pos;
@@ -23,10 +24,10 @@ public class Entity {
 	protected boolean hitHorizontal;
 	protected boolean hitVertical;
 	
-	public Entity(MarniaWorld world, IController controller) {
+	public Entity(MarniaWorld world, UUID identifier) {
 		this.world = world;
-		this.controller = controller;
-	
+		this.identifier = identifier;
+
 		pos = new Vec2f();
 		prevPos = new Vec2f();
 	
@@ -37,7 +38,6 @@ public class Entity {
 	
 	public void tick() {
 		prevPos.set(pos);
-		controller.update(this);
 	}
 	
 	public void move() {

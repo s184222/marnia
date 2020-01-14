@@ -80,8 +80,12 @@ public class ServerMarniaApp extends MarniaApp implements ILobbyEventListener {
 				shouldAttemptStartGame = false;
 				
 				GameplaySession session = lobbyArea.startGame();
-				if (session != null && session.startGame())
+				if (session != null && session.startGame()) {
+					for (GameplayProfile profile : session.getProfiles())
+						networkManager.addPlayer(profile.getIdentifier(), session);
+					
 					sessions.add(session);
+				}
 			}
 		}
 		

@@ -2,6 +2,7 @@ package com.marnia.world;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.g4mesoft.world.phys.AABB;
 import com.marnia.entity.Entity;
@@ -59,6 +60,13 @@ public abstract class MarniaWorld {
 		} else {
 			entities.remove(entity);
 		}
+	}
+	public Entity getEntity(UUID identifier) {
+		for(Entity entity : entities) {
+			if(entity.identifier.equals(identifier))
+				return entity;
+		}
+		return null;
 	}
 	
 	public List<AABB> getCollidingHitboxes(AABB hitbox) {

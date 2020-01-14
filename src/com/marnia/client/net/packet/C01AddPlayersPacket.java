@@ -32,7 +32,11 @@ public class C01AddPlayersPacket implements IPacket<IClientNetworkHandler> {
 	}
 
 	@Override
-	public void handlePacket(IClientNetworkHandler handler) {
+	public void handlePacket(UUID senderIdentifier, IClientNetworkHandler handler) {
 		handler.onAddPlayersPacket(this);
+	}
+	
+	public UUID[] getIdentifiers() {
+		return playerIdentifiers;
 	}
 }

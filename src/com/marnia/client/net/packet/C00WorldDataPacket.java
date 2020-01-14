@@ -1,6 +1,7 @@
 package com.marnia.client.net.packet;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import com.marnia.client.net.IClientNetworkHandler;
 import com.marnia.net.packet.IPacket;
@@ -42,7 +43,7 @@ public class C00WorldDataPacket implements IPacket<IClientNetworkHandler> {
 	}
 
 	@Override
-	public void handlePacket(IClientNetworkHandler handler) {
+	public void handlePacket(UUID senderIdentifier, IClientNetworkHandler handler) {
 		handler.onWorldDataPacket(this);
 	}
 	

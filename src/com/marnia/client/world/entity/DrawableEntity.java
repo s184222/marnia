@@ -1,17 +1,18 @@
 package com.marnia.client.world.entity;
 
+import java.util.UUID;
+
 import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.marnia.client.util.CameraUtil;
 import com.marnia.entity.Entity;
-import com.marnia.entity.IController;
 import com.marnia.world.MarniaWorld;
 
 public class DrawableEntity extends Entity {
 
-	public DrawableEntity(MarniaWorld world, IController controller) {
-		super(world, controller);
+	public DrawableEntity(MarniaWorld world, UUID identifier) {
+		super(world, identifier);
 	}
 	
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
