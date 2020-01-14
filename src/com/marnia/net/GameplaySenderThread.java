@@ -1,6 +1,5 @@
 package com.marnia.net;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.jspace.Space;
@@ -35,16 +34,11 @@ public class GameplaySenderThread<H extends INetworkHandler> extends GameplayNet
 	
 	@Override
 	protected boolean processPacket() throws InterruptedException {
-		List<Object[]> packetsInfo = localSpace.getAll(GameplayNetworkManager.PACKET_TO_SEND_MATCH, 
+		Object[] packetToSendInfo = localSpace.get(GameplayNetworkManager.PACKET_TO_SEND_MATCH, 
 				SpaceHelper.UUID_MATCH, GameplayNetworkManager.PACKET_CLASS_MATCH);
 
-		for (Object[] packetToSendInfo : packetsInfo) {
-			UUID receiverUUID = (UUID)packetToSendInfo[1];
-			IPacket<?> packetToSend = (IPacket<?>)packetToSendInfo[2];
-			if (!sendPacket(receiverUUID, packetToSend))
-				return false;
-		}
-		
-		return true;
+		UUID receiverUUID = (UUID)packetToSendInfo[1];
+		IPacket<?> packetToSend = (IPacket<?>)packetToSendInfo[2];
+		return sendPacket(receiverUUID, packetToSend);
 	}
 }

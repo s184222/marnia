@@ -150,7 +150,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			
 			world.tick();
 			
-			if (timer++ > 4) {
+			if (timer++ > 3) {
 				timer = 0;
 				networkManager.sendPacket(new S02PlayerPositionPacket(player.pos.x, player.pos.y), serverIdentifier);
 			}
