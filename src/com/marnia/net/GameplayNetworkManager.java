@@ -1,5 +1,6 @@
 package com.marnia.net;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.jspace.ActualField;
@@ -93,15 +94,17 @@ public abstract class GameplayNetworkManager<H extends INetworkHandler> {
 	public void tick() {
 		if (running) {
 			try {
-				Object[] packetToHandle = localGameplaySpace.getp(PACKET_TO_HANDLE_MATCH, 
+				List<Object[]> packetsToHandle = localGameplaySpace.getAll(PACKET_TO_HANDLE_MATCH, 
 						SpaceHelper.UUID_MATCH, PACKET_CLASS_MATCH);
 
-				if (packetToHandle != null) {
-					UUID sender = (UUID)packetToHandle[1];
-					@SuppressWarnings("unchecked")
-					IPacket<H> packet = (IPacket<H>)packetToHandle[2];
-					
-					handlePacket(sender, packet);
+				for (Object[] packetToHandle : packetsToHandle) {
+					if (packetToHandle != null) {
+						UUID sender = (UUID)packetToHandle[1];
+						@SuppressWarnings("unchecked")
+						IPacket<H> packet = (IPacket<H>)packetToHandle[2];
+						
+						handlePacket(sender, packet);
+					}
 				}
 			} catch (InterruptedException e) {
 			}
