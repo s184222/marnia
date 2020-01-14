@@ -62,12 +62,13 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		camera.setZoomToCenter(true);
 		
 		//setRootComposition(new ConnectMenu(this));
-	
+
+
 		world = new ClientMarniaWorld();
 		
 		try {
 			// Sneak peak of world 1.
-			world.setWorldStorage(WorldLoader.loadFromFile("/worlds/world1.csv"));
+			world.setWorldStorage(WorldLoader.loadFromFile("/worlds/world3.csv"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
