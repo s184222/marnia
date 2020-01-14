@@ -141,6 +141,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		}
 	}
 	
+	private int timer = 0;
+	
 	@Override
 	public void tick() {
 		if (world != null) {
@@ -148,7 +150,10 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			
 			world.tick();
 			
-			networkManager.sendPacket(new S02PlayerPositionPacket(player.pos.x, player.pos.y), serverIdentifier);
+			if (timer++ > 4) {
+				timer = 0;
+				networkManager.sendPacket(new S02PlayerPositionPacket(player.pos.x, player.pos.y), serverIdentifier);
+			}
 		}
 		
 		if (lobbyArea != null)
