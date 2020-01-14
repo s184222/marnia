@@ -125,6 +125,8 @@ public abstract class GameplayNetworkManager<H extends INetworkHandler> {
 		return null;
 	}
 
+	public abstract NetworkSide getNetworkSide();
+	
 	@SuppressWarnings("unchecked")
 	public int getPacketType(IPacket<?> packet) {
 		return registry.getIdFromPacket((Class<? extends IPacket<?>>)packet.getClass());

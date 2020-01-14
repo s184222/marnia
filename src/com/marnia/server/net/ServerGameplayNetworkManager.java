@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.jspace.Space;
 
 import com.marnia.net.GameplayNetworkManager;
+import com.marnia.net.NetworkSide;
 import com.marnia.net.PacketRegistry;
 import com.marnia.net.packet.IPacket;
 
@@ -20,5 +21,10 @@ public class ServerGameplayNetworkManager extends GameplayNetworkManager<IServer
 		// TODO: add some check for client validity..
 		
 		packet.handlePacket(this);
+	}
+	
+	@Override
+	public NetworkSide getNetworkSide() {
+		return NetworkSide.SERVER;
 	}
 }

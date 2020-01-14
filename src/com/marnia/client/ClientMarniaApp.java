@@ -193,8 +193,6 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	
 	@Override
 	public void onLobbyEvent(int eventId) {
-		System.out.println("Lobby event: " + eventId);
-		
 		switch (eventId) {
 		case ClientLobbyArea.LOBBY_CLOSED_EVENT:
 			if (connected) {

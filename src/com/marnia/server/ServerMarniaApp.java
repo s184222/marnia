@@ -21,7 +21,7 @@ public class ServerMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private static final String ADDRESS = "192.168.1.12";
 	private static final String PORT = "42069";
 	
-	private static final long MAX_WAIT_TIME = 30L * 1000L;
+	private static final long MAX_WAIT_TIME = 5L * 1000L;
 	
 	private final UUID serverIdentifier;
 	private final List<GameplaySession> sessions;
@@ -55,6 +55,7 @@ public class ServerMarniaApp extends MarniaApp implements ILobbyEventListener {
 		spaceRepo.addGate(getGateAddress(ADDRESS, PORT));
 	
 		lobbyArea = new ServerLobbyArea(this, serverIdentifier, lobbySpace);
+		lobbyArea.addEventListener(this);
 		lobbyArea.start();
 		
 		networkManager = new ServerGameplayNetworkManager(gameplaySpace, serverIdentifier, registry);
@@ -71,13 +72,15 @@ public class ServerMarniaApp extends MarniaApp implements ILobbyEventListener {
 	
 	@Override
 	public void tick() {
+		lobbyArea.tick();
+		
 		if (shouldAttemptStartGame) {
 			long deltaTime = System.currentTimeMillis() - lastPlayerJoinTime;
 			if (deltaTime >= MAX_WAIT_TIME) {
 				shouldAttemptStartGame = false;
 				
 				GameplaySession session = lobbyArea.startGame();
-				if (session.startGame())
+				if (session != null && session.startGame())
 					sessions.add(session);
 			}
 		}

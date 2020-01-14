@@ -16,19 +16,29 @@ public class GameplaySenderThread<H extends INetworkHandler> extends GameplayNet
 	}
 
 	@Override
-	protected void processPacket() throws InterruptedException {
+	protected boolean processPacket() throws InterruptedException {
 		Object[] packetToSendInfo = localSpace.get(GameplayNetworkManager.PACKET_TO_SEND_MATCH, 
 				SpaceHelper.UUID_MATCH, GameplayNetworkManager.PACKET_CLASS_MATCH);
 	
+		if (packetToSendInfo == null)
+			return false;
+		
 		UUID receiverUUID = (UUID)packetToSendInfo[1];
 		IPacket<?> packetToSend = (IPacket<?>)packetToSendInfo[2];
 	
 		int packetType = manager.getPacketType(packetToSend);
 		if (packetType != -1) {
-			packetToSend.encodePacket(new PacketEncoder(identifier, receiverUUID, publicSpace));
-			publicSpace.put(receiverUUID, identifier, packetType);
+			try {
+				packetToSend.encodePacket(new PacketEncoder(receiverUUID, identifier, publicSpace));
+				publicSpace.put(receiverUUID, identifier, packetType);
+			} catch (InterruptedException e) {
+			} catch (Exception e) {
+				return false;
+			}
 		} else {
 			System.err.println("Attempted to send a non-registered packet " + packetToSend.getClass());
 		}
+		
+		return true;
 	}
 }

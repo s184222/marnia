@@ -30,7 +30,7 @@ public class C00WorldDataPacket implements IPacket<IClientNetworkHandler> {
 	
 	@Override
 	public void decodePacket(PacketDecoder decoder) throws InterruptedException, IOException {
-		decoder.fetchData(SpaceHelper.INT_MATCH, SpaceHelper.INT_MATCH, SpaceHelper.INT_ARRAY_MATCH);
+		decoder.fetchData(SpaceHelper.INTEGER_MATCH, SpaceHelper.INTEGER_MATCH, SpaceHelper.INT_ARRAY_MATCH);
 		width = decoder.getData(Integer.class, 0);
 		height = decoder.getData(Integer.class, 1);
 		tiles = decoder.getData(int[].class, 2);

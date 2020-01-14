@@ -20,7 +20,7 @@ public class PacketDecoder extends PacketCoder {
 		fields[0] = new ActualField(receiver);
 		fields[1] = new ActualField(sender);
 		System.arraycopy(packetFields, 0, fields, PACKET_OVERHEAD, packetFields.length);
-		data = space.getp(fields);
+		data = space.get(fields);
 	}
 	
 	public <T> T getData(Class<T> clazz, int index) throws IOException {

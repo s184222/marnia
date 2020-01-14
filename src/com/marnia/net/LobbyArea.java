@@ -103,7 +103,7 @@ public abstract class LobbyArea {
 	
 	public void tick() {
 		try {
-			List<Object[]> events = localLobbySpace.getAll(SpaceHelper.INT_MATCH);
+			List<Object[]> events = localLobbySpace.getAll(SpaceHelper.INTEGER_MATCH);
 			for (Object[] event : events)
 				dispatchEvent((Integer)event[0]);
 		} catch (InterruptedException e) {

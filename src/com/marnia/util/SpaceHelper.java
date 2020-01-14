@@ -8,7 +8,7 @@ import org.jspace.FormalField;
 public final class SpaceHelper {
 
 	public static final FormalField STRING_MATCH = new FormalField(String.class);
-	public static final FormalField INT_MATCH = new FormalField(Integer.class);
+	public static final FormalField INTEGER_MATCH = new FormalField(Integer.class);
 	public static final FormalField FLOAT_MATCH = new FormalField(Float.class);
 	public static final FormalField LONG_MATCH = new FormalField(Long.class);
 	public static final FormalField DOUBLE_MATCH = new FormalField(Double.class);

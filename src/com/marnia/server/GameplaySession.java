@@ -2,10 +2,8 @@ package com.marnia.server;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import com.marnia.client.net.IClientNetworkHandler;
-import com.marnia.client.net.packet.C01AddPlayersPacket;
 import com.marnia.client.net.packet.C00WorldDataPacket;
 import com.marnia.net.packet.IPacket;
 import com.marnia.server.net.ServerGameplayNetworkManager;
@@ -41,7 +39,7 @@ public class GameplaySession {
 		world.setWorldStorage(storage);
 
 		sendPacketToAll(new C00WorldDataPacket(storage));
-		sendPacketToAll(new C01AddPlayersPacket(profiles.toArray(new UUID[0])));
+//		sendPacketToAll(new C01AddPlayersPacket(profiles.toArray(new GameplayProfile[0])));
 
 		started = true;
 		

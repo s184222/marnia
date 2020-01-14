@@ -59,6 +59,8 @@ public class ServerLobbyThread extends LobbyThread {
 						sendResponseToPlayer(username, playerName);
 						sendResponseToPlayer(username, LobbyArea.PLAYER_JOINED_TYPE);
 					}
+					
+					dispatchLobbyEvent(LobbyArea.PLAYER_ADDED_EVENT);
 				}
 			} catch (InterruptedException e) {
 			}

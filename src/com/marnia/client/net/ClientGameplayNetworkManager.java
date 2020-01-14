@@ -9,6 +9,7 @@ import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.net.packet.C00WorldDataPacket;
 import com.marnia.net.GameplayNetworkManager;
+import com.marnia.net.NetworkSide;
 import com.marnia.net.PacketRegistry;
 import com.marnia.net.packet.IPacket;
 
@@ -41,5 +42,10 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	@Override
 	public void onAddPlayersPacket(C01AddPlayersPacket addPlayersPacket) {
 		
+	}
+	
+	@Override
+	public NetworkSide getNetworkSide() {
+		return NetworkSide.CLIENT;
 	}
 }
