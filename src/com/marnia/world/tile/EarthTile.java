@@ -21,7 +21,7 @@ public class EarthTile extends Tile {
 	public byte getSpriteData(MarniaWorld world, int xt, int yt) {
 		int sy = 0;
 		int sx = 0;
-
+		
 		if (world.getTile(xt, yt - 1) != Tile.AIR_TILE)
 			sy += 2;
 		if (world.getTile(xt, yt + 1) != Tile.AIR_TILE)
@@ -38,6 +38,8 @@ public class EarthTile extends Tile {
 			if (world.getTile(xt - 1, yt - 1) != Tile.AIR_TILE)
 				sx += 3;
 		}
+		
+		
 
 
 		return SpriteHelper.getSpriteDataAt(sx, sy);
