@@ -12,6 +12,7 @@ public class Tile {
 	public static final Tile AIR_TILE = new Tile(0);
 	public static final Tile SOLID_TILE = new EarthTile(1);
 	public static final Tile SMALL_GRASS_TILE = new SmallGrassTile(2);
+	public static final Tile WATER_TILE = new WaterTile(3);
 
 	private final int index;
 	
