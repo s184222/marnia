@@ -148,7 +148,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			
 			world.tick();
 			
-			networkManager.sendPacket(new S02PlayerPositionPacket(player.pos.x, player.pos.y), serverIdentifier);
+			networkManager.sendPacket(new S02PlayerPositionPacket(player.pos.x, player.pos.y));
 		}
 		
 		if (lobbyArea != null)

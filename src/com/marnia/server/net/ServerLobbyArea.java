@@ -32,9 +32,11 @@ public class ServerLobbyArea extends LobbyArea {
 			return null;
 		
 		List<GameplayProfile> profiles = new ArrayList<GameplayProfile>();
-		for (String name : players)
-			profiles.add(new GameplayProfile(name, app.getUniqueIdentifier()));
-
+		
+		UUID[] identifiers = app.createUniqueIdentifiers(players.size());
+		for (int i = 0; i < players.size(); i++)
+			profiles.add(new GameplayProfile(players.get(i), identifiers[i]));
+		
 		removePlayers(players);
 		
 		sendGameStartEvent(profiles);

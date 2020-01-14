@@ -26,6 +26,10 @@ public class ServerGameplayNetworkManager extends GameplayNetworkManager<IServer
 		sessions.put(identifier, session);
 	}
 	
+	public boolean hasPlayerIdentifier(UUID identifier) {
+		return sessions.get(identifier) != null;
+	}
+	
 	@Override
 	protected void handlePacket(UUID sender, IPacket<IServerNetworkHandler> packet) {
 		GameplaySession session = sessions.get(sender);

@@ -31,8 +31,20 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 
 	@Override
 	protected void handlePacket(UUID sender, IPacket<IClientNetworkHandler> packet) {
-		if (sender.equals(serverIdentifier))
+		if (serverIdentifier.equals(sender))
 			packet.handlePacket(sender, this);
+	}
+
+	public void sendPacket(IPacket<?> packet) {
+		sendPacket(packet, serverIdentifier);
+	}
+	
+	@Override
+	public void sendPacket(IPacket<?> packet, UUID receiver) {
+		if (!serverIdentifier.equals(receiver))
+			throw new IllegalArgumentException("Receiver must be server identifier!");
+		
+		super.sendPacket(packet, receiver);
 	}
 	
 	@Override
@@ -53,7 +65,7 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	}
 	
 	@Override
-	public void onEntityPosition(C03EntityPositionPacket positionPacket) {
+	public void onEntityPositionPacket(C03EntityPositionPacket positionPacket) {
 		Entity entity = app.getWorld().getEntity(positionPacket.getIdentifier());
 		if (entity != null)
 			entity.pos.set(positionPacket.getX(), positionPacket.getY());

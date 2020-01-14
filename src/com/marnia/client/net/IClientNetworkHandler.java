@@ -11,6 +11,6 @@ public interface IClientNetworkHandler extends INetworkHandler {
 
 	public void onAddPlayersPacket(C01AddPlayersPacket addPlayersPacket);
 	
-	public void onEntityPosition(C03EntityPositionPacket positionPacket);
+	public void onEntityPositionPacket(C03EntityPositionPacket positionPacket);
 
 }

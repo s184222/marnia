@@ -18,7 +18,7 @@ import com.marnia.server.net.ServerLobbyArea;
 
 public class ServerMarniaApp extends MarniaApp implements ILobbyEventListener {
 
-	private static final String ADDRESS = "192.168.1.12";
+	private static final String ADDRESS = "127.0.0.1";
 	private static final String PORT = "42069";
 	
 	private static final long MAX_WAIT_TIME = 5L * 1000L;
@@ -108,9 +108,25 @@ public class ServerMarniaApp extends MarniaApp implements ILobbyEventListener {
 		}
 	}
 	
-	public UUID getUniqueIdentifier() {
-		// // TODO: For now just a random uuid, but fix later.
-		return UUID.randomUUID();
+	public UUID[] createUniqueIdentifiers(int amount) {
+		UUID[] identifiers = new UUID[amount];
+		
+		for (int i = 0; i < amount; i++) {
+			UUID identifier;
+			int j;
+			do {
+				identifier = UUID.randomUUID();
+				
+				for (j = i - 1; j >= 0; j--) {
+					if (identifiers[j].equals(identifier))
+						break;
+				}
+			} while (j >= 0 || networkManager.hasPlayerIdentifier(identifier));
+		
+			identifiers[i] = identifier;
+		}
+		
+		return identifiers;
 	}
 
 	public ServerGameplayNetworkManager getNetworkManager() {

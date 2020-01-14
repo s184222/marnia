@@ -40,7 +40,7 @@ public class C03EntityPositionPacket implements IPacket<IClientNetworkHandler> {
 
 	@Override
 	public void handlePacket(UUID senderIdentifier, IClientNetworkHandler handler) {
-		handler.onEntityPosition(this);
+		handler.onEntityPositionPacket(this);
 	}
 	
 	public float getX() {
