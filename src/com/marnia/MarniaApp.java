@@ -5,6 +5,9 @@ import org.jspace.Space;
 
 import com.g4mesoft.Application;
 import com.g4mesoft.graphic.DisplayConfig;
+import com.marnia.client.net.packet.C01AddPlayersPacket;
+import com.marnia.client.net.packet.C00WorldDataPacket;
+import com.marnia.net.PacketRegistry;
 
 public abstract class MarniaApp extends Application {
 
@@ -15,6 +18,8 @@ public abstract class MarniaApp extends Application {
 	protected Space gameplaySpace;
 	protected Space localSpace;
 	
+	protected PacketRegistry registry;
+	
 	public MarniaApp(DisplayConfig config) {
 		super(config);
 	}
@@ -24,6 +29,10 @@ public abstract class MarniaApp extends Application {
 		super.init();
 
 		localSpace = new SequentialSpace();
+		
+		registry = new PacketRegistry();
+		registry.addPacketType(C01AddPlayersPacket.class, 1);
+		registry.addPacketType(C00WorldDataPacket.class, 0);
 		
 		setDebug(false);
 	}

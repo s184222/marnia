@@ -1,13 +1,17 @@
 package com.marnia.net;
 
+import java.util.UUID;
+
 import org.jspace.ActualField;
+import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 import org.jspace.Space;
 
 import com.marnia.net.packet.INetworkHandler;
 import com.marnia.net.packet.IPacket;
+import com.marnia.util.SpaceHelper;
 
-public class GameplayNetworkManager<H extends INetworkHandler> {
+public abstract class GameplayNetworkManager<H extends INetworkHandler> {
 
 	public static final int PACKET_TO_HANDLE = 0;
 	public static final int PACKET_TO_SEND = 1;
@@ -21,19 +25,120 @@ public class GameplayNetworkManager<H extends INetworkHandler> {
 	
 	public static final ActualField FIELD_RUNNING_MATCH = new ActualField(FIELD_RUNNING);
 	
-	private final Space publicGameplaySpace;
-	private final String identifier;
+	public static final FormalField PACKET_CLASS_MATCH = new FormalField(IPacket.class);
+	
+	private final UUID identifier;
+	private final PacketRegistry registry;
 
 	private final Space localGameplaySpace;
 	
-	public GameplayNetworkManager(Space publicGameplaySpace, String identifier) {
-		this.publicGameplaySpace = publicGameplaySpace;
+	private final GameplayReceiverThread<H> receiverThread;
+	private final GameplaySenderThread<H> senderThread;
+	
+	private boolean started;
+	private boolean running;
+	
+	public GameplayNetworkManager(Space publicGameplaySpace, UUID identifier, PacketRegistry registry) {
 		this.identifier = identifier;
+		this.registry = registry;
 
 		localGameplaySpace = new SequentialSpace();
+	
+		receiverThread = new GameplayReceiverThread<H>(this, publicGameplaySpace, localGameplaySpace, identifier);
+		senderThread = new GameplaySenderThread<H>(this, publicGameplaySpace, localGameplaySpace, identifier);
+	}
+	
+	public void start() {
+		if (started)
+			throw new IllegalStateException("Network manager has already been started!");
+		
+		started = true;
+		
+		try {
+			localGameplaySpace.put(RUNTIME_FIELDS, FIELD_RUNNING);
+		} catch (InterruptedException e) {
+		}
+		
+		receiverThread.start();
+		senderThread.start();
+		
+		running = true;
+	}
+	
+	public void stop() {
+		if (!running)
+			throw new IllegalStateException("Network manager is not running!");
+
+		running = false;
+		
+		try {
+			localGameplaySpace.getp(RUNTIME_FIELDS_MATCH, FIELD_RUNNING_MATCH);
+			
+			receiverThread.interrupt();
+			senderThread.interrupt();
+			
+			receiverThread.join();
+			senderThread.join();
+		} catch (InterruptedException e) {
+		}
+	}
+	
+	public void sendPacket(IPacket<?> packet, UUID receiver) {
+		try {
+			localGameplaySpace.put(PACKET_TO_SEND, receiver, packet);
+		} catch (InterruptedException e) {
+		}
+	}
+	
+	public void tick() {
+		if (running) {
+			try {
+				Object[] packetToHandle = localGameplaySpace.getp(PACKET_TO_HANDLE_MATCH, 
+						SpaceHelper.UUID_MATCH, PACKET_CLASS_MATCH);
+
+				if (packetToHandle != null) {
+					UUID sender = (UUID)packetToHandle[1];
+					@SuppressWarnings("unchecked")
+					IPacket<H> packet = (IPacket<H>)packetToHandle[2];
+					
+					handlePacket(sender, packet);
+				}
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+	
+	protected abstract void handlePacket(UUID sender, IPacket<H> packet);
+
+	@SuppressWarnings("unchecked")
+	public IPacket<H> getPacketByType(int packetType) {
+		Class<? extends IPacket<?>> packetClazz = registry.getPacketFromId(packetType);
+		if (packetClazz == null)
+			return null;
+		
+		try {
+			return (IPacket<H>)packetClazz.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			System.err.println("Unable to initialize " + packetClazz + " is the constructor private?");
+		}
+		
+		return null;
 	}
 
-	public IPacket<H> getPacketByType(int packetType) {
-		return null;
+	@SuppressWarnings("unchecked")
+	public int getPacketType(IPacket<?> packet) {
+		return registry.getIdFromPacket((Class<? extends IPacket<?>>)packet.getClass());
+	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+	
+	public boolean hasStarted() {
+		return started;
+	}
+	
+	public UUID getIdentifier() {
+		return identifier;
 	}
 }

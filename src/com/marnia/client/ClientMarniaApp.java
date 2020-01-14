@@ -2,6 +2,7 @@ package com.marnia.client;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
@@ -16,12 +17,14 @@ import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.input.key.KeyInput;
 import com.g4mesoft.input.key.KeySingleInput;
 import com.marnia.MarniaApp;
+import com.marnia.client.menu.ConnectMenu;
 import com.marnia.client.menu.LobbyMenu;
+import com.marnia.client.net.ClientGameplayNetworkManager;
 import com.marnia.client.net.ClientLobbyArea;
 import com.marnia.client.world.ClientMarniaWorld;
+import com.marnia.client.world.entity.ClientController;
 import com.marnia.client.world.entity.ClientPlayer;
 import com.marnia.net.ILobbyEventListener;
-import com.marnia.server.world.gen.WorldLoader;
 
 public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
@@ -35,9 +38,17 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private LobbyMenu lobbyMenu;
 	private boolean connected;
 	
+	private UUID serverIdentifier;
+	private UUID identifier;
+	private ClientGameplayNetworkManager networkManager;
+	
 	private ClientMarniaWorld world;
+	private ClientPlayer player;
 	private DynamicCamera camera;	
 	
+	private KeyInput leftKey;
+	private KeyInput rightKey;
+	private KeyInput jumpKey;
 	private KeyInput fullscreenKey;
 	
 	public ClientMarniaApp() {
@@ -55,27 +66,21 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		
 		lobbyArea = null;
 		lobbyMenu = null;
-		
+
 		camera = new DynamicCamera();
 		
 		// Ensure that camera does not move out of bounds.
 		camera.setZoomToCenter(true);
 		
-		//setRootComposition(new ConnectMenu(this));
-	
-		world = new ClientMarniaWorld();
-		
-		try {
-			// Sneak peak of world 1.
-			world.setWorldStorage(WorldLoader.loadFromFile("/worlds/world1.csv"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		leftKey = new KeySingleInput("left", KeyEvent.VK_A, KeyEvent.VK_LEFT);
+		rightKey = new KeySingleInput("right", KeyEvent.VK_D, KeyEvent.VK_RIGHT);
+		jumpKey = new KeySingleInput("jump", KeyEvent.VK_W, KeyEvent.VK_SPACE, KeyEvent.VK_UP);
 		fullscreenKey = new KeySingleInput("fullscreen", KeyEvent.VK_F11);
-		Application.addKey(fullscreenKey);
+		Application.addKeys(leftKey, rightKey, jumpKey, fullscreenKey);
 		
 		setMinimumFps(120.0);
+
+		setRootComposition(new ConnectMenu(this));
 	}
 	
 	@Override
@@ -108,7 +113,14 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			lobbyArea.stop();
 			lobbyArea = null;
 		}
+		
+		if (networkManager != null && networkManager.isRunning()) {
+			networkManager.stop();
+			networkManager = null;
+		}
 
+		identifier = serverIdentifier = null;
+		
 		closeRemoteSpace(lobbySpace);
 		closeRemoteSpace(gameplaySpace);
 		
@@ -137,6 +149,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		
 		if (lobbyArea != null)
 			lobbyArea.tick();
+		if (networkManager != null)
+			networkManager.tick();
 		
 		if (fullscreenKey.isClicked()) {
 			Display display = getDisplay();
@@ -163,7 +177,6 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		// TODO: listeners for this.
 		camera.setBounds(0.0f, -MAX_VIEW_ABOVE, world.getWidth(), world.getHeight());
 
-        ClientPlayer player = ((ClientMarniaWorld)world).getPlayer();
         camera.setCenterX((camera.getCenterX() + player.getCenterX()) * 0.5f);
         camera.setCenterY((camera.getCenterY() + player.getCenterY()) * 0.5f);
 	}
@@ -184,9 +197,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		switch (eventId) {
 		case ClientLobbyArea.LOBBY_CLOSED_EVENT:
 			if (connected) {
-				lobbyArea.stop();
-				lobbyArea = null;
-				lobbyMenu = null;
+				closeLobby();
 			} else {
 				// We have to reconnect.
 				disconnectFromServer();
@@ -201,9 +212,47 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			if (lobbyMenu != null)
 				lobbyMenu.setNames(lobbyArea.getPlayers());
 			break;
+		case ClientLobbyArea.GAME_STARTING_EVENT:
+			initGameplayNetwork(lobbyArea.getServerIdentifier(), lobbyArea.getClientIdentifier());
+			break;
 		}
 	}
+	
+	private void closeLobby() {
+		lobbyArea.stop();
+		lobbyArea = null;
+		lobbyMenu = null;
+		
+		setRootComposition(null);
+	}
+	
+	private void initGameplayNetwork(UUID serverIdentifier, UUID identifier) {
+		if (serverIdentifier == null || identifier == null)
+			throw new IllegalArgumentException("An identifier was null.");
+		
+		this.serverIdentifier = serverIdentifier;
+		this.identifier = identifier;
+		
+		networkManager = new ClientGameplayNetworkManager(this, serverIdentifier, gameplaySpace, identifier, registry);
+		networkManager.start();
+		
+		world = new ClientMarniaWorld();
+		player = new ClientPlayer(world, new ClientController(leftKey, rightKey, jumpKey));
+		world.addEntity(player);
+	}
+	
+	public UUID getServerIdentifier() {
+		return serverIdentifier;
+	}
+	
+	public UUID getIdentifier() {
+		return identifier;
+	}
 
+	public ClientMarniaWorld getWorld() {
+		return world;
+	}
+	
 	public static void main(String[] args) throws Exception {
 		Application.start(args, ClientMarniaApp.class);
 	}

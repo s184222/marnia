@@ -51,4 +51,8 @@ public class WorldStorage {
 	public int getHeight() {
 		return height;
 	}
+
+	public int[] getTiles() {
+		return tiles;
+	}
 }

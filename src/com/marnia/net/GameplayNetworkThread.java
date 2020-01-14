@@ -29,7 +29,16 @@ public abstract class GameplayNetworkThread<H extends INetworkHandler> extends T
 				GameplayNetworkManager.FIELD_RUNNING_MATCH) != null;
 	}
 
+	protected abstract void processPacket() throws InterruptedException;
+	
 	@Override
-	public abstract void run();
+	public final void run() {
+		try {
+			while (isGameplayRunning())
+				processPacket();
+		} catch (InterruptedException e) {
+			// We have been interrupted by the main thread.
+		}
+	}
 	
 }

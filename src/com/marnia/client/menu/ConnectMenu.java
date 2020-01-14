@@ -54,9 +54,13 @@ public class ConnectMenu extends LinearComposition implements IButtonComposition
 		setupFormRow(addressRow);
 		addressRow.addComposition(new LabelComposition("Address: "));
 		addressRow.addComposition(address);
-		addressRow.addComposition(new LabelComposition("Port: "));
-		addressRow.addComposition(port);
 		formLayout.addComposition(addressRow);
+
+		LinearComposition portRow = new LinearComposition(LinearComposition.HORIZONTAL_DIRECTION, 5);
+		setupFormRow(portRow);
+		portRow.addComposition(new LabelComposition("Port: "));
+		portRow.addComposition(port);
+		formLayout.addComposition(portRow);
 		
 		connect.setAlignment(ALIGN_CENTER);
 		connect.setBackground(null);

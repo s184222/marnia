@@ -4,7 +4,6 @@ import org.jspace.ActualField;
 import org.jspace.Space;
 
 import com.marnia.client.net.ClientLobbyArea;
-import com.marnia.util.SpaceHelper;
 
 public abstract class LobbyThread extends Thread {
 
@@ -21,9 +20,7 @@ public abstract class LobbyThread extends Thread {
 	}
 
 	protected void dispatchLobbyEvent(int event) throws InterruptedException {
-		localLobbySpace.get(SpaceHelper.LOCK_MATCH);
 		localLobbySpace.put(event);
-		localLobbySpace.put(SpaceHelper.LOCK);
 	}
 	
 	protected boolean isPlayerInLobby(String username) throws InterruptedException {

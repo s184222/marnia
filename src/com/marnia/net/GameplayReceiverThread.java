@@ -1,5 +1,6 @@
 package com.marnia.net;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.jspace.ActualField;
@@ -21,21 +22,20 @@ public class GameplayReceiverThread<H extends INetworkHandler> extends GameplayN
 	}
 
 	@Override
-	public void run() {
-		try {
-			while (isGameplayRunning()) {
-				Object[] packetTypeInfo = publicSpace.get(idMatch, SpaceHelper.UUID_MATCH, SpaceHelper.INTEGER_MATCH);
-				
-				UUID senderIdentifier = (UUID)packetTypeInfo[1];
-				int packetType = ((Integer)packetTypeInfo[2]).intValue();
-			
-				IPacket<H> packet = manager.getPacketByType(packetType);
+	public void processPacket() throws InterruptedException {
+		Object[] packetTypeInfo = publicSpace.get(idMatch, SpaceHelper.UUID_MATCH, SpaceHelper.INT_MATCH);
+		
+		UUID senderIdentifier = (UUID)packetTypeInfo[1];
+		int packetType = ((Integer)packetTypeInfo[2]).intValue();
+	
+		IPacket<H> packet = manager.getPacketByType(packetType);
+		if (packet != null) {
+			try {
 				packet.decodePacket(new PacketDecoder(identifier, senderIdentifier, publicSpace));
-				
 				localSpace.put(GameplayNetworkManager.PACKET_TO_HANDLE, senderIdentifier, packet);
+			} catch (IOException e) {
+				// Some error occurred whilst decoding...
 			}
-		} catch (InterruptedException e) {
-			// We have been interrupted by the main thread.
 		}
 	}
 }

@@ -4,14 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.g4mesoft.world.phys.AABB;
+import com.marnia.entity.Entity;
 import com.marnia.world.tile.Tile;
 
 public abstract class MarniaWorld {
 
 	protected final WorldStorage storage;
+
+	private final List<Entity> entities;
+	private final List<Entity> entitiesToRemove;
+	private final List<Entity> entitiesToAdd;
+	
+	private boolean updatingEntities;
 	
 	public MarniaWorld() {
 		storage = new WorldStorage(0, 0);
+	
+		entities = new ArrayList<Entity>();
+		entitiesToRemove = new ArrayList<Entity>();
+		entitiesToAdd = new ArrayList<Entity>();
 	}
 	
 	public void setTile(int xt, int yt, Tile tile) {
@@ -23,6 +34,31 @@ public abstract class MarniaWorld {
 	}
 	
 	public void tick() {
+		updatingEntities = true;
+		for (Entity entity : entities)
+			entity.tick();
+		updatingEntities = false;
+		
+		for (Entity entity : entitiesToAdd)
+			entities.add(entity);
+		for (Entity entity : entitiesToRemove)
+			entities.remove(entity);
+	}
+	
+	public void addEntity(Entity entity) {
+		if (updatingEntities) {
+			entitiesToAdd.add(entity);
+		} else {
+			entities.add(entity);
+		}
+	}
+	
+	public void removeEntity(Entity entity) {
+		if (updatingEntities) {
+			entitiesToRemove.add(entity);
+		} else {
+			entities.remove(entity);
+		}
 	}
 	
 	public List<AABB> getCollidingHitboxes(AABB hitbox) {

@@ -1,17 +1,15 @@
 package com.marnia.client.world;
 
-import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.g4mesoft.Application;
 import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
-import com.g4mesoft.input.key.KeyInput;
-import com.g4mesoft.input.key.KeySingleInput;
 import com.g4mesoft.math.MathUtils;
 import com.marnia.client.util.CameraUtil;
-import com.marnia.client.world.entity.ClientController;
-import com.marnia.client.world.entity.ClientPlayer;
+import com.marnia.client.world.entity.DrawableEntity;
+import com.marnia.entity.Entity;
 import com.marnia.world.MarniaWorld;
 import com.marnia.world.WorldStorage;
 import com.marnia.world.tile.Tile;
@@ -20,26 +18,29 @@ public class ClientMarniaWorld extends MarniaWorld {
 
 	public static final int TILE_SIZE = 32;
 	
-	private ClientPlayer player;
-	
 	private byte[] spriteData;
 	
-	public ClientMarniaWorld() {
-		KeyInput left = new KeySingleInput("left", KeyEvent.VK_A, KeyEvent.VK_LEFT);
-		KeyInput right = new KeySingleInput("right", KeyEvent.VK_D, KeyEvent.VK_RIGHT);
-		KeyInput jump = new KeySingleInput("jump", KeyEvent.VK_W, KeyEvent.VK_SPACE, KeyEvent.VK_UP);
-		Application.addKeys(left, right, jump);
-		
-		player = new ClientPlayer(this, new ClientController(left, right, jump));
+	private List<DrawableEntity> drawableEntities;
 	
+	public ClientMarniaWorld() {
 		spriteData = new byte[storage.getWidth() * storage.getHeight()];
+	
+		drawableEntities = new ArrayList<DrawableEntity>();
 	}
 	
 	@Override
 	public void tick() {
 		super.tick();
-		
-		player.tick();
+	}
+	
+	@Override
+	public void setTile(int xt, int yt, Tile tile) {
+		super.setTile(xt, yt, tile);
+	
+		if (storage.isInBounds(xt, yt)) {
+			byte data = getTile(xt, yt).getSpriteData(this, xt, yt);
+			spriteData[xt + yt * getWidth()] = data;
+		}
 	}
 	
 	@Override
@@ -56,10 +57,27 @@ public class ClientMarniaWorld extends MarniaWorld {
 				spriteData[index] = getTile(xt, yt).getSpriteData(this, xt, yt);
 	}
 	
+	@Override
+	public void addEntity(Entity entity) {
+		super.addEntity(entity);
+		
+		if (entity instanceof DrawableEntity)
+			drawableEntities.add((DrawableEntity)entity);
+	}
+	
+	@Override
+	public void removeEntity(Entity entity) {
+		super.removeEntity(entity);
+		
+		if (entity instanceof DrawableEntity)
+			drawableEntities.remove((DrawableEntity)entity);
+	}
+	
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
 		renderTiles(renderer, dt, camera);
 		
-		player.render(renderer, dt, camera);
+		for (DrawableEntity entity : drawableEntities)
+			entity.render(renderer, dt, camera);
 	}
 	
 	private void renderTiles(IRenderer2D renderer, float dt, DynamicCamera camera) {
@@ -84,9 +102,5 @@ public class ClientMarniaWorld extends MarniaWorld {
 				}
 			}
 		}
-	}
-	
-	public ClientPlayer getPlayer(){
-		return player;
 	}
 }

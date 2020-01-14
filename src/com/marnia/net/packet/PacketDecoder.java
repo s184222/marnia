@@ -1,5 +1,6 @@
 package com.marnia.net.packet;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.jspace.ActualField;
@@ -19,12 +20,12 @@ public class PacketDecoder extends PacketCoder {
 		fields[0] = new ActualField(receiver);
 		fields[1] = new ActualField(sender);
 		System.arraycopy(packetFields, 0, fields, PACKET_OVERHEAD, packetFields.length);
-		data = space.get(fields);
+		data = space.getp(fields);
 	}
 	
-	public <T> T getData(Class<T> clazz, int index) {
+	public <T> T getData(Class<T> clazz, int index) throws IOException {
 		if (data == null)
-			throw new IllegalStateException("Data has not been fetched!");
+			throw new IOException("Data has not been fetched!");
 		@SuppressWarnings("unchecked")
 		T value = (T)data[PACKET_OVERHEAD + index];
 		return value;

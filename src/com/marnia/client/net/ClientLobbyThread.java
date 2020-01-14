@@ -1,11 +1,14 @@
 package com.marnia.client.net;
 
+import java.util.UUID;
+
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.Space;
 
 import com.marnia.net.LobbyArea;
 import com.marnia.net.LobbyThread;
+import com.marnia.util.SpaceHelper;
 
 public class ClientLobbyThread extends LobbyThread {
 
@@ -54,6 +57,20 @@ public class ClientLobbyThread extends LobbyThread {
 						if (playerName == null)
 							break;
 						addPlayerToLobby(playerName);
+					} else if (serverEvent == LobbyArea.START_GAME_TYPE) {
+						Object[] resp = publicLobbySpace.get(LobbyArea.SERVER_RESPONSE_MATCH, 
+								usernameMatch, SpaceHelper.UUID_MATCH, SpaceHelper.UUID_MATCH);
+						
+						UUID serverIdentifier = (UUID)resp[2];
+						UUID clientIdentifier = (UUID)resp[3];
+
+						localLobbySpace.put(ClientLobbyArea.LOCAL_SERVER_IDENTIFIER_FIELD, serverIdentifier);
+						localLobbySpace.put(ClientLobbyArea.LOCAL_CLIENT_IDENTIFIER_FIELD, clientIdentifier);
+					
+						dispatchLobbyEvent(LobbyArea.GAME_STARTING_EVENT);
+						
+						// Close thread when game starts.
+						break;
 					} else {
 						System.out.println("Received invalid event from server: " + serverEvent);
 					}

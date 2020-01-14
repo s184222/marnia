@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jspace.ActualField;
+import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 import org.jspace.Space;
+import org.jspace.TemplateField;
 
 import com.marnia.util.SpaceHelper;
 
@@ -13,6 +15,7 @@ public abstract class LobbyArea {
 
 	public static final int LOBBY_CLOSED_EVENT = 0;
 	public static final int PLAYER_ADDED_EVENT = 1;
+	public static final int GAME_STARTING_EVENT = 2;
 	
 	public static final int CLIENT_REQUEST = 0;
 	public static final int SERVER_RESPONSE = 1;
@@ -23,6 +26,7 @@ public abstract class LobbyArea {
 	public static final int CONNECTION_FAILED_TYPE = 0;
 	public static final int CONNECTION_SUCCESSFUL_TYPE = 1;
 	public static final int PLAYER_JOINED_TYPE = 2;
+	public static final int START_GAME_TYPE = 3;
 	
 	public static final String RUNNING_FIELD = "running";
 	
@@ -50,13 +54,6 @@ public abstract class LobbyArea {
 		localLobbySpace = new SequentialSpace();
 
 		listeners = new ArrayList<ILobbyEventListener>();
-		
-		lobbyThread = null;
-		
-		try {
-			localLobbySpace.put(SpaceHelper.LOCK);
-		} catch (InterruptedException e) {
-		}
 	}
 	
 	public void start() {
@@ -73,6 +70,16 @@ public abstract class LobbyArea {
 	}
 	
 	protected abstract LobbyThread createLobbyThread();
+	
+	@SuppressWarnings("unchecked")
+	protected <T> T queryLocalField(TemplateField field, Class<T> clazz) {
+		Object[] fieldInfo = null;
+		try {
+			fieldInfo = localLobbySpace.queryp(field, new FormalField(clazz));
+		} catch (InterruptedException e) {
+		}
+		return (fieldInfo == null) ? null : (T)fieldInfo[1];
+	}
 	
 	public void stop() {
 		if (lobbyThread != null) {
@@ -96,11 +103,9 @@ public abstract class LobbyArea {
 	
 	public void tick() {
 		try {
-			localLobbySpace.get(SpaceHelper.LOCK_MATCH);
-			List<Object[]> events = localLobbySpace.getAll(SpaceHelper.INTEGER_MATCH);
+			List<Object[]> events = localLobbySpace.getAll(SpaceHelper.INT_MATCH);
 			for (Object[] event : events)
 				dispatchEvent((Integer)event[0]);
-			localLobbySpace.put(SpaceHelper.LOCK);
 		} catch (InterruptedException e) {
 		}
 	}
@@ -133,5 +138,14 @@ public abstract class LobbyArea {
 		}
 		
 		return result;
+	}
+	
+	protected void removePlayers(List<String> players) {
+		for (String name : players) {
+			try {
+				localLobbySpace.get(LOCAL_PLAYER_MATCH, new ActualField(name));
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 }

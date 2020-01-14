@@ -31,7 +31,7 @@ public class ServerLobbyThread extends LobbyThread {
 		
 		List<String> playerNames = new ArrayList<String>();
 		for (Object[] playerInfo : playerInfos)
-			playerNames.add((String)playerInfo[2]);
+			playerNames.add((String)playerInfo[1]);
 		return playerNames;
 	}
 	
