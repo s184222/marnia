@@ -7,7 +7,7 @@ import org.jspace.Space;
 import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.net.packet.C00WorldDataPacket;
 import com.marnia.client.net.packet.C01AddPlayersPacket;
-import com.marnia.client.net.packet.C04EntityPositionPacket;
+import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.world.entity.DrawableEntity;
 import com.marnia.entity.Entity;
@@ -53,18 +53,14 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	}
 	
 	@Override
-	public void onEntityPosition(C04EntityPositionPacket positionPacket) {
+	public void onEntityPosition(C03EntityPositionPacket positionPacket) {
 		Entity entity = app.getWorld().getEntity(positionPacket.getIdentifier());
 		if (entity != null)
 			entity.pos.set(positionPacket.getX(), positionPacket.getY());
 	}
-
-	
-	
 	
 	@Override
 	public NetworkSide getNetworkSide() {
 		return NetworkSide.CLIENT;
 	}
-
 }

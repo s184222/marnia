@@ -9,17 +9,17 @@ import com.marnia.net.packet.PacketDecoder;
 import com.marnia.net.packet.PacketEncoder;
 import com.marnia.util.SpaceHelper;
 
-public class C04EntityPositionPacket implements IPacket<IClientNetworkHandler> {
+public class C03EntityPositionPacket implements IPacket<IClientNetworkHandler> {
 	
 	private float x;
 	private float y;
 	
 	private UUID identifier;
 	
-	public C04EntityPositionPacket() {
+	public C03EntityPositionPacket() {
 	}
 	
-	public C04EntityPositionPacket(float x, float y, UUID identifier) {
+	public C03EntityPositionPacket(float x, float y, UUID identifier) {
 		this.x = x;
 		this.y = y;
 		this.identifier = identifier;

@@ -8,7 +8,7 @@ import java.util.UUID;
 import com.marnia.client.net.IClientNetworkHandler;
 import com.marnia.client.net.packet.C00WorldDataPacket;
 import com.marnia.client.net.packet.C01AddPlayersPacket;
-import com.marnia.client.net.packet.C04EntityPositionPacket;
+import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.entity.Entity;
 import com.marnia.net.packet.IPacket;
 import com.marnia.server.net.IServerNetworkHandler;
@@ -87,7 +87,7 @@ public class GameplaySession implements IServerNetworkHandler {
 		if (currentEntity != null)
 			currentEntity.pos.set(packet.getX(), packet.getY());
 		
-		sendPacketToAllExcept(new C04EntityPositionPacket(packet.getX(), 
+		sendPacketToAllExcept(new C03EntityPositionPacket(packet.getX(), 
 				packet.getY(), senderIdentifier), senderIdentifier);
 	}
 }

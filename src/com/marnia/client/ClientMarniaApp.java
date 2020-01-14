@@ -25,6 +25,7 @@ import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.client.world.entity.ClientController;
 import com.marnia.client.world.entity.ClientPlayer;
 import com.marnia.net.ILobbyEventListener;
+import com.marnia.server.net.packet.S02PlayerPositionPacket;
 
 public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
@@ -146,6 +147,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			updateCamera();
 			
 			world.tick();
+			
+			networkManager.sendPacket(new S02PlayerPositionPacket(player.pos.x, player.pos.y), serverIdentifier);
 		}
 		
 		if (lobbyArea != null)
