@@ -93,7 +93,7 @@ public class Entity {
 	
 	public boolean isInWater() {
 		int x1 = (int)hitbox.x1;
-		int y1 = (int)hitbox.y1;
+		int y1 = (int)(hitbox.y1 - 0.1f);
 		
 		for (int xt = (int)hitbox.x0; xt <= x1; xt++) {
 			for (int yt = (int)hitbox.y0; yt <= y1; yt++) {

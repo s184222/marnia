@@ -13,6 +13,8 @@ public class ClientController implements IController {
 
 	private static final int MAX_JUMP_TIME = 8;
 
+	private static final float WATER_FRICTION_MULTIPLIER = 0.6f;
+
 	private final KeyInput left;
 	private final KeyInput right;
 	private final KeyInput jump;
@@ -50,13 +52,23 @@ public class ClientController implements IController {
 			jumpTimer = 0;
 		}
 
+		boolean inWater = entity.isInWater();
+
 		if (jumpTimer > 0) {
 			jumpTimer--;
 		} else {
-			entity.vel.y += 0.25f;
+			entity.vel.y += inWater ? 0.1f : 0.25f;
 		}
 
-		entity.vel.mul(moving || !entity.isOnGround() ? 0.8f : 0.6f, 0.8f);
+		float frictionX = (moving || !entity.isOnGround()) ? 0.8f : 0.6f;
+		float frictionY = 0.8f;
+
+		if (inWater) {
+			frictionX *= WATER_FRICTION_MULTIPLIER;
+			frictionY *= WATER_FRICTION_MULTIPLIER;
+		}
+
+		entity.vel.mul(frictionX, frictionY);
 		entity.move();
 		
 		ClientMarniaApp app = ((ClientMarniaWorld)entity.world).getMarniaApp();
