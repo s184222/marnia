@@ -10,11 +10,10 @@ public class TileSheet {
 	private int tileHeight;
 	
 	public TileSheet(Texture texture, int tileWidth, int tileHeight) throws IllegalArgumentException {
-		this.texture = texture;
-		// TODO: add validation of texture width and height (must be a multiple of tileWidth and tileHeight.
-		if(texture.getWidth() % tileWidth != 0 || texture.getHeight() % tileHeight != 0) {
+		if(texture.getWidth() % tileWidth != 0 || texture.getHeight() % tileHeight != 0)
 			throw new IllegalArgumentException("Sheet size not multiple of 128");
-		}
+
+		this.texture = texture;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 	}
