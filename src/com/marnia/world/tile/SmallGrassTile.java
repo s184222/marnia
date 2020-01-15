@@ -18,7 +18,7 @@ public class SmallGrassTile extends Tile {
 	}
 	
 	@Override
-	public byte getSpriteData(MarniaWorld world, int xt, int yt) {
+	public int getSpriteData(MarniaWorld world, int xt, int yt) {
 		int sx = 0;
 		
 		if (world.getTile(xt + 1, yt) != Tile.AIR_TILE) 

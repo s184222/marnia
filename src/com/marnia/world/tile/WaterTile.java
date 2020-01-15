@@ -10,7 +10,7 @@ public class WaterTile extends Tile {
 	}
 
 	@Override
-	public byte getSpriteData(MarniaWorld world, int xt, int yt) {
+	public int getSpriteData(MarniaWorld world, int xt, int yt) {
 		int sy = (world.getTile(xt, yt -1) != Tile.AIR_TILE) ? 5 : 4;
 		return SpriteHelper.getSpriteDataAt(4, sy);
 	}

@@ -36,7 +36,7 @@ public class GameplaySession implements IServerNetworkHandler {
 	public boolean startGame() {
 		WorldStorage storage = null;
 		try {
-			storage = WorldLoader.loadFromFile("/worlds/world2.csv");
+			storage = WorldLoader.loadFromFile("/worlds/world1.csv");
 		} catch (IOException e) {
 		}
 		
@@ -80,7 +80,7 @@ public class GameplaySession implements IServerNetworkHandler {
 	public void onPlayerPosition(UUID senderIdentifier, S02PlayerPositionPacket packet) {
 		Entity currentEntity = world.getEntity(senderIdentifier);
 		if (currentEntity != null)
-			currentEntity.pos.set(packet.getX(), packet.getY());
+			currentEntity.moveToImmediately(packet.getX(), packet.getY());
 		
 		sendPacketToAllExcept(new C03EntityPositionPacket(packet.getX(), 
 				packet.getY(), senderIdentifier), senderIdentifier);

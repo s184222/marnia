@@ -18,7 +18,7 @@ public class EarthTile extends Tile {
 	}
 	
 	@Override
-	public byte getSpriteData(MarniaWorld world, int xt, int yt) {
+	public int getSpriteData(MarniaWorld world, int xt, int yt) {
 		int sy = 0;
 		int sx = 0;
 		

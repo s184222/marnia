@@ -23,4 +23,9 @@ public class ServerMarniaWorld extends MarniaWorld {
 	public GameplaySession getSession() {
 		return session;
 	}
+
+	@Override
+	public boolean isServer() {
+		return true;
+	}
 }

@@ -86,8 +86,8 @@ public class Entity {
 	}
 	
 	public void moveToImmediately(float x, float y) {
-		vel.set(x - hitbox.x0, y - hitbox.y0);
-		hitbox.move(vel.x, vel.y);
+		vel.set(0.0f);
+		hitbox.move(x - hitbox.x0, y - hitbox.y0);
 		pos.set(hitbox.x0, hitbox.y0);
 	}
 	

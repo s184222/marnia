@@ -61,9 +61,6 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 		Entity entity = EntityRegistry.getInstance().getEntity(addEntityPacket.getEntityId(), 
 				world, addEntityPacket.getEntityContainer());
 		
-		System.out.println(entity);
-		System.out.println(addEntityPacket.getEntityId());
-		
 		if (entity != null) {
 			Entity currentEntity = world.getEntity(entity.identifier);
 			if (currentEntity != null)
@@ -83,7 +80,7 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	public void onEntityPositionPacket(C03EntityPositionPacket positionPacket) {
 		Entity entity = app.getWorld().getEntity(positionPacket.getIdentifier());
 		if (entity != null)
-			entity.pos.set(positionPacket.getX(), positionPacket.getY());
+			entity.moveToImmediately(positionPacket.getX(), positionPacket.getY());
 	}
 	
 	@Override

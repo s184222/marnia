@@ -8,7 +8,15 @@ public final class SpriteHelper {
 	private SpriteHelper() {
 	}
 	
-	public static byte getSpriteDataAt(int sx, int sy) {
-		return (byte)(sx + TILESHEET_WIDTH * sy);
+	public static int getSpriteDataAt(int sx, int sy) {
+		return ((sx & 0xFFFF) << 16) | (sy & 0xFFFF);
+	}
+
+	public static int getSpriteX(int data) {
+		return (data >> 16) & 0xFFFF;
+	}
+
+	public static int getSpriteY(int data) {
+		return data & 0xFFFF;
 	}
 }

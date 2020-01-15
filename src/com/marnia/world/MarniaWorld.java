@@ -92,4 +92,7 @@ public abstract class MarniaWorld {
 	public void setWorldStorage(WorldStorage storage) {
 		this.storage.copy(storage);
 	}
+
+	public abstract boolean isServer();
+
 }

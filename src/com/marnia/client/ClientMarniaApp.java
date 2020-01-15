@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.marnia.graphics.TextureLoader;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
 
@@ -52,6 +53,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private KeyInput rightKey;
 	private KeyInput jumpKey;
 	private KeyInput fullscreenKey;
+
+	private TextureLoader textureLoader;
 	
 	public ClientMarniaApp() {
 		super(new DisplayConfig(TITLE, 720, 454, 100, 100, 
@@ -80,7 +83,17 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		fullscreenKey = new KeySingleInput("fullscreen", KeyEvent.VK_F11);
 
 		Application.addKeys(leftKey, rightKey, jumpKey, fullscreenKey);
-		
+
+		textureLoader = new TextureLoader();
+
+		try {
+			textureLoader.loadTextures();
+		} catch (IOException e) {
+			e.printStackTrace();
+			stopRunning();
+			return;
+		}
+
 		setMinimumFps(120.0);
 
 		setRootComposition(new ConnectMenu(this));
@@ -269,6 +282,10 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	
 	public IController getClientController() {
 		return new ClientController(leftKey, rightKey, jumpKey);
+	}
+
+	public TextureLoader getTextureLoader() {
+		return textureLoader;
 	}
 	
 	public static void main(String[] args) throws Exception {
