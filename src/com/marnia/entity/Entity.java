@@ -103,8 +103,6 @@ public class Entity {
 		}
 		return false;
 	}
-		
-	
 	
 	public float getCenterX() {
 		return (hitbox.x0 + hitbox.x1)/2;
