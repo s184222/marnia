@@ -121,8 +121,8 @@ public class ClientMarniaWorld extends MarniaWorld {
 		float yOffset = camera.getYOffset(dt);
 
 		float scale = camera.getScale(dt);
-		float viewWidth = camera.getScreenWidth() * scale;
-		float viewHeight = camera.getScreenWidth() * scale;
+		float viewWidth = camera.getScreenWidth() / scale;
+		float viewHeight = camera.getScreenHeight() / scale;
 
 		int x0 = MathUtils.max(0, (int)xOffset);
 		int y0 = MathUtils.max(0, (int)yOffset);
