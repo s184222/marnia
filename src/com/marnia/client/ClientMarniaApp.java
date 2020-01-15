@@ -17,15 +17,15 @@ import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.input.key.KeyInput;
 import com.g4mesoft.input.key.KeySingleInput;
 import com.marnia.MarniaApp;
+import com.marnia.client.entity.ClientController;
 import com.marnia.client.menu.ConnectMenu;
 import com.marnia.client.menu.LobbyMenu;
 import com.marnia.client.net.ClientGameplayNetworkManager;
 import com.marnia.client.net.ClientLobbyArea;
 import com.marnia.client.world.ClientMarniaWorld;
-import com.marnia.client.world.entity.ClientController;
-import com.marnia.client.world.entity.ClientPlayer;
+import com.marnia.entity.IController;
+import com.marnia.entity.PlayerEntity;
 import com.marnia.net.ILobbyEventListener;
-import com.marnia.server.net.packet.S02PlayerPositionPacket;
 
 public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
@@ -44,8 +44,9 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private ClientGameplayNetworkManager networkManager;
 	
 	private ClientMarniaWorld world;
-	private ClientPlayer player;
 	private DynamicCamera camera;	
+	
+	private PlayerEntity player;
 	
 	private KeyInput leftKey;
 	private KeyInput rightKey;
@@ -147,8 +148,6 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			updateCamera();
 			
 			world.tick();
-			
-			networkManager.sendPacket(new S02PlayerPositionPacket(player.pos.x, player.pos.y));
 		}
 		
 		if (lobbyArea != null)
@@ -180,9 +179,6 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 		// TODO: listeners for this.
 		camera.setBounds(0.0f, -MAX_VIEW_ABOVE, world.getWidth(), world.getHeight());
-
-        camera.setCenterX((camera.getCenterX() + player.getCenterX()) * 0.5f);
-        camera.setCenterY((camera.getCenterY() + player.getCenterY()) * 0.5f);
 	}
 	
 	@Override
@@ -238,9 +234,17 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		networkManager = new ClientGameplayNetworkManager(this, serverIdentifier, gameplaySpace, identifier, registry);
 		networkManager.start();
 		
-		world = new ClientMarniaWorld();
-		player = new ClientPlayer(world, identifier, new ClientController(leftKey, rightKey, jumpKey));
-		world.addEntity(player);
+		world = new ClientMarniaWorld(this);
+	
+		player = null;
+	}
+
+	public void setPlayerEntity(PlayerEntity player) {
+		this.player = player;
+	}
+	
+	public PlayerEntity getPlayer() {
+		return player;
 	}
 	
 	public UUID getServerIdentifier() {
@@ -253,6 +257,18 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 	public ClientMarniaWorld getWorld() {
 		return world;
+	}
+	
+	public ClientGameplayNetworkManager getNetworkManager() {
+		return networkManager;
+	}
+	
+	public DynamicCamera getCamera() {
+		return camera;
+	}
+	
+	public IController getClientController() {
+		return new ClientController(leftKey, rightKey, jumpKey);
 	}
 	
 	public static void main(String[] args) throws Exception {

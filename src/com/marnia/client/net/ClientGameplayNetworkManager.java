@@ -6,11 +6,12 @@ import org.jspace.Space;
 
 import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.net.packet.C00WorldDataPacket;
-import com.marnia.client.net.packet.C01AddPlayersPacket;
+import com.marnia.client.net.packet.C01AddEntityPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.client.world.ClientMarniaWorld;
-import com.marnia.client.world.entity.DrawableEntity;
 import com.marnia.entity.Entity;
+import com.marnia.entity.PlayerEntity;
+import com.marnia.entity.registry.EntityRegistry;
 import com.marnia.net.GameplayNetworkManager;
 import com.marnia.net.NetworkSide;
 import com.marnia.net.PacketRegistry;
@@ -55,12 +56,26 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	}
 	
 	@Override
-	public void onAddPlayersPacket(C01AddPlayersPacket addPlayersPacket) {
+	public void onAddEntityPacket(C01AddEntityPacket addEntityPacket) {
 		ClientMarniaWorld world = app.getWorld();
+		Entity entity = EntityRegistry.getInstance().getEntity(addEntityPacket.getEntityId(), 
+				world, addEntityPacket.getEntityContainer());
 		
-		for (UUID identifier : addPlayersPacket.getIdentifiers()) {
-			if (!getIdentifier().equals(identifier))
-				world.addEntity(new DrawableEntity(world, identifier));
+		System.out.println(entity);
+		System.out.println(addEntityPacket.getEntityId());
+		
+		if (entity != null) {
+			Entity currentEntity = world.getEntity(entity.identifier);
+			if (currentEntity != null)
+				world.removeEntity(currentEntity);
+			
+			// This is our player entity.
+			if (entity instanceof PlayerEntity && entity.identifier.equals(app.getIdentifier())) {
+				entity.setController(app.getClientController());
+				app.setPlayerEntity((PlayerEntity)entity);
+			}
+			
+			world.addEntity(entity);
 		}
 	}
 	

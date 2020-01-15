@@ -1,14 +1,12 @@
 package com.marnia.client.world;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.MathUtils;
+import com.g4mesoft.world.phys.AABB;
+import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.util.CameraUtil;
-import com.marnia.client.world.entity.DrawableEntity;
 import com.marnia.entity.Entity;
 import com.marnia.world.MarniaWorld;
 import com.marnia.world.WorldStorage;
@@ -18,14 +16,14 @@ public class ClientMarniaWorld extends MarniaWorld {
 
 	public static final int TILE_SIZE = 32;
 	
+	private final ClientMarniaApp app;
+	
 	private byte[] spriteData;
 	
-	private List<DrawableEntity> drawableEntities;
-	
-	public ClientMarniaWorld() {
+	public ClientMarniaWorld(ClientMarniaApp app) {
+		this.app = app;
+		
 		spriteData = new byte[storage.getWidth() * storage.getHeight()];
-	
-		drawableEntities = new ArrayList<DrawableEntity>();
 	}
 	
 	@Override
@@ -57,27 +55,23 @@ public class ClientMarniaWorld extends MarniaWorld {
 				spriteData[index++] = getTile(xt, yt).getSpriteData(this, xt, yt);
 	}
 	
-	@Override
-	public void addEntity(Entity entity) {
-		super.addEntity(entity);
-		
-		if (entity instanceof DrawableEntity)
-			drawableEntities.add((DrawableEntity)entity);
-	}
-	
-	@Override
-	public void removeEntity(Entity entity) {
-		super.removeEntity(entity);
-		
-		if (entity instanceof DrawableEntity)
-			drawableEntities.remove((DrawableEntity)entity);
-	}
-	
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
 		renderTiles(renderer, dt, camera);
 		
-		for (DrawableEntity entity : drawableEntities)
-			entity.render(renderer, dt, camera);
+		for (Entity entity : entities) {
+			float ix = entity.prevPos.x + (entity.pos.x - entity.prevPos.x) * dt;
+			float iy = entity.prevPos.y + (entity.pos.y - entity.prevPos.y) * dt;
+
+			AABB hitbox = entity.getHitbox();
+			
+			int xp = CameraUtil.getPixelX(ix, camera, dt);
+			int yp = CameraUtil.getPixelY(iy, camera, dt);
+			int w = CameraUtil.getPixelX(ix + hitbox.x1 - hitbox.x0, camera, dt) - xp;
+			int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
+			
+			renderer.setColor(GColor.HOT_PINK);
+			renderer.fillRect(xp, yp, w, h);
+		}
 	}
 	
 	private void renderTiles(IRenderer2D renderer, float dt, DynamicCamera camera) {
@@ -102,5 +96,9 @@ public class ClientMarniaWorld extends MarniaWorld {
 				}
 			}
 		}
+	}
+	
+	public ClientMarniaApp getMarniaApp() {
+		return app;
 	}
 }

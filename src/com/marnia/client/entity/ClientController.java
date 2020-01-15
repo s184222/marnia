@@ -1,8 +1,13 @@
-package com.marnia.client.world.entity;
+package com.marnia.client.entity;
 
+import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.input.key.KeyInput;
+import com.marnia.client.ClientMarniaApp;
+import com.marnia.client.net.ClientGameplayNetworkManager;
+import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.Entity;
 import com.marnia.entity.IController;
+import com.marnia.server.net.packet.S02PlayerPositionPacket;
 
 public class ClientController implements IController {
 
@@ -51,8 +56,16 @@ public class ClientController implements IController {
 			entity.vel.y += 0.25f;
 		}
 
-
 		entity.vel.mul(moving || !entity.isOnGround() ? 0.8f : 0.6f, 0.8f);
 		entity.move();
+		
+		ClientMarniaApp app = ((ClientMarniaWorld)entity.world).getMarniaApp();
+		
+		DynamicCamera camera = app.getCamera();
+        camera.setCenterX((camera.getCenterX() + entity.getCenterX()) * 0.5f);
+        camera.setCenterY((camera.getCenterY() + entity.getCenterY()) * 0.5f);
+
+        ClientGameplayNetworkManager networkManager = app.getNetworkManager();
+        networkManager.sendPacket(new S02PlayerPositionPacket(entity.pos.x, entity.pos.y));
 	}
 }

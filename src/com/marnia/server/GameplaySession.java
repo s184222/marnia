@@ -7,9 +7,9 @@ import java.util.UUID;
 
 import com.marnia.client.net.IClientNetworkHandler;
 import com.marnia.client.net.packet.C00WorldDataPacket;
-import com.marnia.client.net.packet.C01AddPlayersPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.entity.Entity;
+import com.marnia.entity.PlayerEntity;
 import com.marnia.net.packet.IPacket;
 import com.marnia.server.net.IServerNetworkHandler;
 import com.marnia.server.net.ServerGameplayNetworkManager;
@@ -30,7 +30,7 @@ public class GameplaySession implements IServerNetworkHandler {
 		this.networkManager = networkManager;
 		this.profiles = profiles;
 		
-		world = new ServerMarniaWorld();
+		world = new ServerMarniaWorld(this);
 	}
 	
 	public boolean startGame() {
@@ -46,16 +46,11 @@ public class GameplaySession implements IServerNetworkHandler {
 		world.setWorldStorage(storage);
 
 		sendPacketToAll(new C00WorldDataPacket(storage));
-		
-		for (GameplayProfile profile : profiles)
-			world.addEntity(new Entity(world, profile.getIdentifier()));
-		
-		UUID[] identifiers = new UUID[profiles.size()];
-		for (int i = 0; i < profiles.size(); i++)
-			identifiers[i] = profiles.get(i).getIdentifier();
-		sendPacketToAll(new C01AddPlayersPacket(identifiers));
 
 		started = true;
+		
+		for (GameplayProfile profile : profiles)
+			world.addEntity(new PlayerEntity(world, profile.getIdentifier()));
 		
 		return true;
 	}
@@ -65,12 +60,12 @@ public class GameplaySession implements IServerNetworkHandler {
 			world.tick();
 	}
 	
-	private void sendPacketToAll(IPacket<IClientNetworkHandler> packet) {
+	public void sendPacketToAll(IPacket<IClientNetworkHandler> packet) {
 		for (GameplayProfile profile : profiles)
 			networkManager.sendPacket(packet, profile.getIdentifier());
 	}
 	
-	private void sendPacketToAllExcept(IPacket<IClientNetworkHandler> packet, UUID excludeIdentifier) {
+	public void sendPacketToAllExcept(IPacket<IClientNetworkHandler> packet, UUID excludeIdentifier) {
 		for (GameplayProfile profile : profiles) {
 			if(!profile.getIdentifier().equals(excludeIdentifier))
 				networkManager.sendPacket(packet, profile.getIdentifier());

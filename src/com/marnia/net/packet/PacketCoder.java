@@ -6,7 +6,9 @@ import org.jspace.Space;
 
 public abstract class PacketCoder {
 
-	protected static final int PACKET_OVERHEAD = 2;
+	protected static final int PACKET_OVERHEAD = 3;
+	
+	protected static final int UNIQUE_PACKET_OVERHEAD = 0xFF00FF;
 	
 	protected final UUID receiver;
 	protected final UUID sender;

@@ -12,7 +12,7 @@ public abstract class MarniaWorld {
 
 	protected final WorldStorage storage;
 
-	private final List<Entity> entities;
+	protected final List<Entity> entities;
 	private final List<Entity> entitiesToRemove;
 	private final List<Entity> entitiesToAdd;
 	

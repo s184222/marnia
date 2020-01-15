@@ -28,6 +28,7 @@ public class GameplayReceiverThread<H extends INetworkHandler> extends GameplayN
 				localSpace.put(GameplayNetworkManager.PACKET_TO_HANDLE, senderIdentifier, packet);
 			} catch (Exception e) {
 				// Some error occurred whilst decoding...
+				e.printStackTrace();
 			}
 		}
 	}

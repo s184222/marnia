@@ -102,8 +102,14 @@ public abstract class GameplayNetworkManager<H extends INetworkHandler> {
 						UUID sender = (UUID)packetToHandle[1];
 						@SuppressWarnings("unchecked")
 						IPacket<H> packet = (IPacket<H>)packetToHandle[2];
-						
-						handlePacket(sender, packet);
+
+						try {	
+							handlePacket(sender, packet);
+						} catch (Exception e) {
+							e.printStackTrace();
+	
+							System.err.println("Error when handling packet: " + packet.getClass());
+						}
 					}
 				}
 			} catch (InterruptedException e) {

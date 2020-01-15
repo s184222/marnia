@@ -9,6 +9,8 @@ import org.jspace.TemplateField;
 
 public class PacketDecoder extends PacketCoder {
 
+	private static final ActualField UNIQUE_PACKET_OVERHEAD_MATCH = new ActualField(UNIQUE_PACKET_OVERHEAD);
+	
 	private Object[] data;
 	
 	public PacketDecoder(UUID receiver, UUID sender, Space space) {
@@ -19,6 +21,7 @@ public class PacketDecoder extends PacketCoder {
 		TemplateField[] fields = new TemplateField[PACKET_OVERHEAD + packetFields.length];
 		fields[0] = new ActualField(receiver);
 		fields[1] = new ActualField(sender);
+		fields[2] = UNIQUE_PACKET_OVERHEAD_MATCH;
 		System.arraycopy(packetFields, 0, fields, PACKET_OVERHEAD, packetFields.length);
 		data = space.get(fields);
 	}

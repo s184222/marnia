@@ -6,7 +6,7 @@ import org.jspace.Space;
 import com.g4mesoft.Application;
 import com.g4mesoft.graphic.DisplayConfig;
 import com.marnia.client.net.packet.C00WorldDataPacket;
-import com.marnia.client.net.packet.C01AddPlayersPacket;
+import com.marnia.client.net.packet.C01AddEntityPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.net.PacketRegistry;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
@@ -34,7 +34,7 @@ public abstract class MarniaApp extends Application {
 		
 		registry = new PacketRegistry();
 		registry.addPacketType(C00WorldDataPacket.class, 0);
-		registry.addPacketType(C01AddPlayersPacket.class, 1);
+		registry.addPacketType(C01AddEntityPacket.class, 1);
 		registry.addPacketType(S02PlayerPositionPacket.class, 2);
 		registry.addPacketType(C03EntityPositionPacket.class, 3);
 		

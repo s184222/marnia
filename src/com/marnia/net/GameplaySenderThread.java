@@ -23,6 +23,7 @@ public class GameplaySenderThread<H extends INetworkHandler> extends GameplayNet
 				publicSpace.put(receiverUUID, identifier, packetType);
 			} catch (InterruptedException e) {
 			} catch (Exception e) {
+				e.printStackTrace();
 				return false;
 			}
 		} else {

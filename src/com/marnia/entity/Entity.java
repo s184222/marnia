@@ -10,10 +10,13 @@ import com.marnia.world.MarniaWorld;
 
 public class Entity {
 
+	public static final IController DUMMY_CONTROLLER = new DummyController();
+	
 	public final MarniaWorld world;
 	public final UUID identifier;
+	private IController controller;
 	
-	protected final Vec2f prevPos;
+	public final Vec2f prevPos;
 	public final Vec2f pos;
 
 	public final Vec2f vel;
@@ -23,11 +26,16 @@ public class Entity {
 	protected boolean onGround;
 	protected boolean hitHorizontal;
 	protected boolean hitVertical;
-	
+
 	public Entity(MarniaWorld world, UUID identifier) {
+		this(world, identifier, DUMMY_CONTROLLER);
+	}
+	
+	public Entity(MarniaWorld world, UUID identifier, IController controller) {
 		this.world = world;
 		this.identifier = identifier;
-
+		this.controller = controller;
+		
 		pos = new Vec2f();
 		prevPos = new Vec2f();
 	
@@ -38,6 +46,14 @@ public class Entity {
 	
 	public void tick() {
 		prevPos.set(pos);
+		controller.update(this);
+	}
+	
+	public void setController(IController controller) {
+		if (controller == null)
+			throw new IllegalArgumentException("Controller can not be null");
+		
+		this.controller = controller;
 	}
 	
 	public void move() {
@@ -68,6 +84,12 @@ public class Entity {
 			vel.y = 0.0f;
 	}
 	
+	public void moveToImmediately(float x, float y) {
+		vel.set(x - hitbox.x0, y - hitbox.y0);
+		hitbox.move(vel.x, vel.y);
+		pos.set(hitbox.x0, hitbox.y0);
+	}
+	
 	public float getCenterX() {
 		return (hitbox.x0 + hitbox.x1)/2;
 	}
@@ -86,5 +108,9 @@ public class Entity {
 
 	public boolean hitVerticalHitbox() {
 		return hitVertical;
+	}
+	
+	public AABB getHitbox() {
+		return hitbox;
 	}
 }

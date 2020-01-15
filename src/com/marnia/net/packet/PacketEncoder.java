@@ -14,6 +14,7 @@ public class PacketEncoder extends PacketCoder {
 		Object[] data = new Object[PACKET_OVERHEAD + packetData.length];
 		data[0] = receiver;
 		data[1] = sender;
+		data[2] = UNIQUE_PACKET_OVERHEAD;
 		System.arraycopy(packetData, 0, data, PACKET_OVERHEAD, packetData.length);
 		space.put(data);
 	}
