@@ -1,22 +1,26 @@
 package com.marnia.graphics;
 
-import java.awt.Graphics;
 import com.g4mesoft.graphic.IRenderer2D;
 
 public class TileSheet {
 	
 	private Texture texture;
+	
 	private int tileWidth;
 	private int tileHeight;
 	
-	public TileSheet(Texture texture, int width, int height) {
+	public TileSheet(Texture texture, int tileWidth, int tileHeight) throws IllegalArgumentException {
 		this.texture = texture;
-		this.tileWidth = width;
-		this.tileHeight = height;
+		// TODO: add validation of texture width and height (must be a multiple of tileWidth and tileHeight.
+		if(texture.getWidth() % tileWidth != 0 || texture.getHeight() % tileHeight != 0) {
+			throw new IllegalArgumentException("Sheet size not multiple of 128");
+		}
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
 	}
 	
-	public void render(IRenderer2D renderer, int sx, int sy, int w, int h, int xs, int ys, int ws, int hs) {
-		texture.render(renderer, sx, sy, sx + w, sy + h, sx, sy, ws + xs, hs + ys);
+	public void render(IRenderer2D renderer, int xp, int yp, int w, int h, int sx, int sy) {
+		texture.render(renderer, xp, yp , w, h, sx * tileWidth, sy * tileHeight, tileWidth, tileHeight);
 	}
 	
 	public int getWidth() {
