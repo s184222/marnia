@@ -7,7 +7,7 @@ import com.g4mesoft.graphic.IRenderer2D;
 
 public class Texture {
 	
-	private BufferedImage texture;
+	private final BufferedImage texture;
 	
 	public Texture(BufferedImage texture) {
 		this.texture = texture;
@@ -16,7 +16,6 @@ public class Texture {
 	public void render(IRenderer2D renderer, int xp, int yp, int width, int height) {
 		Graphics graphics = renderer.getGraphics();
 		graphics.drawImage(texture, xp, yp, width, height, null);
-		
 	}
 	
 	public void render(IRenderer2D renderer, int xp, int yp, int w, int h, int xs, int ys, int ws, int hs) {
@@ -35,5 +34,4 @@ public class Texture {
 	public BufferedImage getImage() {
 		return texture;
 	}
-	
 }
