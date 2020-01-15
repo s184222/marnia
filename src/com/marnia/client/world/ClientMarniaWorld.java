@@ -86,10 +86,10 @@ public class ClientMarniaWorld extends MarniaWorld {
 		int dh = renderer.getHeight();
 
 		if (bgw * dh > dw * bgh) {
-			bgw = bgh * dw / bgw;
+			bgw = bgw * dh / bgh;
 			bgh = dh;
 		} else {
-			bgh = bgw * dh / bgh;
+			bgh = bgh * dw / bgw;
 			bgw = dw;
 		}
 
