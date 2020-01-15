@@ -7,6 +7,7 @@ import com.g4mesoft.math.MathUtils;
 import com.g4mesoft.math.Vec2f;
 import com.g4mesoft.world.phys.AABB;
 import com.marnia.world.MarniaWorld;
+import com.marnia.world.tile.Tile;
 
 public class Entity {
 
@@ -89,6 +90,21 @@ public class Entity {
 		hitbox.move(vel.x, vel.y);
 		pos.set(hitbox.x0, hitbox.y0);
 	}
+	
+	public boolean isInWater() {
+		int x1 = (int)hitbox.x1;
+		int y1 = (int)hitbox.y1;
+		
+		for (int xt = (int)hitbox.x0; xt <= x1; xt++) {
+			for (int yt = (int)hitbox.y0; yt <= y1; yt++) {
+				if(world.getTile(xt, yt) == Tile.WATER_TILE)
+					return true;
+			}
+		}
+		return false;
+	}
+		
+	
 	
 	public float getCenterX() {
 		return (hitbox.x0 + hitbox.x1)/2;
