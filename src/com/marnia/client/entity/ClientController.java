@@ -14,6 +14,7 @@ public class ClientController implements IController {
 	private static final int MAX_JUMP_TIME = 8;
 
 	private static final float WATER_FRICTION_MULTIPLIER = 0.6f;
+	private static final float IN_WATER_CAMERA_SCALE = 2.0f;
 
 	private final KeyInput left;
 	private final KeyInput right;
@@ -21,6 +22,8 @@ public class ClientController implements IController {
 
 	private boolean canDoubleJump;
 	private int jumpTimer;
+
+	private boolean wasInWater;
 	
 	public ClientController(KeyInput l, KeyInput r, KeyInput j) {
 		left = l;
@@ -72,7 +75,11 @@ public class ClientController implements IController {
 		entity.move();
 		
 		ClientMarniaApp app = ((ClientMarniaWorld)entity.world).getMarniaApp();
-		
+
+		if (inWater != wasInWater)
+			app.setCameraScaleFactorTarget(inWater ? IN_WATER_CAMERA_SCALE : 1.0f);
+		wasInWater = inWater;
+
 		DynamicCamera camera = app.getCamera();
         camera.setCenterX((camera.getCenterX() + entity.getCenterX()) * 0.5f);
         camera.setCenterY((camera.getCenterY() + entity.getCenterY()) * 0.5f);

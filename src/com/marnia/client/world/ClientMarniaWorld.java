@@ -8,6 +8,7 @@ import com.g4mesoft.world.phys.AABB;
 import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.util.CameraUtil;
 import com.marnia.entity.Entity;
+import com.marnia.graphics.Texture;
 import com.marnia.graphics.TileSheet;
 import com.marnia.util.SpriteHelper;
 import com.marnia.world.MarniaWorld;
@@ -70,18 +71,63 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		renderTiles(renderer, dt, camera);
+		renderBackground(renderer, dt, camera);
 		renderEntities(renderer, dt, camera);
+		renderTiles(renderer, dt, camera);
+	}
+
+	private void renderBackground(IRenderer2D renderer, float dt, DynamicCamera camera) {
+		Texture background = app.getTextureLoader().getWorldBackground();
+
+		int bgw = background.getWidth();
+		int bgh = background.getHeight();
+
+		int dw = renderer.getWidth();
+		int dh = renderer.getHeight();
+
+		if (bgw * dh > dw * bgh) {
+			bgw = bgh * dw / bgw;
+			bgh = dh;
+		} else {
+			bgh = bgw * dh / bgh;
+			bgw = dw;
+		}
+
+		int bgx = (dw - bgw) / 2;
+		int bgy = (dh - bgh) / 2;
+
+		background.render(renderer, bgx, bgy, bgw, bgh);
+	}
+
+	private void renderEntities(IRenderer2D renderer, float dt, DynamicCamera camera) {
+		for (Entity entity : entities) {
+			float ix = entity.prevPos.x + (entity.pos.x - entity.prevPos.x) * dt;
+			float iy = entity.prevPos.y + (entity.pos.y - entity.prevPos.y) * dt;
+
+			AABB hitbox = entity.getHitbox();
+
+			int xp = CameraUtil.getPixelX(ix, camera, dt);
+			int yp = CameraUtil.getPixelY(iy, camera, dt);
+			int w = CameraUtil.getPixelX(ix + hitbox.x1 - hitbox.x0, camera, dt) - xp;
+			int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
+
+			renderer.setColor(GColor.HOT_PINK);
+			renderer.fillRect(xp, yp, w, h);
+		}
 	}
 	
 	private void renderTiles(IRenderer2D renderer, float dt, DynamicCamera camera) {
 		float xOffset = camera.getXOffset(dt);
 		float yOffset = camera.getYOffset(dt);
-		
+
+		float scale = camera.getScale(dt);
+		float viewWidth = camera.getScreenWidth() * scale;
+		float viewHeight = camera.getScreenWidth() * scale;
+
 		int x0 = MathUtils.max(0, (int)xOffset);
 		int y0 = MathUtils.max(0, (int)yOffset);
-		int x1 = MathUtils.min(getWidth() - 1, (int)(xOffset + camera.getViewWidth() + 0.5f));
-		int y1 = MathUtils.min(getHeight() - 1, (int)(yOffset + camera.getViewHeight() + 0.5f));
+		int x1 = MathUtils.min(getWidth() - 1, (int)(xOffset + viewWidth + 0.5f));
+		int y1 = MathUtils.min(getHeight() - 1, (int)(yOffset + viewHeight + 0.5f));
 
 		TileSheet sheet = app.getTextureLoader().getWorldTileSheet();
 		for (int xt = x0; xt <= x1; xt++) {
@@ -99,23 +145,6 @@ public class ClientMarniaWorld extends MarniaWorld {
 					sheet.render(renderer, xp, yp, w, h, sx, sy);
 				}
 			}
-		}
-	}
-
-	private void renderEntities(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		for (Entity entity : entities) {
-			float ix = entity.prevPos.x + (entity.pos.x - entity.prevPos.x) * dt;
-			float iy = entity.prevPos.y + (entity.pos.y - entity.prevPos.y) * dt;
-
-			AABB hitbox = entity.getHitbox();
-
-			int xp = CameraUtil.getPixelX(ix, camera, dt);
-			int yp = CameraUtil.getPixelY(iy, camera, dt);
-			int w = CameraUtil.getPixelX(ix + hitbox.x1 - hitbox.x0, camera, dt) - xp;
-			int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
-
-			renderer.setColor(GColor.HOT_PINK);
-			renderer.fillRect(xp, yp, w, h);
 		}
 	}
 	

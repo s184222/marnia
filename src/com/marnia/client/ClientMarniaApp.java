@@ -35,6 +35,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 	private static final float MAX_VIEW_WIDTH = 25.0f;
 	private static final float MAX_VIEW_ABOVE = 10.0f;
+
+	private static final float CAMERA_SCALE_EASING_FACTOR = 0.2f;
 	
 	private ClientLobbyArea lobbyArea;
 	private LobbyMenu lobbyMenu;
@@ -45,8 +47,11 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private ClientGameplayNetworkManager networkManager;
 	
 	private ClientMarniaWorld world;
-	private DynamicCamera camera;	
-	
+	private DynamicCamera camera;
+
+	private float cameraScaleFactor;
+	private float cameraScaleFactorTarget;
+
 	private PlayerEntity player;
 	
 	private KeyInput leftKey;
@@ -73,6 +78,9 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		lobbyMenu = null;
 
 		camera = new DynamicCamera();
+		camera.setZoomToCenter(true);
+		cameraScaleFactor = 1.0f;
+		cameraScaleFactorTarget = 1.0f;
 		
 		// Ensure that camera does not move out of bounds.
 		camera.setZoomToCenter(true);
@@ -157,12 +165,14 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	
 	@Override
 	public void tick() {
+		cameraScaleFactor += (cameraScaleFactorTarget - cameraScaleFactor) * CAMERA_SCALE_EASING_FACTOR;
+
 		if (world != null) {
 			updateCamera();
 			
 			world.tick();
 		}
-		
+
 		if (lobbyArea != null)
 			lobbyArea.tick();
 		if (networkManager != null)
@@ -188,7 +198,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		float dth = (float)display.getHeight() / ClientMarniaWorld.TILE_SIZE;
 
 		camera.setScreenSize(dtw, dth);
-		camera.setScale(dtw / MAX_VIEW_WIDTH);
+		camera.setScale(dtw / MAX_VIEW_WIDTH * cameraScaleFactor);
 
 		// TODO: listeners for this.
 		camera.setBounds(0.0f, -MAX_VIEW_ABOVE, world.getWidth(), world.getHeight());
@@ -258,6 +268,10 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	
 	public PlayerEntity getPlayer() {
 		return player;
+	}
+
+	public void setCameraScaleFactorTarget(float scaleFactorTarget) {
+		cameraScaleFactorTarget = scaleFactorTarget;
 	}
 	
 	public UUID getServerIdentifier() {

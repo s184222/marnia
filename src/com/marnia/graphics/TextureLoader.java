@@ -1,7 +1,6 @@
 package com.marnia.graphics;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class TextureLoader {
@@ -10,13 +9,17 @@ public class TextureLoader {
 	private static final int WORLD_SHEET_TW = 128;
 	private static final int WORLD_SHEET_TH = 128;
 
+	private static final String WORLD_BACKGROUND_PATH = "/textures/normal/background.png";
+
 	private TileSheet worldTileSheet;
+	private Texture worldBackground;
 
 	public TextureLoader() {
 	}
 
 	public void loadTextures() throws IOException {
 		worldTileSheet = readTileSheet(WORLD_SHEET_PATH, WORLD_SHEET_TW, WORLD_SHEET_TH);
+		worldBackground = readTexture(WORLD_BACKGROUND_PATH);
 	}
 
 	private TileSheet readTileSheet(String path, int tileWidth, int tileHeight) throws IOException {
@@ -29,5 +32,9 @@ public class TextureLoader {
 
 	public TileSheet getWorldTileSheet() {
 		return worldTileSheet;
+	}
+
+	public Texture getWorldBackground() {
+		return worldBackground;
 	}
 }
