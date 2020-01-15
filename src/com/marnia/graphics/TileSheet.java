@@ -4,10 +4,10 @@ import com.g4mesoft.graphic.IRenderer2D;
 
 public class TileSheet {
 	
-	private Texture texture;
+	private final Texture texture;
 	
-	private int tileWidth;
-	private int tileHeight;
+	private final int tileWidth;
+	private final int tileHeight;
 	
 	public TileSheet(Texture texture, int tileWidth, int tileHeight) throws IllegalArgumentException {
 		if(texture.getWidth() % tileWidth != 0 || texture.getHeight() % tileHeight != 0)
