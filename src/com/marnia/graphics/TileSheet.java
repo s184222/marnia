@@ -11,7 +11,7 @@ public class TileSheet {
 	
 	public TileSheet(Texture texture, int tileWidth, int tileHeight) throws IllegalArgumentException {
 		if(texture.getWidth() % tileWidth != 0 || texture.getHeight() % tileHeight != 0)
-			throw new IllegalArgumentException("Sheet size not multiple of 128");
+			throw new IllegalArgumentException("Texture size is not a multiple of tile size!");
 
 		this.texture = texture;
 		this.tileWidth = tileWidth;
