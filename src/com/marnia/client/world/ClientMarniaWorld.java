@@ -25,7 +25,7 @@ import java.util.UUID;
 
 public class ClientMarniaWorld extends MarniaWorld {
 
-	public static final int TILE_SIZE = 32;
+	public static final int TILE_SIZE = 128;
 	
 	private final ClientMarniaApp app;
 	

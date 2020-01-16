@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.UUID;
 
 import com.marnia.entity.Entity;
-import com.marnia.entity.PlayerEntity;
 import com.marnia.net.packet.PacketDecoder;
 import com.marnia.net.packet.PacketEncoder;
 import com.marnia.util.SpaceHelper;
-import com.marnia.world.MarniaWorld;
 
 public abstract class BasicEntityProvider<E extends Entity> implements IEntityProvider<E, EntityContainer> {
 
