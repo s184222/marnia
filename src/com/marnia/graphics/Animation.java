@@ -1,6 +1,7 @@
 package com.marnia.graphics;
 
 import com.g4mesoft.graphic.IRenderer2D;
+import com.g4mesoft.math.MathUtils;
 
 public class Animation {
 
@@ -33,6 +34,11 @@ public class Animation {
 			nextFrame = 0.0f;
 	}
 
+	public void setFrame(int frame) {
+		// Ensure there are no rounding errors.
+		currentFrame = nextFrame = frame + MathUtils.EPSILON;
+	}
+	
 	public void render(IRenderer2D renderer, float dt, int xp, int yp, int w, int h) {
 		render(renderer, dt, xp, yp, w, h, false, false);
 	}
