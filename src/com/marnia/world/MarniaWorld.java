@@ -61,6 +61,7 @@ public abstract class MarniaWorld {
 			entities.remove(entity);
 		}
 	}
+
 	public Entity getEntity(UUID identifier) {
 		for(Entity entity : entities) {
 			if(entity.identifier.equals(identifier))

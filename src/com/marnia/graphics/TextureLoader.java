@@ -11,8 +11,19 @@ public class TextureLoader {
 
 	private static final String WORLD_BACKGROUND_PATH = "/textures/normal/background.png";
 
+	private static final String PLAYER_IDLE_SHEET_PATH = "/textures/player/idle.png";
+	private static final String PLAYER_JUMP_SHEET_PATH = "/textures/player/jump.png";
+	private static final String PLAYER_RUN_SHEET_PATH = "/textures/player/run.png";
+
+	private static final int PLAYER_SHHET_TW = 128;
+	private static final int PLAYER_SHEET_TH = 128;
+
 	private TileSheet worldTileSheet;
 	private Texture worldBackground;
+
+	private TileSheet playerIdleTileSheet;
+	private TileSheet playerJumpTileSheet;
+	private TileSheet playerRunTileSheet;
 
 	public TextureLoader() {
 	}
@@ -20,6 +31,10 @@ public class TextureLoader {
 	public void loadTextures() throws IOException {
 		worldTileSheet = readTileSheet(WORLD_SHEET_PATH, WORLD_SHEET_TW, WORLD_SHEET_TH);
 		worldBackground = readTexture(WORLD_BACKGROUND_PATH);
+
+		playerIdleTileSheet = readTileSheet(PLAYER_IDLE_SHEET_PATH, PLAYER_SHHET_TW, PLAYER_SHEET_TH);
+		playerJumpTileSheet = readTileSheet(PLAYER_JUMP_SHEET_PATH, PLAYER_SHHET_TW, PLAYER_SHEET_TH);
+		playerRunTileSheet = readTileSheet(PLAYER_RUN_SHEET_PATH, PLAYER_SHHET_TW, PLAYER_SHEET_TH);
 	}
 
 	private TileSheet readTileSheet(String path, int tileWidth, int tileHeight) throws IOException {
@@ -36,5 +51,17 @@ public class TextureLoader {
 
 	public Texture getWorldBackground() {
 		return worldBackground;
+	}
+
+	public TileSheet getPlayerIdleTileSheet() {
+		return playerIdleTileSheet;
+	}
+
+	public TileSheet getPlayerJumpTileSheet() {
+		return playerJumpTileSheet;
+	}
+
+	public TileSheet getPlayerRunTileSheet() {
+		return playerRunTileSheet;
 	}
 }

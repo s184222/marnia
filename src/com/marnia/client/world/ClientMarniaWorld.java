@@ -1,19 +1,25 @@
 package com.marnia.client.world;
 
 import com.g4mesoft.camera.DynamicCamera;
-import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.MathUtils;
-import com.g4mesoft.world.phys.AABB;
 import com.marnia.client.ClientMarniaApp;
+import com.marnia.client.entity.model.EntityModel;
+import com.marnia.client.entity.model.EntityModelRegistry;
+import com.marnia.client.entity.model.PlayerEntityModel;
 import com.marnia.client.util.CameraUtil;
 import com.marnia.entity.Entity;
+import com.marnia.entity.PlayerEntity;
 import com.marnia.graphics.Texture;
 import com.marnia.graphics.TileSheet;
 import com.marnia.util.SpriteHelper;
 import com.marnia.world.MarniaWorld;
 import com.marnia.world.WorldStorage;
 import com.marnia.world.tile.Tile;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ClientMarniaWorld extends MarniaWorld {
 
@@ -22,16 +28,31 @@ public class ClientMarniaWorld extends MarniaWorld {
 	private final ClientMarniaApp app;
 	
 	private int[] spriteData;
+
+	private final EntityModelRegistry entityModelRegistry;
+	private final Map<UUID, EntityModel<?>> entityModels;
 	
 	public ClientMarniaWorld(ClientMarniaApp app) {
 		this.app = app;
 		
 		spriteData = new int[storage.getWidth() * storage.getHeight()];
+
+		entityModelRegistry = new EntityModelRegistry();
+		entityModels = new HashMap<UUID, EntityModel<?>>();
+
+		registerEntityModels();
+	}
+
+	private void registerEntityModels() {
+		entityModelRegistry.registerModelProvider(PlayerEntity.class, PlayerEntityModel::new);
 	}
 	
 	@Override
 	public void tick() {
 		super.tick();
+
+		for (EntityModel<?> entityModel : entityModels.values())
+			entityModel.tick();
 	}
 	
 	@Override
@@ -70,6 +91,20 @@ public class ClientMarniaWorld extends MarniaWorld {
 		return spriteData[xt + yt * getWidth()];
 	}
 
+	@Override
+	public void addEntity(Entity entity) {
+		super.addEntity(entity);
+
+		entityModels.put(entity.identifier, entityModelRegistry.getEntityModel(entity));
+	}
+
+	@Override
+	public void removeEntity(Entity entity) {
+		super.removeEntity(entity);
+
+		entityModels.remove(entity.identifier);
+	}
+
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
 		renderBackground(renderer, dt, camera);
 		renderEntities(renderer, dt, camera);
@@ -100,20 +135,8 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 
 	private void renderEntities(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		for (Entity entity : entities) {
-			float ix = entity.prevPos.x + (entity.pos.x - entity.prevPos.x) * dt;
-			float iy = entity.prevPos.y + (entity.pos.y - entity.prevPos.y) * dt;
-
-			AABB hitbox = entity.getHitbox();
-
-			int xp = CameraUtil.getPixelX(ix, camera, dt);
-			int yp = CameraUtil.getPixelY(iy, camera, dt);
-			int w = CameraUtil.getPixelX(ix + hitbox.x1 - hitbox.x0, camera, dt) - xp;
-			int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
-
-			renderer.setColor(GColor.HOT_PINK);
-			renderer.fillRect(xp, yp, w, h);
-		}
+		for (EntityModel<?> entityModel : entityModels.values())
+			entityModel.render(renderer, dt, camera);
 	}
 	
 	private void renderTiles(IRenderer2D renderer, float dt, DynamicCamera camera) {
