@@ -9,6 +9,7 @@ import com.marnia.client.net.IClientNetworkHandler;
 import com.marnia.client.net.packet.C00WorldDataPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.entity.Entity;
+import com.marnia.entity.GhostEntity;
 import com.marnia.entity.PlayerEntity;
 import com.marnia.net.packet.IPacket;
 import com.marnia.server.net.IServerNetworkHandler;
@@ -51,7 +52,11 @@ public class GameplaySession implements IServerNetworkHandler {
 		
 		for (GameplayProfile profile : profiles)
 			world.addEntity(new PlayerEntity(world, profile.getIdentifier()));
-		
+
+		GhostEntity ghostEntity = new GhostEntity(world, UUID.randomUUID());
+		ghostEntity.moveToImmediately(2, world.getHeight() - 3);
+		world.addEntity(ghostEntity);
+
 		return true;
 	}
 	

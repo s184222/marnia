@@ -9,6 +9,7 @@ import com.marnia.world.MarniaWorld;
 public class EntityRegistry {
 
 	private static final int PLAYER_PROVIDER_ID = 0;
+	private static final int GHOST_PROVIDER_ID = 1;
 
 	private static EntityRegistry instance;
 	
@@ -58,6 +59,7 @@ public class EntityRegistry {
 	
 	private static void registerEntityProviders() {
 		instance.registerEntityProvider(new PlayerEntityProvider(), PLAYER_PROVIDER_ID);
+		instance.registerEntityProvider(new GhostEntityProvider(), GHOST_PROVIDER_ID);
 	}
 	
 	public static synchronized EntityRegistry getInstance() {

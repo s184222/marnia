@@ -49,7 +49,6 @@ public class PlayerEntityModel extends EntityModel<PlayerEntity> {
 		} else {
 			currentAnimation = idleAnimation;
 		}
-
 		currentAnimation.tick();
 	}
 
