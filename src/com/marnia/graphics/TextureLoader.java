@@ -23,12 +23,17 @@ public class TextureLoader {
 	private static final int PLAYER_RUN_SHEET_TW = 200;
 	private static final int PLAYER_RUN_SHEET_TH = 155;
 
+	private static final String GHOST_SHEET = "/textures/ghost_normal.png";
+	private static final int GHOST_TW = 51;
+	private static final int GHOST_TH = 73;
+
 	private TileSheet worldTileSheet;
 	private Texture worldBackground;
 
 	private TileSheet playerIdleTileSheet;
 	private TileSheet playerJumpTileSheet;
 	private TileSheet playerRunTileSheet;
+	private TileSheet ghostTileSheet;
 
 	public TextureLoader() {
 	}
@@ -40,6 +45,7 @@ public class TextureLoader {
 		playerIdleTileSheet = readTileSheet(PLAYER_IDLE_SHEET_PATH, PLAYER_IDLE_SHEET_TW, PLAYER_IDLE_SHEET_TH);
 		playerJumpTileSheet = readTileSheet(PLAYER_JUMP_SHEET_PATH, PLAYER_JUMP_SHEET_TW, PLAYER_JUMP_SHEET_TH);
 		playerRunTileSheet = readTileSheet(PLAYER_RUN_SHEET_PATH, PLAYER_RUN_SHEET_TW, PLAYER_RUN_SHEET_TH);
+		ghostTileSheet = readTileSheet(GHOST_SHEET,GHOST_TW, GHOST_TH);
 	}
 
 	private TileSheet readTileSheet(String path, int tileWidth, int tileHeight) throws IOException {
@@ -69,4 +75,6 @@ public class TextureLoader {
 	public TileSheet getPlayerRunTileSheet() {
 		return playerRunTileSheet;
 	}
+
+	public TileSheet getGhostTileSheet() { return ghostTileSheet; }
 }
