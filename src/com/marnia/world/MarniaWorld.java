@@ -3,6 +3,7 @@ package com.marnia.world;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import com.g4mesoft.world.phys.AABB;
@@ -18,6 +19,8 @@ public abstract class MarniaWorld {
 	private final List<Entity> entitiesToAdd;
 	
 	private boolean updatingEntities;
+
+	public final Random random;
 	
 	public MarniaWorld() {
 		storage = new WorldStorage(0, 0);
@@ -25,6 +28,8 @@ public abstract class MarniaWorld {
 		entities = new ArrayList<Entity>();
 		entitiesToRemove = new ArrayList<Entity>();
 		entitiesToAdd = new ArrayList<Entity>();
+	
+		random = new Random();
 	}
 	
 	public void setTile(int xt, int yt, Tile tile) {

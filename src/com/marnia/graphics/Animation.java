@@ -12,6 +12,8 @@ public class Animation {
 
 	private float currentFrame;
 	private float nextFrame;
+	
+	private boolean looping;
 
 	public Animation(TileSheet tileSheet) {
 		this(tileSheet, 1.0f);
@@ -24,6 +26,8 @@ public class Animation {
 		numFrames = tileSheet.getWidth() * tileSheet.getHeight();
 
 		currentFrame = nextFrame = 0.0f;
+		
+		looping = true;
 	}
 
 	public void tick() {
@@ -31,7 +35,7 @@ public class Animation {
 
 		nextFrame += framesPerTick;
 		if (nextFrame >= numFrames)
-			nextFrame = 0.0f;
+			nextFrame = looping ? 0.0f : numFrames - MathUtils.EPSILON;
 	}
 
 	public void setFrame(int frame) {
@@ -50,7 +54,7 @@ public class Animation {
 	public void render(IRenderer2D renderer, float dt, int xp, int yp, int w, int h, boolean flipX, boolean flipY) {
 		int frame = (int)(currentFrame + framesPerTick * dt);
 		if (frame >= numFrames)
-			frame = 0;
+			frame = looping ? numFrames - 1 : 0;
 
 		int sheetWidth = tileSheet.getWidth();
 		int sx = frame % sheetWidth;
@@ -61,6 +65,22 @@ public class Animation {
 
 	public void setFramesPerTick(float framesPerTick) {
 		this.framesPerTick = framesPerTick;
+	}
+
+	public boolean hasFinished() {
+		return !looping && currentFrame >= numFrames - 1;
+	}
+	
+	public void setLooping(boolean looping) {
+		this.looping = looping;
+	}
+	
+	public boolean isLooping() {
+		return looping;
+	}
+
+	public int getNumFrames() {
+		return numFrames;
 	}
 	
 	public TileSheet getTileSheet() {
