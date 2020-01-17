@@ -14,7 +14,7 @@ import com.marnia.server.ServerMarniaApp;
 
 public class ServerLobbyArea extends LobbyArea {
 
-	private static final int MIN_NUM_PLAYERS = 1;
+	private static final int MIN_NUM_PLAYERS = 2;
 	
 	private final ServerMarniaApp app;
 	private final UUID serverIdentifier;
