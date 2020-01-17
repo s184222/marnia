@@ -1,10 +1,10 @@
 package com.marnia.graphics;
 
+import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 import com.marnia.entity.PlayerColor;
-
-import java.io.IOException;
 
 public class TextureLoader {
 
@@ -34,6 +34,12 @@ public class TextureLoader {
 	private static final int GHOST_SHEET_TW = 51;
 	private static final int GHOST_SHEET_TH = 73;
 
+/*
+	private static final String KEY_SHEET = "/textures/key.png";
+	private static final int KEY_TW = 0;
+	private final int KEY_TH = 0;
+*/
+
 	private TileSheet worldTileSheet;
 	private Texture worldBackground;
 
@@ -43,6 +49,7 @@ public class TextureLoader {
 	private TileSheet[] playerRunTileSheet;
 	
 	private TileSheet ghostTileSheet;
+	//private TileSheet keyTileSheet;
 
 	public TextureLoader() {
 	}
@@ -55,8 +62,9 @@ public class TextureLoader {
 		playerBlinkTileSheet = readPlayerTileSheets(PLAYER_BLINK_SHEET_PATH, PLAYER_BLINK_SHEET_TW, PLAYER_BLINK_SHEET_TH);
 		playerJumpTileSheet = readPlayerTileSheets(PLAYER_JUMP_SHEET_PATH, PLAYER_JUMP_SHEET_TW, PLAYER_JUMP_SHEET_TH);
 		playerRunTileSheet = readPlayerTileSheets(PLAYER_RUN_SHEET_PATH, PLAYER_RUN_SHEET_TW, PLAYER_RUN_SHEET_TH);
-		
+
 		ghostTileSheet = readTileSheet(GHOST_SHEET,GHOST_SHEET_TW, GHOST_SHEET_TH);
+		//keyTileSheet = readTileSheet(KEY_SHEET, KEY_TW, KEY_TH);
 	}
 	
 	private TileSheet[] readPlayerTileSheets(String basePath, int tileWidth, int tileHeight) throws IOException {
@@ -101,4 +109,6 @@ public class TextureLoader {
 	}
 
 	public TileSheet getGhostTileSheet() { return ghostTileSheet; }
+
+	//public TileSheet getKeyTileSheet() { return keyTileSheet; }
 }
