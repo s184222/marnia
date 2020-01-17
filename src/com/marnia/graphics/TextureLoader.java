@@ -31,8 +31,8 @@ public class TextureLoader {
 	private static final int PLAYER_RUN_SHEET_TH = 155;
 
 	private static final String GHOST_SHEET = "/textures/ghost_normal.png";
-	private static final int GHOST_SHEET_TW = 51;
-	private static final int GHOST_SHEET_TH = 73;
+	private static final int GHOST_SHEET_TW = 51 * 2;
+	private static final int GHOST_SHEET_TH = 73 * 2;
 
 /*
 	private static final String KEY_SHEET = "/textures/key.png";

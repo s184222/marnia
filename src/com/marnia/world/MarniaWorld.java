@@ -98,6 +98,27 @@ public abstract class MarniaWorld {
 		return hitboxes;
 	}
 	
+	public Entity getClosestEntity(Entity entity) {
+		float minimumDist = Float.POSITIVE_INFINITY;
+		Entity closestEntity = null;
+		
+		for (Entity other : entities) {
+			if (other != entity) {
+				float distX = other.getCenterX() - entity.getCenterX();
+				float distY = other.getCenterY() - entity.getCenterY();
+				
+				float dist = distX * distX + distY * distY;
+
+				if (dist < minimumDist) {
+					minimumDist = dist;
+					closestEntity = other;
+				}
+			}
+		}
+		
+		return closestEntity;
+	}
+	
 	public int getWidth() {
 		return storage.getWidth();
 	}
@@ -111,5 +132,4 @@ public abstract class MarniaWorld {
 	}
 
 	public abstract boolean isServer();
-
 }

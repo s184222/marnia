@@ -6,12 +6,18 @@ import com.g4mesoft.math.MathUtils;
 import com.g4mesoft.world.phys.AABB;
 import com.marnia.client.util.CameraUtil;
 import com.marnia.client.world.ClientMarniaWorld;
+import com.marnia.entity.Entity;
 import com.marnia.entity.GhostEntity;
 import com.marnia.graphics.Animation;
 import com.marnia.graphics.TextureLoader;
 
 public class GhostEntityModel extends EntityModel<GhostEntity> {
 
+	private static final float SCARE_DIST_SQR = 5.0f;
+	
+	private static final int NORMAL_FRAME = 0;
+	private static final int SCARE_FRAME = 1;
+	
 	private final Animation ghostAnimation;
 
 	public GhostEntityModel(GhostEntity entity) {
@@ -21,11 +27,17 @@ public class GhostEntityModel extends EntityModel<GhostEntity> {
 				.getMarniaApp().getTextureLoader();
 
 		ghostAnimation = new Animation(tl.getGhostTileSheet(), 0.0f);
-		ghostAnimation.setFrame(0);
 	}
 
 	@Override
 	public void tick() {
+		Entity closestEntity = entity.world.getClosestEntity(entity);
+		float distX = closestEntity.getCenterX() - entity.getCenterX();
+		float distY = closestEntity.getCenterY() - entity.getCenterY();
+		
+		float distSqr = distX * distX + distY + distY;
+
+		ghostAnimation.setFrame((distSqr < SCARE_DIST_SQR) ? SCARE_FRAME : NORMAL_FRAME);
 	}
 
 	@Override
@@ -35,10 +47,11 @@ public class GhostEntityModel extends EntityModel<GhostEntity> {
 
 		AABB hitbox = entity.getHitbox();
 
-		int xp = CameraUtil.getPixelX(ix, camera, dt);
 		int yp = CameraUtil.getPixelY(iy, camera, dt);
-		int w = CameraUtil.getPixelX(ix + hitbox.x1 - hitbox.x0, camera, dt) - xp;
 		int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
+
+		int w = ghostAnimation.getFrameWidth() * h / ghostAnimation.getFrameHeight();
+		int xp = CameraUtil.getPixelX(ix + (hitbox.x1 - hitbox.x0) * 0.5f, camera, dt) - w / 2;
 
 		boolean flipX = (entity.prevPos.x - entity.pos.x > MathUtils.EPSILON);
 		ghostAnimation.render(renderer, dt, xp, yp, w, h, !flipX);
