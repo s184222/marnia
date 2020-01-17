@@ -30,15 +30,13 @@ public class TextureLoader {
 	private static final int PLAYER_RUN_SHEET_TW = 200;
 	private static final int PLAYER_RUN_SHEET_TH = 155;
 
-	private static final String GHOST_SHEET = "/textures/ghost_normal.png";
+	private static final String GHOST_SHEET_PATH = "/textures/ghost_normal.png";
 	private static final int GHOST_SHEET_TW = 51 * 2;
 	private static final int GHOST_SHEET_TH = 73 * 2;
 
-/*
-	private static final String KEY_SHEET = "/textures/key.png";
-	private static final int KEY_TW = 0;
-	private final int KEY_TH = 0;
-*/
+	private static final String KEY_SHEET_PATH = "/textures/key.png";
+	private static final int KEY_SHEET_TW = 70;
+	private static final int KEY_SHEET_TH = 70;
 
 	private TileSheet worldTileSheet;
 	private Texture worldBackground;
@@ -49,7 +47,7 @@ public class TextureLoader {
 	private TileSheet[] playerRunTileSheet;
 	
 	private TileSheet ghostTileSheet;
-	//private TileSheet keyTileSheet;
+	private TileSheet keyTileSheet;
 
 	public TextureLoader() {
 	}
@@ -63,8 +61,8 @@ public class TextureLoader {
 		playerJumpTileSheet = readPlayerTileSheets(PLAYER_JUMP_SHEET_PATH, PLAYER_JUMP_SHEET_TW, PLAYER_JUMP_SHEET_TH);
 		playerRunTileSheet = readPlayerTileSheets(PLAYER_RUN_SHEET_PATH, PLAYER_RUN_SHEET_TW, PLAYER_RUN_SHEET_TH);
 
-		ghostTileSheet = readTileSheet(GHOST_SHEET,GHOST_SHEET_TW, GHOST_SHEET_TH);
-		//keyTileSheet = readTileSheet(KEY_SHEET, KEY_TW, KEY_TH);
+		ghostTileSheet = readTileSheet(GHOST_SHEET_PATH,GHOST_SHEET_TW, GHOST_SHEET_TH);
+		keyTileSheet = readTileSheet(KEY_SHEET_PATH, KEY_SHEET_TW, KEY_SHEET_TH);
 	}
 	
 	private TileSheet[] readPlayerTileSheets(String basePath, int tileWidth, int tileHeight) throws IOException {
@@ -108,7 +106,11 @@ public class TextureLoader {
 		return playerRunTileSheet[color.getIndex()];
 	}
 
-	public TileSheet getGhostTileSheet() { return ghostTileSheet; }
+	public TileSheet getGhostTileSheet() {
+		return ghostTileSheet;
+	}
 
-	//public TileSheet getKeyTileSheet() { return keyTileSheet; }
+	public TileSheet getKeyTileSheet() {
+		return keyTileSheet;
+	}
 }

@@ -7,10 +7,12 @@ import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.entity.model.EntityModel;
 import com.marnia.client.entity.model.EntityModelRegistry;
 import com.marnia.client.entity.model.GhostEntityModel;
+import com.marnia.client.entity.model.KeyEntityModel;
 import com.marnia.client.entity.model.PlayerEntityModel;
 import com.marnia.client.util.CameraUtil;
 import com.marnia.entity.Entity;
 import com.marnia.entity.GhostEntity;
+import com.marnia.entity.KeyEntity;
 import com.marnia.entity.PlayerEntity;
 import com.marnia.graphics.Texture;
 import com.marnia.graphics.TileSheet;
@@ -48,6 +50,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 	private void registerEntityModels() {
 		entityModelRegistry.registerModelProvider(PlayerEntity.class, PlayerEntityModel::new);
 		entityModelRegistry.registerModelProvider(GhostEntity.class, GhostEntityModel::new);
+		entityModelRegistry.registerModelProvider(KeyEntity.class, KeyEntityModel::new);
 	}
 	
 	public void tickEntityModels() {

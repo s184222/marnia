@@ -34,7 +34,6 @@ public class ServerMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private long lastPlayerJoinTime;
 	private boolean shouldAttemptStartGame;
 	
-	
 	public ServerMarniaApp() {
 		super(DisplayConfig.INVISIBLE_DISPLAY_CONFIG);
 	

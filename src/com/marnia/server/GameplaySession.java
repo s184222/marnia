@@ -10,16 +10,17 @@ import com.marnia.client.net.IClientNetworkHandler;
 import com.marnia.client.net.packet.C00WorldDataPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.entity.Entity;
-import com.marnia.entity.GhostEntity;
 import com.marnia.entity.PlayerColor;
 import com.marnia.entity.PlayerEntity;
+import com.marnia.entity.registry.EntityRegistry;
 import com.marnia.net.packet.IPacket;
 import com.marnia.server.net.IServerNetworkHandler;
 import com.marnia.server.net.ServerGameplayNetworkManager;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
 import com.marnia.server.world.ServerMarniaWorld;
+import com.marnia.server.world.gen.WorldEntityInfo;
+import com.marnia.server.world.gen.WorldFile;
 import com.marnia.server.world.gen.WorldLoader;
-import com.marnia.world.WorldStorage;
 
 public class GameplaySession implements IServerNetworkHandler {
 
@@ -37,18 +38,19 @@ public class GameplaySession implements IServerNetworkHandler {
 	}
 	
 	public boolean startGame() {
-		WorldStorage storage = null;
+		WorldFile worldFile = null;
 		try {
-			storage = WorldLoader.loadFromFile("/worlds/world1.csv");
+			worldFile = WorldLoader.loadFromFile("/worlds/world1.csv");
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
-		if (storage == null)
+		if (worldFile == null)
 			return false;
 
-		world.setWorldStorage(storage);
+		world.setWorldStorage(worldFile.getStorage());
 
-		sendPacketToAll(new C00WorldDataPacket(storage));
+		sendPacketToAll(new C00WorldDataPacket(worldFile.getStorage()));
 
 		started = true;
 		
@@ -62,9 +64,9 @@ public class GameplaySession implements IServerNetworkHandler {
 			world.addEntity(new PlayerEntity(world, identifier, colors.get(i)));
 		}
 
-		GhostEntity ghostEntity = new GhostEntity(world, UUID.randomUUID());
-		ghostEntity.moveToImmediately(2, world.getHeight() - 3);
-		world.addEntity(ghostEntity);
+		EntityRegistry registry = EntityRegistry.getInstance();
+		for (WorldEntityInfo entityInfo : worldFile.getEntityInfos())
+			world.addEntity(registry.getEntity(entityInfo.getTypeId(), world, entityInfo.getContainer()));
 
 		return true;
 	}

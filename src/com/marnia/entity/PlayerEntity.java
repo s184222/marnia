@@ -50,4 +50,8 @@ public class PlayerEntity extends Entity {
 	public PlayerColor getColor() {
 		return color;
 	}
+
+	public void pickup(KeyEntity keyEntity) {
+		
+	}
 }

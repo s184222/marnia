@@ -3,8 +3,6 @@ package com.marnia.client.entity.model;
 import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.MathUtils;
-import com.g4mesoft.world.phys.AABB;
-import com.marnia.client.util.CameraUtil;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.PlayerEntity;
 import com.marnia.graphics.Animation;
@@ -85,18 +83,8 @@ public class PlayerEntityModel extends EntityModel<PlayerEntity> {
 
 	@Override
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		float ix = entity.prevPos.x + (entity.pos.x - entity.prevPos.x) * dt;
-		float iy = entity.prevPos.y + (entity.pos.y - entity.prevPos.y) * dt;
-
-		AABB hitbox = entity.getHitbox();
-
-		int yp = CameraUtil.getPixelY(iy, camera, dt);
-		int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
-
-		int w = currentAnimation.getFrameWidth() * h / currentAnimation.getFrameHeight();
-		int xp = CameraUtil.getPixelX(ix + (hitbox.x1 - hitbox.x0) * 0.5f, camera, dt) - w / 2;
-
 		boolean flipX = (entity.prevPos.x - entity.pos.x > MathUtils.EPSILON);
-		currentAnimation.render(renderer, dt, xp, yp, w, h, flipX);
+		renderAnimation(renderer, dt, camera, currentAnimation, 0.0f, 0.0f, flipX);
+
 	}
 }

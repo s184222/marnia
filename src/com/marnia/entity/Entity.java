@@ -64,19 +64,29 @@ public class Entity {
 	}
 	
 	public void move() {
+		move(true);
+	}
+	
+	public void move(boolean checkCollision) {
 		// Ensure we do not move out of bounds.
-		float moveX = MathUtils.clamp(vel.x, -hitbox.x0, world.getWidth() - hitbox.x1);
+		float moveX = vel.x;
 		float moveY = vel.y;
-
-		List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(vel.x, vel.y));
-
-		for (AABB aabb : hitboxes)
-			moveY = aabb.clipY(hitbox, moveY);
-		hitbox.move(0.0f, moveY);
-
-		for (AABB aabb : hitboxes)
-			moveX = aabb.clipX(hitbox, moveX);
-		hitbox.move(moveX, 0.0f);
+		
+		if (checkCollision) {
+			moveX = MathUtils.clamp(moveX, -hitbox.x0, world.getWidth() - hitbox.x1);
+	
+			List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(vel.x, vel.y));
+	
+			for (AABB aabb : hitboxes)
+				moveY = aabb.clipY(hitbox, moveY);
+			hitbox.move(0.0f, moveY);
+	
+			for (AABB aabb : hitboxes)
+				moveX = aabb.clipX(hitbox, moveX);
+			hitbox.move(moveX, 0.0f);
+		} else {
+			hitbox.move(moveX, moveY);
+		}
 
 		hitVertical = !MathUtils.nearZero(vel.y - moveY);
 		hitHorizontal = !MathUtils.nearZero(vel.x - moveX);
