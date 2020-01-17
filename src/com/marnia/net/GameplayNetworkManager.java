@@ -103,7 +103,7 @@ public abstract class GameplayNetworkManager<H extends INetworkHandler> {
 						@SuppressWarnings("unchecked")
 						IPacket<H> packet = (IPacket<H>)packetToHandle[2];
 
-						try {	
+						try {
 							handlePacket(sender, packet);
 						} catch (Exception e) {
 							e.printStackTrace();
