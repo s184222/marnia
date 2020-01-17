@@ -38,10 +38,10 @@ public class PlayerEntityModel extends EntityModel<PlayerEntity> {
 		TextureLoader tl = ((ClientMarniaWorld)entity.world)
 				.getMarniaApp().getTextureLoader();
 		
-		idleAnimation = new Animation(tl.getPlayerIdleTileSheet(), IDLE_ANIMATION_SPEED);
-		blinkAnimation = new Animation(tl.getPlayerBlinkTileSheet(), BLINK_ANIMATION_SPEED);
-		jumpAnimation = new Animation(tl.getPlayerJumpTileSheet(), 0.0f);
-		runningAnimation = new Animation(tl.getPlayerRunTileSheet());
+		idleAnimation = new Animation(tl.getPlayerIdleTileSheet(entity.getColor()), IDLE_ANIMATION_SPEED);
+		blinkAnimation = new Animation(tl.getPlayerBlinkTileSheet(entity.getColor()), BLINK_ANIMATION_SPEED);
+		jumpAnimation = new Animation(tl.getPlayerJumpTileSheet(entity.getColor()), 0.0f);
+		runningAnimation = new Animation(tl.getPlayerRunTileSheet(entity.getColor()));
 
 		currentAnimation = idleAnimation;
 

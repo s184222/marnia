@@ -11,10 +11,14 @@ public class PlayerEntity extends Entity {
 
 	private static final int DEATH_TIME = 20;
 
+	private final PlayerColor color;
+	
 	private int deathTimer;
 
-	public PlayerEntity(MarniaWorld world, UUID identifier) {
+	public PlayerEntity(MarniaWorld world, UUID identifier, PlayerColor color) {
 		super(world, identifier);
+		
+		this.color = color;
 	}
 
 	@Override
@@ -41,5 +45,9 @@ public class PlayerEntity extends Entity {
 
 			deathTimer = 0;
 		}
+	}
+	
+	public PlayerColor getColor() {
+		return color;
 	}
 }

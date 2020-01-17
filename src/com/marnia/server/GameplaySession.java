@@ -1,6 +1,7 @@
 package com.marnia.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -10,6 +11,7 @@ import com.marnia.client.net.packet.C00WorldDataPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.entity.Entity;
 import com.marnia.entity.GhostEntity;
+import com.marnia.entity.PlayerColor;
 import com.marnia.entity.PlayerEntity;
 import com.marnia.net.packet.IPacket;
 import com.marnia.server.net.IServerNetworkHandler;
@@ -50,8 +52,15 @@ public class GameplaySession implements IServerNetworkHandler {
 
 		started = true;
 		
-		for (GameplayProfile profile : profiles)
-			world.addEntity(new PlayerEntity(world, profile.getIdentifier()));
+		List<PlayerColor> colors = new ArrayList<PlayerColor>();
+		for (PlayerColor color : PlayerColor.values())
+			colors.add(color);
+		Collections.shuffle(colors);
+		
+		for (int i = 0; i < profiles.size(); i++) {
+			UUID identifier = profiles.get(i).getIdentifier();
+			world.addEntity(new PlayerEntity(world, identifier, colors.get(i)));
+		}
 
 		GhostEntity ghostEntity = new GhostEntity(world, UUID.randomUUID());
 		ghostEntity.moveToImmediately(2, world.getHeight() - 3);
