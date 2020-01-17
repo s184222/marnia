@@ -15,6 +15,10 @@ public class TextureLoader {
 	private static final int PLAYER_IDLE_SHEET_TW = 144;
 	private static final int PLAYER_IDLE_SHEET_TH = 155;
 
+	private static final String PLAYER_BLINK_SHEET_PATH = "/textures/player/blink.png";
+	private static final int PLAYER_BLINK_SHEET_TW = 144;
+	private static final int PLAYER_BLINK_SHEET_TH = 155;
+
 	private static final String PLAYER_JUMP_SHEET_PATH = "/textures/player/jump.png";
 	private static final int PLAYER_JUMP_SHEET_TW = 151;
 	private static final int PLAYER_JUMP_SHEET_TH = 155;
@@ -24,8 +28,8 @@ public class TextureLoader {
 	private static final int PLAYER_RUN_SHEET_TH = 155;
 
 	private static final String GHOST_SHEET = "/textures/ghost_normal.png";
-	private static final int GHOST_TW = 51;
-	private static final int GHOST_TH = 73;
+	private static final int GHOST_SHEET_TW = 51;
+	private static final int GHOST_SHEET_TH = 73;
 
 	private static final String KEY_SHEET = "/textures/key.png";
 	private static final int KEY_TW = 0;
@@ -37,8 +41,10 @@ public class TextureLoader {
 	private Texture worldBackground;
 
 	private TileSheet playerIdleTileSheet;
+	private TileSheet playerBlinkTileSheet;
 	private TileSheet playerJumpTileSheet;
 	private TileSheet playerRunTileSheet;
+	
 	private TileSheet ghostTileSheet;
 	private TileSheet keyTileSheet;
 
@@ -50,10 +56,12 @@ public class TextureLoader {
 		worldBackground = readTexture(WORLD_BACKGROUND_PATH);
 
 		playerIdleTileSheet = readTileSheet(PLAYER_IDLE_SHEET_PATH, PLAYER_IDLE_SHEET_TW, PLAYER_IDLE_SHEET_TH);
+		playerBlinkTileSheet = readTileSheet(PLAYER_BLINK_SHEET_PATH, PLAYER_BLINK_SHEET_TW, PLAYER_BLINK_SHEET_TH);
 		playerJumpTileSheet = readTileSheet(PLAYER_JUMP_SHEET_PATH, PLAYER_JUMP_SHEET_TW, PLAYER_JUMP_SHEET_TH);
 		playerRunTileSheet = readTileSheet(PLAYER_RUN_SHEET_PATH, PLAYER_RUN_SHEET_TW, PLAYER_RUN_SHEET_TH);
-		ghostTileSheet = readTileSheet(GHOST_SHEET,GHOST_TW, GHOST_TH);
+		ghostTileSheet = readTileSheet(GHOST_SHEET,GHOST_SHEET_TW, GHOST_SHEET_TH);
 		keyTileSheet= readTileSheet(KEY_SHEET, KEY_TW, KEY_TH);
+
 
 	}
 
@@ -75,6 +83,10 @@ public class TextureLoader {
 
 	public TileSheet getPlayerIdleTileSheet() {
 		return playerIdleTileSheet;
+	}
+
+	public TileSheet getPlayerBlinkTileSheet() {
+		return playerBlinkTileSheet;
 	}
 
 	public TileSheet getPlayerJumpTileSheet() {
