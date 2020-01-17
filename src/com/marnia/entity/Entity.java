@@ -59,16 +59,15 @@ public class Entity {
 	
 	public void move() {
 		// Ensure we do not move out of bounds.
-		vel.x = MathUtils.clamp(vel.x, -hitbox.x0, world.getWidth() - hitbox.x1);
-		
-		List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(vel.x, vel.y));
-		
+		float moveX = MathUtils.clamp(vel.x, -hitbox.x0, world.getWidth() - hitbox.x1);
 		float moveY = vel.y;
+
+		List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(vel.x, vel.y));
+
 		for (AABB aabb : hitboxes)
 			moveY = aabb.clipY(hitbox, moveY);
 		hitbox.move(0.0f, moveY);
 
-		float moveX = vel.x;
 		for (AABB aabb : hitboxes)
 			moveX = aabb.clipX(hitbox, moveX);
 		hitbox.move(moveX, 0.0f);
@@ -89,6 +88,20 @@ public class Entity {
 		vel.set(0.0f);
 		hitbox.move(x - hitbox.x0, y - hitbox.y0);
 		pos.set(hitbox.x0, hitbox.y0);
+
+		updateOnGround(0.1f);
+	}
+
+	private void updateOnGround(float epsilon) {
+		List<AABB> hitboxes = world.getCollidingHitboxes(hitbox.expand(0.0f, epsilon));
+
+		onGround = false;
+		for (AABB aabb : hitboxes) {
+			if (hitbox.y1 - epsilon < aabb.y0 && hitbox.y1 + epsilon > aabb.y0) {
+				onGround = true;
+				break;
+			}
+		}
 	}
 	
 	public boolean isInWater() {
@@ -102,6 +115,12 @@ public class Entity {
 			}
 		}
 		return false;
+	}
+
+	public Tile getTileBelow() {
+		int xtMid = (int)(0.5f * (hitbox.x0 + hitbox.x1));
+		int ytBelow = (int)(hitbox.y1 + 0.1f);
+		return world.getTile(xtMid, ytBelow);
 	}
 	
 	public float getCenterX() {

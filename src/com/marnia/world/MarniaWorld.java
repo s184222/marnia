@@ -1,6 +1,7 @@
 package com.marnia.world;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +34,11 @@ public abstract class MarniaWorld {
 	public Tile getTile(int xt, int yt) {
 		return Tile.getTile(storage.getTileIndex(xt, yt));
 	}
-	
+
+	public boolean isAir(int xt, int yt) {
+		return getTile(xt, yt) == Tile.AIR_TILE;
+	}
+
 	public void tick() {
 		updatingEntities = true;
 		for (Entity entity : entities)
@@ -78,7 +83,13 @@ public abstract class MarniaWorld {
 		for (int xt = (int)hitbox.x0; xt <= x1; xt++)
 			for (int yt = (int)hitbox.y0; yt <= y1; yt++)
 				getTile(xt, yt).getHitboxes(this, xt, yt, hitboxes);
-		
+
+		Iterator<AABB> itr = hitboxes.iterator();
+		while (itr.hasNext()) {
+			if (!itr.next().collides(hitbox))
+				itr.remove();
+		}
+
 		return hitboxes;
 	}
 	

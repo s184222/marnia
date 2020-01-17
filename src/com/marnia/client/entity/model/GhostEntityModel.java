@@ -15,7 +15,6 @@ public class GhostEntityModel extends EntityModel<GhostEntity> {
 
 	@Override
 	public void tick() {
-		entity.pos.x +=0.1;
 	}
 
 	@Override

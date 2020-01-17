@@ -39,6 +39,7 @@ public class PlayerEntityModel extends EntityModel<PlayerEntity> {
 		currentAnimation = idleAnimation;
 	}
 
+	@Override
 	public void tick() {
 		Animation nextAnimation;
 		

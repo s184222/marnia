@@ -16,6 +16,11 @@ public class EarthTile extends Tile {
 	public void getHitboxes(MarniaWorld world, int xt, int yt, List<AABB> hitboxes) {
 		hitboxes.add(new AABB(xt, yt, xt + 1.0f, yt + 1.0f));
 	}
+
+	@Override
+	public boolean isSolidTop() {
+		return true;
+	}
 	
 	@Override
 	public int getSpriteData(MarniaWorld world, int xt, int yt) {

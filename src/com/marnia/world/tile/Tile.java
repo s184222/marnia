@@ -21,7 +21,7 @@ public class Tile {
 			throw new IllegalArgumentException("Tile with index" + tileIndex + "already exists");
 
 		index = tileIndex;
-		
+
 		tiles[tileIndex] = this;
 	}
 	
@@ -34,6 +34,10 @@ public class Tile {
 	}
 
 	public void getHitboxes(MarniaWorld world, int xt, int yt, List<AABB> hitboxes) {
+	}
+
+	public boolean isSolidTop() {
+		return false;
 	}
 
 	public int getSpriteData(MarniaWorld world, int xt, int yt) {
