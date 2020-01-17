@@ -21,7 +21,7 @@ public class GameplayReceiverThread<H extends INetworkHandler> extends GameplayN
 	}
 
 	private void handlePacket(UUID senderIdentifier, int packetType) {
-		IPacket<H> packet = manager.getPacketByType(packetType);
+		IPacket<?> packet = manager.getPacketByType(packetType);
 		if (packet != null) {
 			try {
 				packet.decodePacket(new PacketDecoder(identifier, senderIdentifier, publicSpace));

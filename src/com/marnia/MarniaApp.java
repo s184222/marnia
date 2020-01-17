@@ -33,10 +33,10 @@ public abstract class MarniaApp extends Application {
 		localSpace = new SequentialSpace();
 		
 		registry = new PacketRegistry();
-		registry.addPacketType(C00WorldDataPacket.class, 0);
-		registry.addPacketType(C01AddEntityPacket.class, 1);
-		registry.addPacketType(S02PlayerPositionPacket.class, 2);
-		registry.addPacketType(C03EntityPositionPacket.class, 3);
+		registry.addPacketType(C00WorldDataPacket.class, 0, C00WorldDataPacket::new);
+		registry.addPacketType(C01AddEntityPacket.class, 1, C01AddEntityPacket::new);
+		registry.addPacketType(S02PlayerPositionPacket.class, 2, S02PlayerPositionPacket::new);
+		registry.addPacketType(C03EntityPositionPacket.class, 3, C03EntityPositionPacket::new);
 		
 		setDebug(false);
 	}

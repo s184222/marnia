@@ -119,19 +119,12 @@ public abstract class GameplayNetworkManager<H extends INetworkHandler> {
 	
 	protected abstract void handlePacket(UUID sender, IPacket<H> packet);
 
-	@SuppressWarnings("unchecked")
-	public IPacket<H> getPacketByType(int packetType) {
-		Class<? extends IPacket<?>> packetClazz = registry.getPacketFromId(packetType);
-		if (packetClazz == null)
+	public IPacket<?> getPacketByType(int packetType) {
+		@SuppressWarnings("rawtypes")
+		IPacketProvider packetProvider = registry.getPacketProviderFromId(packetType);
+		if (packetProvider == null)
 			return null;
-		
-		try {
-			return (IPacket<H>)packetClazz.getDeclaredConstructor().newInstance();
-		} catch (Exception e) {
-			System.err.println("Unable to initialize " + packetClazz + " is the constructor private?");
-		}
-		
-		return null;
+		return packetProvider.getPacketInstance();
 	}
 
 	public abstract NetworkSide getNetworkSide();
