@@ -28,6 +28,9 @@ public class Entity {
 	protected boolean hitHorizontal;
 	protected boolean hitVertical;
 
+	private boolean inWater;
+	private boolean inWaterNeedsUpdate;
+	
 	public Entity(MarniaWorld world, UUID identifier) {
 		this(world, identifier, DUMMY_CONTROLLER);
 	}
@@ -43,6 +46,9 @@ public class Entity {
 		vel = new Vec2f();
 		
 		hitbox = new AABB(0.0f, 0.0f, 0.8f, 1.0f);
+	
+		inWater = false;
+		inWaterNeedsUpdate = true;
 	}
 	
 	public void tick() {
@@ -82,6 +88,8 @@ public class Entity {
 			vel.x = 0.0f;
 		if (hitVertical)
 			vel.y = 0.0f;
+
+		inWaterNeedsUpdate = true;
 	}
 	
 	public void moveToImmediately(float x, float y) {
@@ -89,6 +97,8 @@ public class Entity {
 		hitbox.move(x - hitbox.x0, y - hitbox.y0);
 		pos.set(hitbox.x0, hitbox.y0);
 
+		inWaterNeedsUpdate = true;
+		
 		updateOnGround(0.1f);
 	}
 
@@ -105,6 +115,15 @@ public class Entity {
 	}
 	
 	public boolean isInWater() {
+		if (inWaterNeedsUpdate) {
+			inWater = calculateInWater();
+			inWaterNeedsUpdate = false;
+		}
+		
+		return inWater;
+	}
+	
+	private boolean calculateInWater() {
 		int x1 = (int)hitbox.x1;
 		int y1 = (int)(hitbox.y1 - 0.1f);
 		
@@ -114,6 +133,7 @@ public class Entity {
 					return true;
 			}
 		}
+
 		return false;
 	}
 

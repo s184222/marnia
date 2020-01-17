@@ -50,10 +50,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 		entityModelRegistry.registerModelProvider(GhostEntity.class, GhostEntityModel::new);
 	}
 	
-	@Override
-	public void tick() {
-		super.tick();
-
+	public void tickEntityModels() {
 		for (EntityModel<?> entityModel : entityModels.values())
 			entityModel.tick();
 	}

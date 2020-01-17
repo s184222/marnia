@@ -171,12 +171,14 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			updateCamera();
 			
 			world.tick();
+			networkManager.tick();
+
+			// This must be done after updating the network manager.
+			world.tickEntityModels();
 		}
 
 		if (lobbyArea != null)
 			lobbyArea.tick();
-		if (networkManager != null)
-			networkManager.tick();
 		
 		if (fullscreenKey.isClicked()) {
 			Display display = getDisplay();

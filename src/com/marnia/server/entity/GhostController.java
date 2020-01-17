@@ -6,7 +6,6 @@ import com.marnia.entity.Entity;
 import com.marnia.entity.EntityDirection;
 import com.marnia.entity.IController;
 import com.marnia.server.world.ServerMarniaWorld;
-import com.marnia.world.tile.Tile;
 
 public class GhostController implements IController {
 

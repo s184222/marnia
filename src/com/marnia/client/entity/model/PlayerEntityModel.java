@@ -76,6 +76,7 @@ public class PlayerEntityModel extends EntityModel<PlayerEntity> {
 		int w = currentAnimation.getFrameWidth() * h / currentAnimation.getFrameHeight();
 		int xp = CameraUtil.getPixelX(ix + (hitbox.x1 - hitbox.x0) * 0.5f, camera, dt) - w / 2;
 
-		currentAnimation.render(renderer, dt, xp, yp, w, h, (entity.prevPos.x > entity.pos.x));
+		boolean flipX = (entity.prevPos.x - entity.pos.x > MathUtils.EPSILON);
+		currentAnimation.render(renderer, dt, xp, yp, w, h, flipX);
 	}
 }

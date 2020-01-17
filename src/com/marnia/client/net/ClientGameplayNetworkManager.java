@@ -50,9 +50,7 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	
 	@Override
 	public void onWorldDataPacket(C00WorldDataPacket worldDataPacket) {
-		ClientMarniaWorld world = app.getWorld();
-		if (world != null)
-			world.setWorldStorage(worldDataPacket.getStorage());
+		app.getWorld().setWorldStorage(worldDataPacket.getStorage());
 	}
 	
 	@Override

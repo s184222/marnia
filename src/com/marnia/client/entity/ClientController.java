@@ -5,15 +5,15 @@ import com.g4mesoft.input.key.KeyInput;
 import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.net.ClientGameplayNetworkManager;
 import com.marnia.client.world.ClientMarniaWorld;
+import com.marnia.entity.BasicController;
 import com.marnia.entity.Entity;
-import com.marnia.entity.IController;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
 
-public class ClientController implements IController {
+public class ClientController extends BasicController {
 
 	private static final int MAX_JUMP_TIME = 8;
 
-	private static final float WATER_FRICTION_MULTIPLIER = 0.6f;
+	private static final float FRICTION_MOVE_X = 0.8f;
 	private static final float IN_WATER_CAMERA_SCALE = 2.0f;
 
 	private final KeyInput left;
@@ -56,22 +56,14 @@ public class ClientController implements IController {
 		}
 
 		boolean inWater = entity.isInWater();
-
 		if (jumpTimer > 0) {
 			jumpTimer--;
 		} else {
-			entity.vel.y += inWater ? 0.1f : 0.25f;
+			applyGravity(entity);
 		}
-
-		float frictionX = (moving || !entity.isOnGround()) ? 0.8f : 0.6f;
-		float frictionY = 0.8f;
-
-		if (inWater) {
-			frictionX *= WATER_FRICTION_MULTIPLIER;
-			frictionY *= WATER_FRICTION_MULTIPLIER;
-		}
-
-		entity.vel.mul(frictionX, frictionY);
+		
+		applyFriction(entity, (moving || !entity.isOnGround()) ? FRICTION_X : FRICTION_MOVE_X, FRICTION_Y);
+		
 		entity.move();
 		
 		ClientMarniaApp app = ((ClientMarniaWorld)entity.world).getMarniaApp();
