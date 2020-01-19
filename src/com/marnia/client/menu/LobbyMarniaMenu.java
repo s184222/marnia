@@ -6,11 +6,11 @@ import com.g4mesoft.composition.LinearComposition;
 import com.g4mesoft.composition.text.LabelComposition;
 import com.marnia.client.ClientMarniaApp;
 
-public class LobbyMenu extends MarniaMenu {
+public class LobbyMarniaMenu extends MarniaMenu {
 	
 	private LinearComposition nameList;
 	
-	public LobbyMenu(ClientMarniaApp app) {
+	public LobbyMarniaMenu(ClientMarniaApp app) {
 		super(app);
 	}
 	

@@ -17,7 +17,7 @@ import com.g4mesoft.input.key.KeyInput;
 import com.g4mesoft.input.key.KeySingleInput;
 import com.marnia.MarniaApp;
 import com.marnia.client.entity.ClientController;
-import com.marnia.client.menu.LobbyMenu;
+import com.marnia.client.menu.LobbyMarniaMenu;
 import com.marnia.client.menu.MainMarniaMenu;
 import com.marnia.client.net.ClientGameplayNetworkManager;
 import com.marnia.client.net.ClientLobbyArea;
@@ -37,7 +37,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private static final float CAMERA_SCALE_EASING_FACTOR = 0.2f;
 	
 	private ClientLobbyArea lobbyArea;
-	private LobbyMenu lobbyMenu;
+	private LobbyMarniaMenu lobbyMenu;
 	private boolean connected;
 	
 	private UUID serverIdentifier;
@@ -217,7 +217,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			break;
 		case ClientLobbyArea.CONNECTION_SUCCESSFUL_EVENT:
 			connected = true;
-			lobbyMenu = new LobbyMenu(this);
+			lobbyMenu = new LobbyMarniaMenu(this);
 			setRootComposition(lobbyMenu);
 			break;
 		case ClientLobbyArea.PLAYER_ADDED_EVENT:
