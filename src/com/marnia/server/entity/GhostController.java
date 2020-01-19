@@ -38,8 +38,7 @@ public class GhostController implements IController {
 
 		entity.move();
 
-		C03EntityPositionPacket packet = new C03EntityPositionPacket(entity.pos.x,
-				entity.pos.y, entity.identifier);
+		C03EntityPositionPacket packet = new C03EntityPositionPacket(entity);
 		((ServerMarniaWorld)entity.world).getSession().sendPacketToAll(packet);
 	}
 }

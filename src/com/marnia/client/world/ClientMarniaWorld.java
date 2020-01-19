@@ -1,5 +1,9 @@
 package com.marnia.client.world;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.MathUtils;
@@ -21,13 +25,9 @@ import com.marnia.world.MarniaWorld;
 import com.marnia.world.WorldStorage;
 import com.marnia.world.tile.Tile;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 public class ClientMarniaWorld extends MarniaWorld {
 
-	public static final int TILE_SIZE = 128;
+	private static final float MAX_VIEW_ABOVE = 10.0f;
 	
 	private final ClientMarniaApp app;
 	
@@ -86,6 +86,8 @@ public class ClientMarniaWorld extends MarniaWorld {
 		for (int yt = 0; yt < storage.getHeight(); yt++)
 			for (int xt = 0; xt < storage.getWidth(); xt++)
 				spriteData[index++] = getTile(xt, yt).getSpriteData(this, xt, yt);
+		
+		app.getCamera().setBounds(0.0f, -MAX_VIEW_ABOVE, getWidth(), getHeight());
 	}
 
 	public int getSpriteData(int xt, int yt) {

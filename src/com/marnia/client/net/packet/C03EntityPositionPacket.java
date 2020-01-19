@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import com.marnia.client.net.IClientNetworkHandler;
+import com.marnia.entity.Entity;
 import com.marnia.net.packet.IPacket;
 import com.marnia.net.packet.PacketDecoder;
 import com.marnia.net.packet.PacketEncoder;
@@ -18,10 +19,15 @@ public class C03EntityPositionPacket implements IPacket<IClientNetworkHandler> {
 	
 	public C03EntityPositionPacket() {
 	}
+
+	public C03EntityPositionPacket(Entity entity) {
+		this(entity.pos.x, entity.pos.y, entity.identifier);
+	}
 	
 	public C03EntityPositionPacket(float x, float y, UUID identifier) {
 		this.x = x;
 		this.y = y;
+		
 		this.identifier = identifier;
 	}
 

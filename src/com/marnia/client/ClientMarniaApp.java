@@ -4,7 +4,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.marnia.graphics.TextureLoader;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
 
@@ -13,19 +12,19 @@ import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.graphic.Display;
 import com.g4mesoft.graphic.DisplayConfig;
 import com.g4mesoft.graphic.DisplayMode;
-import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.input.key.KeyInput;
 import com.g4mesoft.input.key.KeySingleInput;
 import com.marnia.MarniaApp;
 import com.marnia.client.entity.ClientController;
-import com.marnia.client.menu.ConnectMenu;
 import com.marnia.client.menu.LobbyMenu;
+import com.marnia.client.menu.MainMarniaMenu;
 import com.marnia.client.net.ClientGameplayNetworkManager;
 import com.marnia.client.net.ClientLobbyArea;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.IController;
 import com.marnia.entity.PlayerEntity;
+import com.marnia.graphics.TextureLoader;
 import com.marnia.net.ILobbyEventListener;
 
 public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
@@ -34,7 +33,6 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private static final String ICON_PATH = "/icon.png";
 
 	private static final float MAX_VIEW_WIDTH = 25.0f;
-	private static final float MAX_VIEW_ABOVE = 10.0f;
 
 	private static final float CAMERA_SCALE_EASING_FACTOR = 0.2f;
 	
@@ -104,7 +102,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 		setMinimumFps(120.0);
 
-		setRootComposition(new ConnectMenu(this));
+		setRootComposition(new MainMarniaMenu(this));
 	}
 	
 	@Override
@@ -114,7 +112,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		disconnectFromServer();
 	}
 	
-	public boolean connectToServer(String address, String port, String username) {
+	public boolean connectToServer(String username, String address, String port) {
 		connected = false;
 
 		try {	
@@ -196,21 +194,12 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		camera.update();
 
 		Display display = getDisplay();
-		float dtw = (float)display.getWidth() / ClientMarniaWorld.TILE_SIZE;
-		float dth = (float)display.getHeight() / ClientMarniaWorld.TILE_SIZE;
-
-		camera.setScreenSize(dtw, dth);
-		camera.setScale(dtw / MAX_VIEW_WIDTH * cameraScaleFactor);
-
-		// TODO: listeners for this.
-		camera.setBounds(0.0f, -MAX_VIEW_ABOVE, world.getWidth(), world.getHeight());
+		camera.setScreenSize(display.getWidth(), display.getHeight());
+		camera.setScale(display.getWidth() / MAX_VIEW_WIDTH * cameraScaleFactor);
 	}
 	
 	@Override
 	protected void render(IRenderer2D renderer, float dt) {
-		renderer.setColor(GColor.WHITE);
-		renderer.clear();
-	
 		if (world != null)
 			world.render(renderer, dt, camera);
 	}
@@ -228,7 +217,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			break;
 		case ClientLobbyArea.CONNECTION_SUCCESSFUL_EVENT:
 			connected = true;
-			lobbyMenu = new LobbyMenu();
+			lobbyMenu = new LobbyMenu(this);
 			setRootComposition(lobbyMenu);
 			break;
 		case ClientLobbyArea.PLAYER_ADDED_EVENT:

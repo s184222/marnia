@@ -98,7 +98,6 @@ public class GameplaySession implements IServerNetworkHandler {
 		if (currentEntity != null)
 			currentEntity.moveToImmediately(packet.getX(), packet.getY());
 		
-		sendPacketToAllExcept(new C03EntityPositionPacket(packet.getX(), 
-				packet.getY(), senderIdentifier), senderIdentifier);
+		sendPacketToAllExcept(new C03EntityPositionPacket(currentEntity), senderIdentifier);
 	}
 }

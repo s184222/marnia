@@ -41,7 +41,7 @@ public class PlayerEntity extends Entity {
 		if (world.isServer()) {
 			moveToImmediately(0.0f, 0.0f);
 			GameplaySession session = ((ServerMarniaWorld)world).getSession();
-			session.sendPacketToAll(new C03EntityPositionPacket(pos.x, pos.y, identifier));
+			session.sendPacketToAll(new C03EntityPositionPacket(this));
 
 			deathTimer = 0;
 		}

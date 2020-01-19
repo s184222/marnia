@@ -18,21 +18,20 @@ public class KeyController implements IController {
 	public void update(Entity entity) {
 		Entity followEntity = getFollowEntity(entity);
 		if (followEntity != null) {
-			float cx = followEntity.getCenterX() - entity.getCenterX();
-			float cy = followEntity.getCenterY() - entity.getCenterY();
+			float dx = followEntity.getCenterX() - entity.getCenterX();
+			float dy = followEntity.getCenterY() - entity.getCenterY();
 
-			float dist = MathUtils.sqrt(cx * cx + cy * cy);
-			cx /= dist;
-			cy /= dist;
+			float dist = MathUtils.sqrt(dx * dx + dy * dy);
+			dx /= dist;
+			dy /= dist;
 			
 			float moveFactor = (dist - MIN_DIST) * MOVE_FACTOR;
-			entity.vel.x = cx * moveFactor;
-			entity.vel.y = cy * moveFactor;
+			entity.vel.x = dx * moveFactor;
+			entity.vel.y = dy * moveFactor;
 			
 			entity.move(false);
 			
-			C03EntityPositionPacket packet = new C03EntityPositionPacket(entity.pos.x,
-					entity.pos.y, entity.identifier);
+			C03EntityPositionPacket packet = new C03EntityPositionPacket(entity);
 			((ServerMarniaWorld)entity.world).getSession().sendPacketToAll(packet);
 		}
 	}

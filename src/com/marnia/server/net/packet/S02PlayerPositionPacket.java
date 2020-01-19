@@ -3,6 +3,8 @@ package com.marnia.server.net.packet;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.g4mesoft.math.Vec2f;
+import com.marnia.entity.Entity;
 import com.marnia.net.packet.IPacket;
 import com.marnia.net.packet.PacketDecoder;
 import com.marnia.net.packet.PacketEncoder;
@@ -15,6 +17,14 @@ public class S02PlayerPositionPacket implements IPacket<IServerNetworkHandler>{
 	private float y;
 
 	public S02PlayerPositionPacket() {
+	}
+
+	public S02PlayerPositionPacket(Entity entity) {
+		this(entity.pos);
+	}
+
+	public S02PlayerPositionPacket(Vec2f pos) {
+		this(pos.x, pos.y);
 	}
 	
 	public S02PlayerPositionPacket(float x, float y) {

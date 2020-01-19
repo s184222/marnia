@@ -25,8 +25,9 @@ public abstract class EntityModel<E extends Entity> {
 		float ix = entity.prevPos.x + (entity.pos.x - entity.prevPos.x) * dt - xo;
 		float iy = entity.prevPos.y + (entity.pos.y - entity.prevPos.y) * dt - yo;
 
-		int yp = CameraUtil.getPixelY(iy, camera, dt);
-		int h = CameraUtil.getPixelY(iy + hitbox.y1 - hitbox.y0, camera, dt) - yp;
+		float hh = hitbox.y1 - hitbox.y0;
+		int h = CameraUtil.getScaledSize(hh, camera, dt);
+		int yp = CameraUtil.getPixelY(iy + hh, camera, dt) - h;
 
 		int w = animation.getFrameWidth() * h / animation.getFrameHeight();
 		int xp = CameraUtil.getPixelX(ix + (hitbox.x1 - hitbox.x0) * 0.5f, camera, dt) - w / 2;

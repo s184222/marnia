@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.g4mesoft.composition.LinearComposition;
 import com.g4mesoft.composition.text.LabelComposition;
-import com.g4mesoft.graphic.GColor;
+import com.marnia.client.ClientMarniaApp;
 
-public class LobbyMenu extends LinearComposition {
+public class LobbyMenu extends MarniaMenu {
 	
 	private LinearComposition nameList;
 	
-	public LobbyMenu() {
-		setBackground(GColor.BLACK);
+	public LobbyMenu(ClientMarniaApp app) {
+		super(app);
 	}
 	
 	public void setNames(List<String> names) {

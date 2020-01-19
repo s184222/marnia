@@ -13,7 +13,7 @@ public class ClientController extends BasicController {
 
 	private static final int MAX_JUMP_TIME = 8;
 
-	private static final float FRICTION_MOVE_X = 0.8f;
+	private static final float FRICTION_IDLE_X = 0.6f;
 	private static final float IN_WATER_CAMERA_SCALE = 2.0f;
 
 	private final KeyInput left;
@@ -25,10 +25,10 @@ public class ClientController extends BasicController {
 
 	private boolean wasInWater;
 	
-	public ClientController(KeyInput l, KeyInput r, KeyInput j) {
-		left = l;
-		right = r;
-		jump = j;
+	public ClientController(KeyInput left, KeyInput right, KeyInput jump) {
+		this.left = left;
+		this.right = right;
+		this.jump = jump;
 	}
 	
 	@Override
@@ -62,7 +62,7 @@ public class ClientController extends BasicController {
 			applyGravity(entity);
 		}
 		
-		applyFriction(entity, (moving || !entity.isOnGround()) ? FRICTION_X : FRICTION_MOVE_X, FRICTION_Y);
+		applyFriction(entity, (moving || !entity.isOnGround()) ? FRICTION_X : FRICTION_IDLE_X, FRICTION_Y);
 		
 		entity.move();
 		
@@ -77,6 +77,6 @@ public class ClientController extends BasicController {
         camera.setCenterY((camera.getCenterY() + entity.getCenterY()) * 0.5f);
 
         ClientGameplayNetworkManager networkManager = app.getNetworkManager();
-        networkManager.sendPacket(new S02PlayerPositionPacket(entity.pos.x, entity.pos.y));
+        networkManager.sendPacket(new S02PlayerPositionPacket(entity));
 	}
 }

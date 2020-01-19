@@ -1,9 +1,16 @@
 package com.marnia.graphics;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.g4mesoft.graphic.filter.ContrastPixelFilter;
+import com.g4mesoft.graphic.filter.FastGaussianBlurPixelFilter;
+import com.g4mesoft.graphic.filter.MultiplyPixelFilter;
 import com.marnia.entity.PlayerColor;
 
 public class TextureLoader {
@@ -38,6 +45,11 @@ public class TextureLoader {
 	private static final int KEY_SHEET_TW = 70;
 	private static final int KEY_SHEET_TH = 70;
 
+	private static final int   MENU_BACKGROUND_SCALE  = 2;
+	private static final float MENU_BLUR_RADIUS       = 5.0f;
+	private static final float MENU_CONTRAST          = 0.9f;
+	private static final float MENU_MULTIPLIER        = 0.8f;
+	
 	private TileSheet worldTileSheet;
 	private Texture worldBackground;
 
@@ -48,6 +60,8 @@ public class TextureLoader {
 	
 	private TileSheet ghostTileSheet;
 	private TileSheet keyTileSheet;
+	
+	private Texture menuBackground;
 
 	public TextureLoader() {
 	}
@@ -63,6 +77,32 @@ public class TextureLoader {
 
 		ghostTileSheet = readTileSheet(GHOST_SHEET_PATH,GHOST_SHEET_TW, GHOST_SHEET_TH);
 		keyTileSheet = readTileSheet(KEY_SHEET_PATH, KEY_SHEET_TW, KEY_SHEET_TH);
+		
+		menuBackground = blurTexture(worldBackground, MENU_BACKGROUND_SCALE, 
+				MENU_BLUR_RADIUS, MENU_CONTRAST, MENU_MULTIPLIER);
+	}
+	
+	private Texture blurTexture(Texture original, int scale, float radius, float contrast, float multiplier) {
+		int width = original.getWidth() / scale;
+		int height = original.getHeight() / scale;
+		Image si = original.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		
+		BufferedImage bi;
+		if (si instanceof BufferedImage) {
+			bi = (BufferedImage)si;
+		} else {
+			bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+			Graphics g = bi.getGraphics();
+			g.drawImage(si, 0, 0, null);
+			g.dispose();
+		}
+		
+		int[] pixels = ((DataBufferInt)bi.getRaster().getDataBuffer()).getData();
+		FastGaussianBlurPixelFilter.filterPixels(radius, pixels, width, height);
+		ContrastPixelFilter.filterPixels(contrast, pixels, width, height);
+		MultiplyPixelFilter.filterPixels(multiplier, pixels, width, height);
+		
+		return new Texture(bi);
 	}
 	
 	private TileSheet[] readPlayerTileSheets(String basePath, int tileWidth, int tileHeight) throws IOException {
@@ -112,5 +152,9 @@ public class TextureLoader {
 
 	public TileSheet getKeyTileSheet() {
 		return keyTileSheet;
+	}
+	
+	public Texture getMenuBackground() {
+		return menuBackground;
 	}
 }

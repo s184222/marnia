@@ -1,15 +1,15 @@
 package com.marnia.graphics;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
+import java.awt.Image;
 
 import com.g4mesoft.graphic.IRenderer2D;
 
 public class Texture {
 	
-	private final BufferedImage texture;
+	private final Image texture;
 	
-	public Texture(BufferedImage texture) {
+	public Texture(Image texture) {
 		this.texture = texture;
 	}
 	
@@ -38,14 +38,14 @@ public class Texture {
 	}
 	
 	public int getWidth() {
-		return texture.getWidth();
+		return texture.getWidth(null);
 	}
 	
 	public int getHeight() {
-		return texture.getHeight();
+		return texture.getHeight(null);
 	}
 	
-	public BufferedImage getImage() {
+	public Image getImage() {
 		return texture;
 	}
 }
