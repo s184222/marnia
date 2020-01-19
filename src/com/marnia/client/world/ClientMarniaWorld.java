@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.g4mesoft.camera.DynamicCamera;
+import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.MathUtils;
 import com.marnia.client.ClientMarniaApp;
@@ -28,6 +29,9 @@ import com.marnia.world.tile.Tile;
 public class ClientMarniaWorld extends MarniaWorld {
 
 	private static final float MAX_VIEW_ABOVE = 10.0f;
+	private static final float PARALLAXING_FACTOR = 0.1f;
+	
+	private static final GColor SKY_COLOR = new GColor(0xDDF8FF);
 	
 	private final ClientMarniaApp app;
 	
@@ -111,6 +115,9 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
+		renderer.setColor(SKY_COLOR);
+		renderer.clear();
+		
 		renderBackground(renderer, dt, camera);
 		renderEntities(renderer, dt, camera);
 		renderTiles(renderer, dt, camera);
@@ -119,24 +126,35 @@ public class ClientMarniaWorld extends MarniaWorld {
 	private void renderBackground(IRenderer2D renderer, float dt, DynamicCamera camera) {
 		Texture background = app.getTextureLoader().getWorldBackground();
 
-		int bgw = background.getWidth();
-		int bgh = background.getHeight();
+		float scale = camera.getScale(dt);
+		float vw = camera.getScreenWidth() / scale;
+		float vh = camera.getScreenHeight() / scale;
 
-		int dw = renderer.getWidth();
-		int dh = renderer.getHeight();
+		float ww = (float)getWidth();
+		float wh = (float)getHeight();
+		
+		float aspect = (float)background.getWidth() / background.getHeight();
+		float bgh = vh + (wh - vh) * PARALLAXING_FACTOR;
+		float bgw = bgh * aspect;
 
-		if (bgw * dh > dw * bgh) {
-			bgw = bgw * dh / bgh;
-			bgh = dh;
-		} else {
-			bgh = bgh * dw / bgw;
-			bgw = dw;
+		float dvw = camera.getScreenWidth() / app.getDefaultCameraScale();
+		float dvh = camera.getScreenHeight() / app.getDefaultCameraScale();
+		float numTiles = (PARALLAXING_FACTOR * (ww - dvw) + dvw) /
+				(aspect * (PARALLAXING_FACTOR * (wh - dvh) + dvh));
+		
+		float bgx = (ww - bgw * numTiles) * camera.getXOffset(dt) / (ww - vw);
+		float bgy = (wh - bgh) * camera.getYOffset(dt) / (wh - vh);
+		
+		int y = CameraUtil.getPixelY(bgy, camera, dt);
+		int h = CameraUtil.getScaledSize(bgh, camera, dt);
+		
+		for (int i = 0; i < numTiles; i++) {
+			int x0 = CameraUtil.getPixelX(bgx + bgw * i, camera, dt);
+			int x1 = CameraUtil.getPixelX(bgx + bgw * (i + 1), camera, dt);
+
+			if (x1 > 0 && x0 < renderer.getWidth())
+				background.render(renderer, x0, y, x1 - x0, h);
 		}
-
-		int bgx = (dw - bgw) / 2;
-		int bgy = (dh - bgh) / 2;
-
-		background.render(renderer, bgx, bgy, bgw, bgh);
 	}
 
 	private void renderEntities(IRenderer2D renderer, float dt, DynamicCamera camera) {

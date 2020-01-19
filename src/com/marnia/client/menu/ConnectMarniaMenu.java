@@ -6,6 +6,7 @@ import com.g4mesoft.composition.LinearComposition;
 import com.g4mesoft.composition.text.ButtonComposition;
 import com.g4mesoft.composition.text.LabelComposition;
 import com.g4mesoft.composition.text.TextComposition;
+import com.g4mesoft.composition.text.editable.SingleLineTextModel;
 import com.g4mesoft.composition.text.editable.TextFieldComposition;
 import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.math.Vec2i;
@@ -31,6 +32,8 @@ public class ConnectMarniaMenu extends MarniaMenu {
 	public ConnectMarniaMenu(ClientMarniaApp app) {
 		super(app);
 		
+		setBackground(new GColor(0x00, 0x00, 0x00, 0x40));
+		
 		uiLayout();
 	}
 	
@@ -41,6 +44,9 @@ public class ConnectMarniaMenu extends MarniaMenu {
 		usernameField = addInputField("Username:", formLayout);
 		addressField = addInputField("IP Address:", formLayout);
 		portField = addInputField("Server Port:", formLayout);
+		
+		addressField.setTextModel(new IPAddressTextModel());
+		portField.setTextModel(new NumericalTextModel());
 		
 		connectButton = createButton(CONNECT_TXT);
 		connectButton.addButtonListener((owner) -> {
@@ -85,5 +91,35 @@ public class ConnectMarniaMenu extends MarniaMenu {
 		formLayout.addComposition(textFieldLayout);
 		
 		return textField;
+	}
+	
+	private class IPAddressTextModel extends SingleLineTextModel {
+		
+		@Override
+		protected boolean shouldDiscardCharacter(char c) {
+			// IP Address might be IPv4 or IPv6. 
+			
+			// IPv4 is decimal values separated by dots. 
+			//   E.g. xxx.xxx.xxx.xxx
+			if (c == '.' || (c >= '0' && c <= '9'))
+				return false;
+			
+			// IPv6 is separated by colon and formatted as
+			// a 128 bit hexadecimal.
+			//   E.g. XXXX:XXXX:XXXX:XXXX:XX... etc.
+			if (c == ':' || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))
+				return false;
+			
+			// All other characters should be discarded.
+			return true;
+		}
+	}
+
+	private class NumericalTextModel extends SingleLineTextModel {
+		
+		@Override
+		protected boolean shouldDiscardCharacter(char c) {
+			return !Character.isDigit(c);
+		}
 	}
 }

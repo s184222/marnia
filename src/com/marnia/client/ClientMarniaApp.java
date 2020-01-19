@@ -32,7 +32,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private static final String TITLE = "Marnia App";
 	private static final String ICON_PATH = "/icon.png";
 
-	private static final float MAX_VIEW_WIDTH = 25.0f;
+	private static final float MAX_VIEW_WIDTH = 20.0f;
 
 	private static final float CAMERA_SCALE_EASING_FACTOR = 0.2f;
 	
@@ -195,7 +195,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 		Display display = getDisplay();
 		camera.setScreenSize(display.getWidth(), display.getHeight());
-		camera.setScale(display.getWidth() / MAX_VIEW_WIDTH * cameraScaleFactor);
+		camera.setScale(getDefaultCameraScale() * cameraScaleFactor);
 	}
 	
 	@Override
@@ -263,6 +263,10 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 	public void setCameraScaleFactorTarget(float scaleFactorTarget) {
 		cameraScaleFactorTarget = scaleFactorTarget;
+	}
+	
+	public float getDefaultCameraScale() {
+		return getDisplay().getWidth() / MAX_VIEW_WIDTH;
 	}
 	
 	public UUID getServerIdentifier() {
