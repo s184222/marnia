@@ -17,8 +17,10 @@ public class TextureLoader {
 	private static final int WORLD_SHEET_TW = 128;
 	private static final int WORLD_SHEET_TH = 128;
 
-	private static final String WORLD_BACKGROUND_PATH = "/textures/normal/background.png";
-
+	private static final String COMPOSED_WORLD_BACKGROUND_PATH = "/textures/normal/background.png";
+	private static final String WORLD_BACKGROUNDS_PATH = "/textures/normal/background_%d.png";
+	private static final int NUM_WORLD_BACKGROUNDS = 6;
+	
 	private static final String PLAYER_IDLE_SHEET_PATH = "/textures/player/idle_%s.png";
 	private static final int PLAYER_IDLE_SHEET_TW = 144;
 	private static final int PLAYER_IDLE_SHEET_TH = 155;
@@ -47,7 +49,7 @@ public class TextureLoader {
 	private static final float MENU_BLUR_RADIUS       = 5.0f;
 	
 	private TileSheet worldTileSheet;
-	private Texture worldBackground;
+	private Texture[] worldBackgrounds;
 
 	private TileSheet[] playerIdleTileSheet;
 	private TileSheet[] playerBlinkTileSheet;
@@ -64,7 +66,9 @@ public class TextureLoader {
 
 	public void loadTextures() throws IOException {
 		worldTileSheet = readTileSheet(WORLD_SHEET_PATH, WORLD_SHEET_TW, WORLD_SHEET_TH);
-		worldBackground = readTexture(WORLD_BACKGROUND_PATH);
+		worldBackgrounds = new Texture[NUM_WORLD_BACKGROUNDS];
+		for (int i = 0; i < NUM_WORLD_BACKGROUNDS; i++)
+			worldBackgrounds[i] = readTexture(String.format(WORLD_BACKGROUNDS_PATH, i));
 
 		playerIdleTileSheet = readPlayerTileSheets(PLAYER_IDLE_SHEET_PATH, PLAYER_IDLE_SHEET_TW, PLAYER_IDLE_SHEET_TH);
 		playerBlinkTileSheet = readPlayerTileSheets(PLAYER_BLINK_SHEET_PATH, PLAYER_BLINK_SHEET_TW, PLAYER_BLINK_SHEET_TH);
@@ -74,7 +78,8 @@ public class TextureLoader {
 		ghostTileSheet = readTileSheet(GHOST_SHEET_PATH,GHOST_SHEET_TW, GHOST_SHEET_TH);
 		keyTileSheet = readTileSheet(KEY_SHEET_PATH, KEY_SHEET_TW, KEY_SHEET_TH);
 		
-		menuBackground = blurTexture(worldBackground, MENU_BACKGROUND_SCALE, MENU_BLUR_RADIUS);
+		Texture composedWorldBackground = readTexture(COMPOSED_WORLD_BACKGROUND_PATH);
+		menuBackground = blurTexture(composedWorldBackground, MENU_BACKGROUND_SCALE, MENU_BLUR_RADIUS);
 	}
 	
 	private Texture blurTexture(Texture original, int scale, float radius) {
@@ -119,8 +124,8 @@ public class TextureLoader {
 		return worldTileSheet;
 	}
 
-	public Texture getWorldBackground() {
-		return worldBackground;
+	public Texture[] getWorldBackgrounds() {
+		return worldBackgrounds;
 	}
 
 	public TileSheet getPlayerIdleTileSheet(PlayerColor color) {

@@ -29,7 +29,7 @@ import com.marnia.world.tile.Tile;
 public class ClientMarniaWorld extends MarniaWorld {
 
 	private static final float MAX_VIEW_ABOVE = 10.0f;
-	private static final float PARALLAXING_FACTOR = 0.1f;
+	private static final float LAYER_PARALLAXING_FACTOR = 0.025f;
 	
 	private static final GColor SKY_COLOR = new GColor(0xDDF8FF);
 	
@@ -40,6 +40,8 @@ public class ClientMarniaWorld extends MarniaWorld {
 	private final EntityModelRegistry entityModelRegistry;
 	private final Map<UUID, EntityModel<?>> entityModels;
 	
+	private final ParallaxedWorldTexture[] backgroundLayers;
+	
 	public ClientMarniaWorld(ClientMarniaApp app) {
 		this.app = app;
 		
@@ -48,6 +50,13 @@ public class ClientMarniaWorld extends MarniaWorld {
 		entityModelRegistry = new EntityModelRegistry();
 		entityModels = new HashMap<UUID, EntityModel<?>>();
 
+		Texture[] backgrounds = app.getTextureLoader().getWorldBackgrounds();
+		backgroundLayers = new ParallaxedWorldTexture[backgrounds.length];
+		for (int i = 0; i < backgrounds.length; i++) {
+			float parallaxing = LAYER_PARALLAXING_FACTOR * (i + 1);
+			backgroundLayers[i] = new ParallaxedWorldTexture(this, backgrounds[i], parallaxing);
+		}
+		
 		registerEntityModels();
 	}
 
@@ -124,37 +133,8 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 
 	private void renderBackground(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		Texture background = app.getTextureLoader().getWorldBackground();
-
-		float scale = camera.getScale(dt);
-		float vw = camera.getScreenWidth() / scale;
-		float vh = camera.getScreenHeight() / scale;
-
-		float ww = (float)getWidth();
-		float wh = (float)getHeight();
-		
-		float aspect = (float)background.getWidth() / background.getHeight();
-		float bgh = vh + (wh - vh) * PARALLAXING_FACTOR;
-		float bgw = bgh * aspect;
-
-		float dvw = camera.getScreenWidth() / app.getDefaultCameraScale();
-		float dvh = camera.getScreenHeight() / app.getDefaultCameraScale();
-		float numTiles = (PARALLAXING_FACTOR * (ww - dvw) + dvw) /
-				(aspect * (PARALLAXING_FACTOR * (wh - dvh) + dvh));
-		
-		float bgx = (ww - bgw * numTiles) * camera.getXOffset(dt) / (ww - vw);
-		float bgy = (wh - bgh) * camera.getYOffset(dt) / (wh - vh);
-		
-		int y = CameraUtil.getPixelY(bgy, camera, dt);
-		int h = CameraUtil.getScaledSize(bgh, camera, dt);
-		
-		for (int i = 0; i < numTiles; i++) {
-			int x0 = CameraUtil.getPixelX(bgx + bgw * i, camera, dt);
-			int x1 = CameraUtil.getPixelX(bgx + bgw * (i + 1), camera, dt);
-
-			if (x1 > 0 && x0 < renderer.getWidth())
-				background.render(renderer, x0, y, x1 - x0, h);
-		}
+		for (ParallaxedWorldTexture layer : backgroundLayers)
+			layer.render(renderer, dt, camera);
 	}
 
 	private void renderEntities(IRenderer2D renderer, float dt, DynamicCamera camera) {
