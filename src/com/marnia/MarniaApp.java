@@ -13,7 +13,7 @@ import com.marnia.client.net.packet.C05DoorUnlockedPacket;
 import com.marnia.client.net.packet.C06RemoveEntityPacket;
 import com.marnia.net.PacketRegistry;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
-import com.marnia.server.net.packet.S07UnlockDoorPacket;
+import com.marnia.server.net.packet.S07EnterDoorPacket;
 
 public abstract class MarniaApp extends Application {
 
@@ -44,7 +44,7 @@ public abstract class MarniaApp extends Application {
 		registry.addPacketType(C04KeyCollectedPacket.class, 4, C04KeyCollectedPacket::new);
 		registry.addPacketType(C05DoorUnlockedPacket.class, 5, C05DoorUnlockedPacket::new);
 		registry.addPacketType(C06RemoveEntityPacket.class, 6, C06RemoveEntityPacket::new);
-		registry.addPacketType(S07UnlockDoorPacket.class, 7, S07UnlockDoorPacket::new);
+		registry.addPacketType(S07EnterDoorPacket.class, 7, S07EnterDoorPacket::new);
 		
 		setDebug(false);
 	}

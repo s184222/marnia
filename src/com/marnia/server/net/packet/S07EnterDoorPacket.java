@@ -10,18 +10,18 @@ import com.marnia.net.packet.PacketEncoder;
 import com.marnia.server.net.IServerNetworkHandler;
 import com.marnia.util.SpaceHelper;
 
-public class S07UnlockDoorPacket implements IPacket<IServerNetworkHandler> {
+public class S07EnterDoorPacket implements IPacket<IServerNetworkHandler> {
 
 	private UUID doorIdentifier;
 	
-	public S07UnlockDoorPacket() {
+	public S07EnterDoorPacket() {
 	}
 
-	public S07UnlockDoorPacket(DoorEntity door) {
+	public S07EnterDoorPacket(DoorEntity door) {
 		this(door.getIdentifier());
 	}
 
-	public S07UnlockDoorPacket(UUID doorIdentifier) {
+	public S07EnterDoorPacket(UUID doorIdentifier) {
 		this.doorIdentifier = doorIdentifier;
 	}
 	
@@ -38,7 +38,7 @@ public class S07UnlockDoorPacket implements IPacket<IServerNetworkHandler> {
 
 	@Override
 	public void handlePacket(UUID senderIdentifier, IServerNetworkHandler handler) {
-		handler.onUnlockDoorPacket(senderIdentifier, this);
+		handler.onEnterDoorPacket(senderIdentifier, this);
 	}
 	
 	public UUID getDoorIdentifier() {

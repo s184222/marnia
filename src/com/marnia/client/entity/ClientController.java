@@ -10,7 +10,7 @@ import com.marnia.entity.DoorEntity;
 import com.marnia.entity.Entity;
 import com.marnia.entity.PlayerEntity;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
-import com.marnia.server.net.packet.S07UnlockDoorPacket;
+import com.marnia.server.net.packet.S07EnterDoorPacket;
 
 public class ClientController extends BasicController {
 
@@ -52,11 +52,12 @@ public class ClientController extends BasicController {
 		ClientMarniaApp app = ((ClientMarniaWorld)entity.world).getMarniaApp();
         ClientGameplayNetworkManager networkManager = app.getNetworkManager();
         
-		if (openDoor.isClicked() && !((PlayerEntity)entity).getKeyIdentifiers().isEmpty()) {
+		if (openDoor.isClicked()) {
 			Entity closestEntity = entity.world.getClosestEntity(entity);
 			if (closestEntity instanceof DoorEntity) {
 				DoorEntity doorEntity = (DoorEntity)closestEntity;
-				networkManager.sendPacket(new S07UnlockDoorPacket(doorEntity));
+				if (doorEntity.isUnlocked() || !((PlayerEntity)entity).getKeyIdentifiers().isEmpty())
+					networkManager.sendPacket(new S07EnterDoorPacket(doorEntity));
 			}
 		}
 

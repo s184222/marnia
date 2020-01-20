@@ -20,7 +20,7 @@ import com.marnia.net.packet.IPacket;
 import com.marnia.server.net.IServerNetworkHandler;
 import com.marnia.server.net.ServerGameplayNetworkManager;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
-import com.marnia.server.net.packet.S07UnlockDoorPacket;
+import com.marnia.server.net.packet.S07EnterDoorPacket;
 import com.marnia.server.world.ServerMarniaWorld;
 import com.marnia.server.world.gen.WorldEntityInfo;
 import com.marnia.server.world.gen.WorldFile;
@@ -141,6 +141,14 @@ public class GameplaySession implements IServerNetworkHandler {
 		return playerWorlds.get(playerIdentifier);
 	}
 	
+	private GameplayProfile getProfile(UUID identifier) {
+		for (GameplayProfile profile : profiles) {
+			if (profile.getIdentifier().equals(identifier))
+				return profile;
+		}
+		return null;
+	}
+	
 	@Override
 	public void onPlayerPosition(UUID senderIdentifier, S02PlayerPositionPacket packet) {
 		ServerMarniaWorld world = getPlayerWorld(senderIdentifier);
@@ -155,7 +163,7 @@ public class GameplaySession implements IServerNetworkHandler {
 	}
 
 	@Override
-	public void onUnlockDoorPacket(UUID senderIdentifier, S07UnlockDoorPacket unlockDoorPacket) {
+	public void onEnterDoorPacket(UUID senderIdentifier, S07EnterDoorPacket unlockDoorPacket) {
 		ServerMarniaWorld world = getPlayerWorld(senderIdentifier);
 		if (world == null)
 			return;
@@ -166,15 +174,24 @@ public class GameplaySession implements IServerNetworkHandler {
 		if (doorEntity instanceof DoorEntity && playerEntity instanceof PlayerEntity) {
 			DoorEntity door = (DoorEntity)doorEntity;
 			PlayerEntity player = (PlayerEntity)playerEntity;
-			
-			Iterator<UUID> keyIdentifiers = player.getKeyIdentifiers().iterator();
-			if (keyIdentifiers.hasNext()) {
-				Entity keyEntity = world.getEntity(keyIdentifiers.next());
-				if (keyEntity instanceof KeyEntity) {
-					world.removeEntity(keyEntity);
-					door.setUnlocked(true);
-					
-					sendPacketToAll(new C05DoorUnlockedPacket(door), world);
+
+			if (!door.isUnlocked()) {
+				Iterator<UUID> keyIdentifiers = player.getKeyIdentifiers().iterator();
+				if (keyIdentifiers.hasNext()) {
+					Entity keyEntity = world.getEntity(keyIdentifiers.next());
+					if (keyEntity instanceof KeyEntity) {
+						world.removeEntity(keyEntity);
+						door.setUnlocked(true);
+						
+						sendPacketToAll(new C05DoorUnlockedPacket(door), world);
+					}
+				}
+			} else {
+				int index = world.getWorldIndex();
+				if (index < worlds.length) {
+					GameplayProfile profile = getProfile(player.getIdentifier());
+					if (profile != null)
+						switchProfileWorld(profile, index + 1);
 				}
 			}
 		}
