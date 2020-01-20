@@ -18,6 +18,27 @@ public class KeyEntity extends Entity {
 	}
 
 	@Override
+	public void onAddedToWorld() {
+		if (followIdentifier != null) {
+			Entity player = world.getEntity(followIdentifier);
+			if (player instanceof PlayerEntity) {
+				((PlayerEntity)player).pickup(this);
+			} else {
+				followIdentifier = null;
+			}
+		}
+	}
+	
+	@Override
+	public void onRemovedFromWorld() {
+		if (followIdentifier != null) {
+			Entity player = world.getEntity(followIdentifier);
+			if (player instanceof PlayerEntity)
+				((PlayerEntity)player).loseKey(this);
+		}
+	}
+	
+	@Override
 	public void tick() {
 		super.tick();
 		
@@ -30,7 +51,7 @@ public class KeyEntity extends Entity {
 				player.pickup(this);
 				
 				GameplaySession session = ((ServerMarniaWorld)world).getSession();
-				session.sendPacketToAll(new C04KeyCollectedPacket(this, player));
+				session.sendPacketToAll(new C04KeyCollectedPacket(this, player), world);
 			}
 		}
 	}

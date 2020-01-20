@@ -5,12 +5,15 @@ import org.jspace.Space;
 
 import com.g4mesoft.Application;
 import com.g4mesoft.graphic.DisplayConfig;
-import com.marnia.client.net.packet.C00WorldDataPacket;
+import com.marnia.client.net.packet.C00SwitchWorldPacket;
 import com.marnia.client.net.packet.C01AddEntityPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.client.net.packet.C04KeyCollectedPacket;
+import com.marnia.client.net.packet.C05DoorUnlockedPacket;
+import com.marnia.client.net.packet.C06RemoveEntityPacket;
 import com.marnia.net.PacketRegistry;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
+import com.marnia.server.net.packet.S07UnlockDoorPacket;
 
 public abstract class MarniaApp extends Application {
 
@@ -34,11 +37,14 @@ public abstract class MarniaApp extends Application {
 		localSpace = new SequentialSpace();
 		
 		registry = new PacketRegistry();
-		registry.addPacketType(C00WorldDataPacket.class, 0, C00WorldDataPacket::new);
+		registry.addPacketType(C00SwitchWorldPacket.class, 0, C00SwitchWorldPacket::new);
 		registry.addPacketType(C01AddEntityPacket.class, 1, C01AddEntityPacket::new);
 		registry.addPacketType(S02PlayerPositionPacket.class, 2, S02PlayerPositionPacket::new);
 		registry.addPacketType(C03EntityPositionPacket.class, 3, C03EntityPositionPacket::new);
 		registry.addPacketType(C04KeyCollectedPacket.class, 4, C04KeyCollectedPacket::new);
+		registry.addPacketType(C05DoorUnlockedPacket.class, 5, C05DoorUnlockedPacket::new);
+		registry.addPacketType(C06RemoveEntityPacket.class, 6, C06RemoveEntityPacket::new);
+		registry.addPacketType(S07UnlockDoorPacket.class, 7, S07UnlockDoorPacket::new);
 		
 		setDebug(false);
 	}

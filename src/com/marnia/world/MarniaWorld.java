@@ -1,6 +1,7 @@
 package com.marnia.world;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -57,9 +58,9 @@ public abstract class MarniaWorld {
 		updatingEntities = false;
 		
 		for (Entity entity : entitiesToAdd)
-			entities.add(entity);
+			addEntity(entity);
 		for (Entity entity : entitiesToRemove)
-			entities.remove(entity);
+			removeEntity(entity);
 	}
 	
 	public void addEntity(Entity entity) {
@@ -73,8 +74,9 @@ public abstract class MarniaWorld {
 			entitiesToAdd.add(entity);
 		} else {
 			entities.add(entity);
+			entity.onAddedToWorld();
 		}
-		
+
 		identifierToEntity.put(identifier, entity);
 	}
 	
@@ -87,14 +89,19 @@ public abstract class MarniaWorld {
 		return identifier;
 	}
 	
-	public void removeEntity(Entity entity) {
-		if (updatingEntities) {
+	public boolean removeEntity(Entity entity) {
+		if (!updatingEntities) {
+			if (entities.remove(entity)) {
+				entity.onRemovedFromWorld();
+				identifierToEntity.remove(entity.getIdentifier());
+				return true;
+			}
+		} else if (entities.contains(entity) || entitiesToAdd.contains(entity)) {
 			entitiesToRemove.add(entity);
-		} else {
-			entities.remove(entity);
+			return true;
 		}
 		
-		identifierToEntity.remove(entity.getIdentifier());
+		return false;
 	}
 
 	public Entity getEntity(UUID identifier) {
@@ -140,6 +147,19 @@ public abstract class MarniaWorld {
 		return closestEntity;
 	}
 	
+	public void clearWorld() {
+		setWorldStorage(new WorldStorage(0, 0));
+		
+		entities.clear();
+		entitiesToAdd.clear();
+		entitiesToRemove.clear();
+		identifierToEntity.clear();
+	}
+	
+	public List<Entity> getEntities() {
+		return Collections.unmodifiableList(entities);
+	}
+	
 	public int getWidth() {
 		return storage.getWidth();
 	}
@@ -150,6 +170,10 @@ public abstract class MarniaWorld {
 	
 	public void setWorldStorage(WorldStorage storage) {
 		this.storage.copy(storage);
+	}
+	
+	public WorldStorage getStorage() {
+		return storage;
 	}
 
 	public abstract boolean isServer();

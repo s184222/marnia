@@ -6,8 +6,11 @@ import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.net.ClientGameplayNetworkManager;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.BasicController;
+import com.marnia.entity.DoorEntity;
 import com.marnia.entity.Entity;
+import com.marnia.entity.PlayerEntity;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
+import com.marnia.server.net.packet.S07UnlockDoorPacket;
 
 public class ClientController extends BasicController {
 
@@ -19,16 +22,18 @@ public class ClientController extends BasicController {
 	private final KeyInput left;
 	private final KeyInput right;
 	private final KeyInput jump;
+	private final KeyInput openDoor;
 
 	private boolean canDoubleJump;
 	private int jumpTimer;
 
 	private boolean wasInWater;
 	
-	public ClientController(KeyInput left, KeyInput right, KeyInput jump) {
+	public ClientController(KeyInput left, KeyInput right, KeyInput jump, KeyInput openDoor) {
 		this.left = left;
 		this.right = right;
 		this.jump = jump;
+		this.openDoor = openDoor;
 	}
 	
 	@Override
@@ -42,6 +47,17 @@ public class ClientController extends BasicController {
 		if (right.isPressed()) {
 			entity.vel.x += 0.15f;
 			moving = true;
+		}
+		
+		ClientMarniaApp app = ((ClientMarniaWorld)entity.world).getMarniaApp();
+        ClientGameplayNetworkManager networkManager = app.getNetworkManager();
+        
+		if (openDoor.isClicked() && !((PlayerEntity)entity).getKeyIdentifiers().isEmpty()) {
+			Entity closestEntity = entity.world.getClosestEntity(entity);
+			if (closestEntity instanceof DoorEntity) {
+				DoorEntity doorEntity = (DoorEntity)closestEntity;
+				networkManager.sendPacket(new S07UnlockDoorPacket(doorEntity));
+			}
 		}
 
 		if (entity.isOnGround())
@@ -66,8 +82,6 @@ public class ClientController extends BasicController {
 		
 		entity.move();
 		
-		ClientMarniaApp app = ((ClientMarniaWorld)entity.world).getMarniaApp();
-
 		if (inWater != wasInWater)
 			app.setCameraScaleFactorTarget(inWater ? IN_WATER_CAMERA_SCALE : 1.0f);
 		wasInWater = inWater;
@@ -76,7 +90,6 @@ public class ClientController extends BasicController {
         camera.setCenterX((camera.getCenterX() + entity.getCenterX()) * 0.5f);
         camera.setCenterY((camera.getCenterY() + entity.getCenterY()) * 0.5f);
 
-        ClientGameplayNetworkManager networkManager = app.getNetworkManager();
         networkManager.sendPacket(new S02PlayerPositionPacket(entity));
 	}
 }

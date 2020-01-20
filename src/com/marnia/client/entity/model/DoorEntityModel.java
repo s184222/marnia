@@ -9,6 +9,9 @@ import com.marnia.graphics.TextureLoader;
 
 public class DoorEntityModel extends EntityModel<DoorEntity> {
 
+	private static final int LOCKED_FRAME = 0;
+	private static final int UNLOCKED_FRAME = 1;
+	
 	private final Animation doorAnimation;
 	
 	public DoorEntityModel(DoorEntity entity) {
@@ -22,6 +25,7 @@ public class DoorEntityModel extends EntityModel<DoorEntity> {
 
 	@Override
 	public void tick() {
+		doorAnimation.setFrame(entity.isUnlocked() ? UNLOCKED_FRAME : LOCKED_FRAME);
 	}
 
 	@Override

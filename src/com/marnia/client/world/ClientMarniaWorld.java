@@ -120,10 +120,13 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 
 	@Override
-	public void removeEntity(Entity entity) {
-		super.removeEntity(entity);
-
-		entityModels.remove(entity.getIdentifier());
+	public boolean removeEntity(Entity entity) {
+		if (super.removeEntity(entity)) {
+			entityModels.remove(entity.getIdentifier());
+			return true;
+		}
+		
+		return false;
 	}
 
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
@@ -175,6 +178,12 @@ public class ClientMarniaWorld extends MarniaWorld {
 				}
 			}
 		}
+	}
+	
+	public void clearWorld() {
+		super.clearWorld();
+		
+		entityModels.clear();
 	}
 	
 	public ClientMarniaApp getMarniaApp() {

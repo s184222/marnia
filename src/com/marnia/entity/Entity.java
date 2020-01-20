@@ -54,6 +54,12 @@ public class Entity {
 		return new AABB(0.0f, 0.0f, 0.8f, 1.0f);
 	}
 	
+	public void onAddedToWorld() {
+	}
+
+	public void onRemovedFromWorld() {
+	}
+	
 	public void tick() {
 		prevPos.set(pos);
 		controller.update(this);

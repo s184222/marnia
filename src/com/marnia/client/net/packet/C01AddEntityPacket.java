@@ -42,7 +42,7 @@ public class C01AddEntityPacket implements IPacket<IClientNetworkHandler> {
 	public void decodePacket(PacketDecoder decoder) throws InterruptedException, IOException {
 		decoder.fetchData(SpaceHelper.INTEGER_MATCH);
 		entityId = decoder.getData(Integer.class, 0);
-		
+
 		IEntityProvider<?, ?> registry = EntityRegistry.getInstance().getEntityProvider(entityId);
 		if (registry == null)
 			throw new IOException("Registry with id not found: " + entityId);

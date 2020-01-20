@@ -5,11 +5,14 @@ import java.util.UUID;
 import org.jspace.Space;
 
 import com.marnia.client.ClientMarniaApp;
-import com.marnia.client.net.packet.C00WorldDataPacket;
+import com.marnia.client.net.packet.C00SwitchWorldPacket;
 import com.marnia.client.net.packet.C01AddEntityPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.client.net.packet.C04KeyCollectedPacket;
+import com.marnia.client.net.packet.C05DoorUnlockedPacket;
+import com.marnia.client.net.packet.C06RemoveEntityPacket;
 import com.marnia.client.world.ClientMarniaWorld;
+import com.marnia.entity.DoorEntity;
 import com.marnia.entity.Entity;
 import com.marnia.entity.KeyEntity;
 import com.marnia.entity.PlayerEntity;
@@ -51,8 +54,10 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	}
 	
 	@Override
-	public void onWorldDataPacket(C00WorldDataPacket worldDataPacket) {
-		app.getWorld().setWorldStorage(worldDataPacket.getStorage());
+	public void onSwitchWorldPacket(C00SwitchWorldPacket worldDataPacket) {
+		ClientMarniaWorld world = app.getWorld();
+		world.clearWorld();
+		world.setWorldStorage(worldDataPacket.getStorage());
 	}
 	
 	@Override
@@ -94,6 +99,24 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 			((KeyEntity)keyEntity).setFollowing((PlayerEntity)playerEntity);
 			((PlayerEntity)playerEntity).pickup((KeyEntity)keyEntity);
 		}
+	}
+	
+	@Override
+	public void onDoorUnlockedPacket(C05DoorUnlockedPacket doorUnlockedPacket) {
+		ClientMarniaWorld world = app.getWorld();
+		
+		Entity doorEntity = world.getEntity(doorUnlockedPacket.getDoorIdentifier());
+		if (doorEntity instanceof DoorEntity)
+			((DoorEntity)doorEntity).setUnlocked(true);
+	}
+	
+	@Override
+	public void onRemoveEntityPacket(C06RemoveEntityPacket removeEntityPacket) {
+		ClientMarniaWorld world = app.getWorld();
+		
+		Entity entity = world.getEntity(removeEntityPacket.getEntityIdentifier());
+		if (entity != null)
+			world.removeEntity(entity);
 	}
 	
 	@Override

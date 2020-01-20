@@ -10,20 +10,20 @@ import com.marnia.net.packet.PacketEncoder;
 import com.marnia.util.SpaceHelper;
 import com.marnia.world.WorldStorage;
 
-public class C00WorldDataPacket implements IPacket<IClientNetworkHandler> {
+public class C00SwitchWorldPacket implements IPacket<IClientNetworkHandler> {
 
 	private int width;
 	private int height;
 	private int[] tiles;
 	
-	public C00WorldDataPacket() {
+	public C00SwitchWorldPacket() {
 	}
 
-	public C00WorldDataPacket(WorldStorage storage) {
+	public C00SwitchWorldPacket(WorldStorage storage) {
 		this(storage.getWidth(), storage.getHeight(), storage.getTiles());
 	}
 	
-	public C00WorldDataPacket(int width, int height, int[] tiles) {
+	public C00SwitchWorldPacket(int width, int height, int[] tiles) {
 		this.width = width;
 		this.height = height;
 		this.tiles = tiles;
@@ -44,7 +44,7 @@ public class C00WorldDataPacket implements IPacket<IClientNetworkHandler> {
 
 	@Override
 	public void handlePacket(UUID senderIdentifier, IClientNetworkHandler handler) {
-		handler.onWorldDataPacket(this);
+		handler.onSwitchWorldPacket(this);
 	}
 	
 	public int getWidth() {

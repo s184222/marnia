@@ -55,6 +55,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private KeyInput leftKey;
 	private KeyInput rightKey;
 	private KeyInput jumpKey;
+	private KeyInput openDoorKey;
+	
 	private KeyInput fullscreenKey;
 
 	private TextureLoader textureLoader;
@@ -86,9 +88,11 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		leftKey = new KeySingleInput("left", KeyEvent.VK_A, KeyEvent.VK_LEFT);
 		rightKey = new KeySingleInput("right", KeyEvent.VK_D, KeyEvent.VK_RIGHT);
 		jumpKey = new KeySingleInput("jump", KeyEvent.VK_W, KeyEvent.VK_SPACE, KeyEvent.VK_UP);
+		openDoorKey = new KeySingleInput("openDoor", KeyEvent.VK_S, KeyEvent.VK_DOWN);
+		
 		fullscreenKey = new KeySingleInput("fullscreen", KeyEvent.VK_F11);
 
-		Application.addKeys(leftKey, rightKey, jumpKey, fullscreenKey);
+		Application.addKeys(leftKey, rightKey, jumpKey, openDoorKey, fullscreenKey);
 
 		textureLoader = new TextureLoader();
 
@@ -290,7 +294,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	}
 	
 	public IController getClientController() {
-		return new ClientController(leftKey, rightKey, jumpKey);
+		return new ClientController(leftKey, rightKey, jumpKey, openDoorKey);
 	}
 
 	public TextureLoader getTextureLoader() {

@@ -43,7 +43,7 @@ public class EntityRegistry {
 		IEntityProvider entityProvider = getEntityProvider(id);
 		if (entityProvider == null)
 			return null;
-		if (!entityProvider.getContainerClass().equals(container.getClass()))
+		if (!entityProvider.getContainerClass().isAssignableFrom(container.getClass()))
 			return null;
 		return entityProvider.getEntity(world, container, placeAtFeet);
 	}
