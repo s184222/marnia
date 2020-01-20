@@ -2,33 +2,41 @@ package com.marnia.entity;
 
 import java.util.UUID;
 
-import com.marnia.server.entity.KeyController;
+import com.marnia.client.net.packet.C04KeyCollectedPacket;
+import com.marnia.server.GameplaySession;
+import com.marnia.server.world.ServerMarniaWorld;
 import com.marnia.world.MarniaWorld;
 
 public class KeyEntity extends Entity {
 
 	private UUID followIdentifier;
 	
-	public KeyEntity(MarniaWorld world, UUID identifier) {
-		super(world, identifier);
+	public KeyEntity(MarniaWorld world) {
+		super(world, new KeyController());
 	
 		followIdentifier = null;
-		
-		if (world.isServer())
-			setController(new KeyController());
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
 		
-		if (world.isServer()) {
+		if (world.isServer() && followIdentifier == null) {
 			Entity closestEntity = world.getClosestEntity(this);
 			if (closestEntity instanceof PlayerEntity && closestEntity.getHitbox().collides(hitbox)) {
 				followIdentifier = closestEntity.identifier;
-				((PlayerEntity)closestEntity).pickup(this);
+				
+				PlayerEntity player = (PlayerEntity)closestEntity;
+				player.pickup(this);
+				
+				GameplaySession session = ((ServerMarniaWorld)world).getSession();
+				session.sendPacketToAll(new C04KeyCollectedPacket(this, player));
 			}
 		}
+	}
+
+	public void setFollowing(PlayerEntity player) {
+		followIdentifier = player.identifier;
 	}
 	
 	public UUID getFollowIdentifier() {

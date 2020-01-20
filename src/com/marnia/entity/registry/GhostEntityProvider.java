@@ -7,7 +7,8 @@ public class GhostEntityProvider extends BasicEntityProvider<GhostEntity> {
 
 	@Override
 	public GhostEntity getEntity(MarniaWorld world, EntityContainer container) {
-		GhostEntity ghost = new GhostEntity(world, container.getIdentifier());
+		GhostEntity ghost = new GhostEntity(world);
+		ghost.setIdentifier(container.getIdentifier());
 		ghost.moveToImmediately(container.getX(), container.getY());
 		return ghost;
 	}

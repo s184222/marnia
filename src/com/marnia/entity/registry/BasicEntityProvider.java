@@ -26,7 +26,7 @@ public abstract class BasicEntityProvider<E extends Entity> implements IEntityPr
 
 	@Override
 	public EntityContainer getContainer(E entity) {
-		return new EntityContainer(entity.pos.x, entity.pos.y, entity.identifier);
+		return new EntityContainer(entity.pos.x, entity.pos.y, entity.getIdentifier());
 	}
 
 	@Override

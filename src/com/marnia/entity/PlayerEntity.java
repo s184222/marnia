@@ -16,7 +16,9 @@ public class PlayerEntity extends Entity {
 	private int deathTimer;
 
 	public PlayerEntity(MarniaWorld world, UUID identifier, PlayerColor color) {
-		super(world, identifier);
+		super(world);
+		
+		setIdentifier(identifier);
 		
 		this.color = color;
 	}

@@ -7,7 +7,8 @@ public class KeyEntityProvider extends BasicEntityProvider<KeyEntity> {
 
 	@Override
 	public KeyEntity getEntity(MarniaWorld world, EntityContainer container) {
-		KeyEntity keyEntity = new KeyEntity(world, container.getIdentifier());
+		KeyEntity keyEntity = new KeyEntity(world);
+		keyEntity.setIdentifier(container.getIdentifier());
 		keyEntity.moveToImmediately(container.getX(), container.getY());
 		return keyEntity;
 	}

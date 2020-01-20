@@ -21,7 +21,7 @@ public class C03EntityPositionPacket implements IPacket<IClientNetworkHandler> {
 	}
 
 	public C03EntityPositionPacket(Entity entity) {
-		this(entity.pos.x, entity.pos.y, entity.identifier);
+		this(entity.pos.x, entity.pos.y, entity.getIdentifier());
 	}
 	
 	public C03EntityPositionPacket(float x, float y, UUID identifier) {

@@ -14,7 +14,7 @@ public class Entity {
 	public static final IController DUMMY_CONTROLLER = new DummyController();
 	
 	public final MarniaWorld world;
-	public final UUID identifier;
+	protected UUID identifier;
 	private IController controller;
 	
 	public final Vec2f prevPos;
@@ -31,13 +31,12 @@ public class Entity {
 	private boolean inWater;
 	private boolean inWaterNeedsUpdate;
 	
-	public Entity(MarniaWorld world, UUID identifier) {
-		this(world, identifier, DUMMY_CONTROLLER);
+	public Entity(MarniaWorld world) {
+		this(world, DUMMY_CONTROLLER);
 	}
 	
-	public Entity(MarniaWorld world, UUID identifier, IController controller) {
+	public Entity(MarniaWorld world, IController controller) {
 		this.world = world;
-		this.identifier = identifier;
 		this.controller = controller;
 		
 		pos = new Vec2f();
@@ -146,7 +145,15 @@ public class Entity {
 
 		return false;
 	}
-
+	
+	public void setIdentifier(UUID identifier) {
+		if (this.identifier != null)
+			throw new IllegalArgumentException("Identifier already set!");
+		
+		if (identifier != null)
+			this.identifier = identifier;
+	}
+	
 	public Tile getTileBelow() {
 		int xtMid = (int)(0.5f * (hitbox.x0 + hitbox.x1));
 		int ytBelow = (int)(hitbox.y1 + 0.1f);
@@ -154,11 +161,11 @@ public class Entity {
 	}
 	
 	public float getCenterX() {
-		return (hitbox.x0 + hitbox.x1)/2;
+		return (hitbox.x0 + hitbox.x1) / 2.0f;
 	}
 
 	public float getCenterY() {
-		return (hitbox.y0 + hitbox.y1)/2;
+		return (hitbox.y0 + hitbox.y1) / 2.0f;
 	}
 
 	public boolean isOnGround() {
@@ -175,5 +182,9 @@ public class Entity {
 	
 	public AABB getHitbox() {
 		return hitbox;
+	}
+	
+	public UUID getIdentifier() {
+		return identifier;
 	}
 }

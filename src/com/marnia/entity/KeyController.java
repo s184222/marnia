@@ -1,13 +1,8 @@
-package com.marnia.server.entity;
+package com.marnia.entity;
 
 import java.util.UUID;
 
 import com.g4mesoft.math.MathUtils;
-import com.marnia.client.net.packet.C03EntityPositionPacket;
-import com.marnia.entity.Entity;
-import com.marnia.entity.IController;
-import com.marnia.entity.KeyEntity;
-import com.marnia.server.world.ServerMarniaWorld;
 
 public class KeyController implements IController {
 
@@ -30,9 +25,6 @@ public class KeyController implements IController {
 			entity.vel.y = dy * moveFactor;
 			
 			entity.move(false);
-			
-			C03EntityPositionPacket packet = new C03EntityPositionPacket(entity);
-			((ServerMarniaWorld)entity.world).getSession().sendPacketToAll(packet);
 		}
 	}
 	

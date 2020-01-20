@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.marnia.entity.registry.EntityContainer;
 import com.marnia.entity.registry.EntityRegistry;
@@ -92,7 +91,7 @@ public final class WorldLoader {
 		}
 		
 		// Might have to be changed to ensure unique ids.
-		EntityContainer container = new EntityContainer(xt, yt, UUID.randomUUID());
+		EntityContainer container = new EntityContainer(xt, yt, null);
 		entityInfos.add(new WorldEntityInfo(entityId, container));
 	}
 	

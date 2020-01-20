@@ -1,6 +1,6 @@
 package com.marnia.client.world;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -48,7 +48,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 		spriteData = new int[storage.getWidth() * storage.getHeight()];
 
 		entityModelRegistry = new EntityModelRegistry();
-		entityModels = new HashMap<UUID, EntityModel<?>>();
+		entityModels = new LinkedHashMap<UUID, EntityModel<?>>();
 
 		Texture[] backgrounds = app.getTextureLoader().getWorldBackgrounds();
 		backgroundLayers = new ParallaxedWorldTexture[backgrounds.length];
@@ -113,14 +113,14 @@ public class ClientMarniaWorld extends MarniaWorld {
 	public void addEntity(Entity entity) {
 		super.addEntity(entity);
 
-		entityModels.put(entity.identifier, entityModelRegistry.getEntityModel(entity));
+		entityModels.put(entity.getIdentifier(), entityModelRegistry.getEntityModel(entity));
 	}
 
 	@Override
 	public void removeEntity(Entity entity) {
 		super.removeEntity(entity);
 
-		entityModels.remove(entity.identifier);
+		entityModels.remove(entity.getIdentifier());
 	}
 
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {

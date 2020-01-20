@@ -2,7 +2,9 @@ package com.marnia.world;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -18,6 +20,8 @@ public abstract class MarniaWorld {
 	private final List<Entity> entitiesToRemove;
 	private final List<Entity> entitiesToAdd;
 	
+	protected final Map<UUID, Entity> identifierToEntity;
+	
 	private boolean updatingEntities;
 
 	public final Random random;
@@ -28,6 +32,8 @@ public abstract class MarniaWorld {
 		entities = new ArrayList<Entity>();
 		entitiesToRemove = new ArrayList<Entity>();
 		entitiesToAdd = new ArrayList<Entity>();
+		
+		identifierToEntity = new LinkedHashMap<UUID, Entity>();
 	
 		random = new Random();
 	}
@@ -57,11 +63,28 @@ public abstract class MarniaWorld {
 	}
 	
 	public void addEntity(Entity entity) {
+		UUID identifier = entity.getIdentifier();
+		if (identifier == null) {
+			identifier = createUniqueIdentifier();
+			entity.setIdentifier(identifier);
+		}
+		
 		if (updatingEntities) {
 			entitiesToAdd.add(entity);
 		} else {
 			entities.add(entity);
 		}
+		
+		identifierToEntity.put(identifier, entity);
+	}
+	
+	private UUID createUniqueIdentifier() {
+		UUID identifier;
+		do {
+			identifier = UUID.randomUUID();
+		} while (getEntity(identifier) != null);
+		
+		return identifier;
 	}
 	
 	public void removeEntity(Entity entity) {
@@ -70,14 +93,12 @@ public abstract class MarniaWorld {
 		} else {
 			entities.remove(entity);
 		}
+		
+		identifierToEntity.remove(entity.getIdentifier());
 	}
 
 	public Entity getEntity(UUID identifier) {
-		for(Entity entity : entities) {
-			if(entity.identifier.equals(identifier))
-				return entity;
-		}
-		return null;
+		return identifierToEntity.get(identifier);
 	}
 	
 	public List<AABB> getCollidingHitboxes(AABB hitbox) {

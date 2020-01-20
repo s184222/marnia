@@ -8,8 +8,10 @@ import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.net.packet.C00WorldDataPacket;
 import com.marnia.client.net.packet.C01AddEntityPacket;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
+import com.marnia.client.net.packet.C04KeyCollectedPacket;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.Entity;
+import com.marnia.entity.KeyEntity;
 import com.marnia.entity.PlayerEntity;
 import com.marnia.entity.registry.EntityRegistry;
 import com.marnia.net.GameplayNetworkManager;
@@ -60,12 +62,12 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 				world, addEntityPacket.getEntityContainer());
 		
 		if (entity != null) {
-			Entity currentEntity = world.getEntity(entity.identifier);
+			Entity currentEntity = world.getEntity(entity.getIdentifier());
 			if (currentEntity != null)
 				world.removeEntity(currentEntity);
 			
 			// This is our player entity.
-			if (entity instanceof PlayerEntity && entity.identifier.equals(app.getIdentifier())) {
+			if (entity instanceof PlayerEntity && entity.getIdentifier().equals(app.getIdentifier())) {
 				entity.setController(app.getClientController());
 				app.setPlayerEntity((PlayerEntity)entity);
 			}
@@ -79,6 +81,19 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 		Entity entity = app.getWorld().getEntity(positionPacket.getIdentifier());
 		if (entity != null)
 			entity.moveToImmediately(positionPacket.getX(), positionPacket.getY());
+	}
+
+	@Override
+	public void onKeyCollectedPacket(C04KeyCollectedPacket keyCollectedPacket) {
+		ClientMarniaWorld world = app.getWorld();
+		
+		Entity keyEntity = world.getEntity(keyCollectedPacket.getKeyIdentifier());
+		Entity playerEntity = world.getEntity(keyCollectedPacket.getPlayerIdentifier());
+		
+		if (keyEntity instanceof KeyEntity && playerEntity instanceof PlayerEntity) {
+			((KeyEntity)keyEntity).setFollowing((PlayerEntity)playerEntity);
+			((PlayerEntity)playerEntity).pickup((KeyEntity)keyEntity);
+		}
 	}
 	
 	@Override

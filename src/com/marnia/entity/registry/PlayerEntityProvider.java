@@ -33,7 +33,7 @@ public class PlayerEntityProvider implements IEntityProvider<PlayerEntity, Playe
 
 	@Override
 	public PlayerEntityContainer getContainer(PlayerEntity player) {
-		return new PlayerEntityContainer(player.pos.x, player.pos.y, player.identifier, player.getColor());
+		return new PlayerEntityContainer(player.pos.x, player.pos.y, player.getIdentifier(), player.getColor());
 	}
 
 	@Override
