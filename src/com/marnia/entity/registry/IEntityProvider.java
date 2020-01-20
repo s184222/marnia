@@ -15,7 +15,7 @@ public interface IEntityProvider<E extends Entity, C extends EntityContainer> {
 	
 	public EntityContainer getContainer(E entity);
 
-	public E getEntity(MarniaWorld world, C container);
+	public E getEntity(MarniaWorld world, C container, boolean placeAtFeet);
 	
 	public Class<E> getEntityClass();
 

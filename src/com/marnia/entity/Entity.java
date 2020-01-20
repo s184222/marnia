@@ -44,10 +44,14 @@ public class Entity {
 	
 		vel = new Vec2f();
 		
-		hitbox = new AABB(0.0f, 0.0f, 0.8f, 1.0f);
+		hitbox = createHitbox();
 	
 		inWater = false;
 		inWaterNeedsUpdate = true;
+	}
+	
+	protected AABB createHitbox() {
+		return new AABB(0.0f, 0.0f, 0.8f, 1.0f);
 	}
 	
 	public void tick() {
@@ -101,9 +105,9 @@ public class Entity {
 		inWaterNeedsUpdate = true;
 	}
 	
-	public void moveToImmediately(float x, float y) {
+	public void moveToImmediately(float x, float y, boolean placeAtFeet) {
 		vel.set(0.0f);
-		hitbox.move(x - hitbox.x0, y - hitbox.y0);
+		hitbox.move(x - hitbox.x0, placeAtFeet ? (y - hitbox.y1) : (y - hitbox.y0));
 		pos.set(hitbox.x0, hitbox.y0);
 
 		inWaterNeedsUpdate = true;

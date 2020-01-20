@@ -11,6 +11,7 @@ public class EntityRegistry {
 	public static final int PLAYER_PROVIDER_ID = 0;
 	public static final int GHOST_PROVIDER_ID = 1;
 	public static final int KEY_PROVIDER_ID = 2;
+	public static final int DOOR_PROVIDER_ID = 3;
 
 	private static EntityRegistry instance;
 	
@@ -37,14 +38,14 @@ public class EntityRegistry {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Entity getEntity(int id, MarniaWorld world, EntityContainer container) {
+	public Entity getEntity(int id, MarniaWorld world, EntityContainer container, boolean placeAtFeet) {
 		@SuppressWarnings("rawtypes")
 		IEntityProvider entityProvider = getEntityProvider(id);
 		if (entityProvider == null)
 			return null;
 		if (!entityProvider.getContainerClass().equals(container.getClass()))
 			return null;
-		return entityProvider.getEntity(world, container);
+		return entityProvider.getEntity(world, container, placeAtFeet);
 	}
 	
 	public int getEntityId(Class<? extends Entity> entityClazz) {
@@ -62,6 +63,7 @@ public class EntityRegistry {
 		instance.registerEntityProvider(new PlayerEntityProvider(), PLAYER_PROVIDER_ID);
 		instance.registerEntityProvider(new GhostEntityProvider(), GHOST_PROVIDER_ID);
 		instance.registerEntityProvider(new KeyEntityProvider(), KEY_PROVIDER_ID);
+		instance.registerEntityProvider(new DoorEntityProvider(), DOOR_PROVIDER_ID);
 	}
 	
 	public static synchronized EntityRegistry getInstance() {

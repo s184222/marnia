@@ -91,7 +91,7 @@ public final class WorldLoader {
 		}
 		
 		// Might have to be changed to ensure unique ids.
-		EntityContainer container = new EntityContainer(xt, yt, null);
+		EntityContainer container = new EntityContainer(xt, yt + 1.0f, null);
 		entityInfos.add(new WorldEntityInfo(entityId, container));
 	}
 	

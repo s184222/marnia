@@ -9,12 +9,14 @@ import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.MathUtils;
 import com.marnia.client.ClientMarniaApp;
+import com.marnia.client.entity.model.DoorEntityModel;
 import com.marnia.client.entity.model.EntityModel;
 import com.marnia.client.entity.model.EntityModelRegistry;
 import com.marnia.client.entity.model.GhostEntityModel;
 import com.marnia.client.entity.model.KeyEntityModel;
 import com.marnia.client.entity.model.PlayerEntityModel;
 import com.marnia.client.util.CameraUtil;
+import com.marnia.entity.DoorEntity;
 import com.marnia.entity.Entity;
 import com.marnia.entity.GhostEntity;
 import com.marnia.entity.KeyEntity;
@@ -64,6 +66,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 		entityModelRegistry.registerModelProvider(PlayerEntity.class, PlayerEntityModel::new);
 		entityModelRegistry.registerModelProvider(GhostEntity.class, GhostEntityModel::new);
 		entityModelRegistry.registerModelProvider(KeyEntity.class, KeyEntityModel::new);
+		entityModelRegistry.registerModelProvider(DoorEntity.class, DoorEntityModel::new);
 	}
 	
 	public void tickEntityModels() {

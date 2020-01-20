@@ -41,7 +41,7 @@ public class PlayerEntity extends Entity {
 
 	public void respawnAtCheckpoint() {
 		if (world.isServer()) {
-			moveToImmediately(0.0f, 0.0f);
+			moveToImmediately(0.0f, 0.0f, false);
 			GameplaySession session = ((ServerMarniaWorld)world).getSession();
 			session.sendPacketToAll(new C03EntityPositionPacket(this));
 

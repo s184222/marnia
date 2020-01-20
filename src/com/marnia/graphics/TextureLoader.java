@@ -38,12 +38,16 @@ public class TextureLoader {
 	private static final int PLAYER_RUN_SHEET_TH = 155;
 
 	private static final String GHOST_SHEET_PATH = "/textures/ghost_normal.png";
-	private static final int GHOST_SHEET_TW = 51 * 2;
-	private static final int GHOST_SHEET_TH = 73 * 2;
+	private static final int GHOST_SHEET_TW = 102;
+	private static final int GHOST_SHEET_TH = 146;
 
 	private static final String KEY_SHEET_PATH = "/textures/key.png";
 	private static final int KEY_SHEET_TW = 70;
 	private static final int KEY_SHEET_TH = 70;
+	
+	private static final String DOOR_SHEET_PATH = "/textures/door.png";
+	private static final int DOOR_SHEET_TW = 70;
+	private static final int DOOR_SHEET_TH = 110;
 
 	private static final int   MENU_BACKGROUND_SCALE  = 2;
 	private static final float MENU_BLUR_RADIUS       = 5.0f;
@@ -58,6 +62,7 @@ public class TextureLoader {
 	
 	private TileSheet ghostTileSheet;
 	private TileSheet keyTileSheet;
+	private TileSheet doorTileSheet;
 	
 	private Texture menuBackground;
 
@@ -75,8 +80,10 @@ public class TextureLoader {
 		playerJumpTileSheet = readPlayerTileSheets(PLAYER_JUMP_SHEET_PATH, PLAYER_JUMP_SHEET_TW, PLAYER_JUMP_SHEET_TH);
 		playerRunTileSheet = readPlayerTileSheets(PLAYER_RUN_SHEET_PATH, PLAYER_RUN_SHEET_TW, PLAYER_RUN_SHEET_TH);
 
-		ghostTileSheet = readTileSheet(GHOST_SHEET_PATH,GHOST_SHEET_TW, GHOST_SHEET_TH);
+		ghostTileSheet = readTileSheet(GHOST_SHEET_PATH, GHOST_SHEET_TW, GHOST_SHEET_TH);
 		keyTileSheet = readTileSheet(KEY_SHEET_PATH, KEY_SHEET_TW, KEY_SHEET_TH);
+		
+		doorTileSheet = readTileSheet(DOOR_SHEET_PATH, DOOR_SHEET_TW, DOOR_SHEET_TH);
 		
 		Texture composedWorldBackground = readTexture(COMPOSED_WORLD_BACKGROUND_PATH);
 		menuBackground = blurTexture(composedWorldBackground, MENU_BACKGROUND_SCALE, MENU_BLUR_RADIUS);
@@ -150,6 +157,10 @@ public class TextureLoader {
 
 	public TileSheet getKeyTileSheet() {
 		return keyTileSheet;
+	}
+
+	public TileSheet getDoorTileSheet() {
+		return doorTileSheet;
 	}
 	
 	public Texture getMenuBackground() {

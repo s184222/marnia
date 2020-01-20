@@ -59,7 +59,7 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	public void onAddEntityPacket(C01AddEntityPacket addEntityPacket) {
 		ClientMarniaWorld world = app.getWorld();
 		Entity entity = EntityRegistry.getInstance().getEntity(addEntityPacket.getEntityId(), 
-				world, addEntityPacket.getEntityContainer());
+				world, addEntityPacket.getEntityContainer(), false);
 		
 		if (entity != null) {
 			Entity currentEntity = world.getEntity(entity.getIdentifier());
@@ -80,7 +80,7 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	public void onEntityPositionPacket(C03EntityPositionPacket positionPacket) {
 		Entity entity = app.getWorld().getEntity(positionPacket.getIdentifier());
 		if (entity != null)
-			entity.moveToImmediately(positionPacket.getX(), positionPacket.getY());
+			entity.moveToImmediately(positionPacket.getX(), positionPacket.getY(), false);
 	}
 
 	@Override

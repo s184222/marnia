@@ -37,9 +37,9 @@ public class PlayerEntityProvider implements IEntityProvider<PlayerEntity, Playe
 	}
 
 	@Override
-	public PlayerEntity getEntity(MarniaWorld world, PlayerEntityContainer container) {
+	public PlayerEntity getEntity(MarniaWorld world, PlayerEntityContainer container, boolean placeAtFeet) {
 		PlayerEntity player = new PlayerEntity(world, container.getIdentifier(), container.getColor());
-		player.moveToImmediately(container.getX(), container.getY());
+		player.moveToImmediately(container.getX(), container.getY(), placeAtFeet);
 		return player;
 	}
 

@@ -66,7 +66,7 @@ public class GameplaySession implements IServerNetworkHandler {
 
 		EntityRegistry registry = EntityRegistry.getInstance();
 		for (WorldEntityInfo entityInfo : worldFile.getEntityInfos())
-			world.addEntity(registry.getEntity(entityInfo.getTypeId(), world, entityInfo.getContainer()));
+			world.addEntity(registry.getEntity(entityInfo.getTypeId(), world, entityInfo.getContainer(), true));
 
 		return true;
 	}
@@ -96,7 +96,7 @@ public class GameplaySession implements IServerNetworkHandler {
 	public void onPlayerPosition(UUID senderIdentifier, S02PlayerPositionPacket packet) {
 		Entity currentEntity = world.getEntity(senderIdentifier);
 		if (currentEntity != null)
-			currentEntity.moveToImmediately(packet.getX(), packet.getY());
+			currentEntity.moveToImmediately(packet.getX(), packet.getY(), false);
 		
 		sendPacketToAllExcept(new C03EntityPositionPacket(currentEntity), senderIdentifier);
 	}
