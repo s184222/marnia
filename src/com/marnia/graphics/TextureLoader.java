@@ -13,12 +13,12 @@ import com.marnia.entity.PlayerColor;
 
 public class TextureLoader {
 
-	private static final String WORLD_SHEET_PATH = "/textures/normal/tilesheet.png";
+	private static final String WORLD_SHEET_PATH = "/textures/desert/tilesheet.png";
 	private static final int WORLD_SHEET_TW = 128;
 	private static final int WORLD_SHEET_TH = 128;
 
-	private static final String COMPOSED_WORLD_BACKGROUND_PATH = "/textures/normal/background.png";
-	private static final String WORLD_BACKGROUNDS_PATH = "/textures/normal/background_%d.png";
+	private static final String COMPOSED_WORLD_BACKGROUND_PATH = "/textures/desert/background.png";
+	private static final String WORLD_BACKGROUNDS_PATH = "/textures/desert/background_%d.png";
 	private static final int NUM_WORLD_BACKGROUNDS = 6;
 	
 	private static final String PLAYER_IDLE_SHEET_PATH = "/textures/player/idle_%s.png";
