@@ -17,14 +17,16 @@ public class KeyController implements IController {
 			float dy = followEntity.getCenterY() - entity.getCenterY();
 
 			float dist = MathUtils.sqrt(dx * dx + dy * dy);
-			dx /= dist;
-			dy /= dist;
+			if (!MathUtils.nearZero(dist)) {
+				dx /= dist;
+				dy /= dist;
 			
-			float moveFactor = (dist - MIN_DIST) * MOVE_FACTOR;
-			entity.vel.x = dx * moveFactor;
-			entity.vel.y = dy * moveFactor;
-			
-			entity.move(false);
+				float moveFactor = (dist - MIN_DIST) * MOVE_FACTOR;
+				entity.vel.x = dx * moveFactor;
+				entity.vel.y = dy * moveFactor;
+				
+				entity.move(false);
+			}
 		}
 	}
 	
