@@ -2,9 +2,12 @@ package com.marnia.client;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.jspace.RemoteSpace;
+import org.jspace.SequentialSpace;
 import org.jspace.Space;
 
 import com.g4mesoft.Application;
@@ -23,9 +26,13 @@ import com.marnia.client.net.ClientGameplayNetworkManager;
 import com.marnia.client.net.ClientLobbyArea;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.IController;
+import com.marnia.entity.PlayerColor;
 import com.marnia.entity.PlayerEntity;
 import com.marnia.graphics.TextureLoader;
 import com.marnia.net.ILobbyEventListener;
+import com.marnia.server.GameplayProfile;
+import com.marnia.server.GameplaySession;
+import com.marnia.server.net.ServerGameplayNetworkManager;
 
 public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
@@ -51,6 +58,8 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private float cameraScaleFactorTarget;
 
 	private PlayerEntity player;
+	private GameplaySession practiceSession;
+	private ServerGameplayNetworkManager practiceNetworkManager;
 	
 	private KeyInput leftKey;
 	private KeyInput rightKey;
@@ -134,6 +143,32 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		return true;
 	}
 	
+	public void connectToPractice() {
+		if (lobbyArea != null || networkManager != null)
+			disconnectFromServer();
+
+		UUID identifier = UUID.randomUUID();
+		UUID practiceServerIdentifier;
+		do {
+			practiceServerIdentifier = UUID.randomUUID();
+		} while (practiceServerIdentifier.equals(identifier));
+		
+		gameplaySpace = new SequentialSpace();
+		practiceNetworkManager = new ServerGameplayNetworkManager(gameplaySpace, practiceServerIdentifier, registry);
+		practiceNetworkManager.start();
+		
+		List<GameplayProfile> profiles = new ArrayList<GameplayProfile>();
+		profiles.add(new GameplayProfile("Practice", identifier, PlayerColor.RED));
+		practiceSession = new GameplaySession(practiceNetworkManager, profiles);
+		practiceNetworkManager.addPlayer(identifier, practiceSession);
+		
+		initGameplayNetwork(practiceServerIdentifier, identifier);
+	
+		setRootComposition(null);
+	
+		practiceSession.startGame();
+	}
+	
 	public void disconnectFromServer() {
 		if (lobbyArea != null && lobbyArea.isRunning()) {
 			lobbyArea.stop();
@@ -147,8 +182,14 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 		identifier = serverIdentifier = null;
 		
-		closeRemoteSpace(lobbySpace);
-		closeRemoteSpace(gameplaySpace);
+		if (practiceNetworkManager != null) {
+			practiceNetworkManager.stop();
+			practiceNetworkManager = null;
+			practiceSession = null;
+		} else {
+			closeRemoteSpace(lobbySpace);
+			closeRemoteSpace(gameplaySpace);
+		}
 		
 		lobbySpace = gameplaySpace = null;
 		
@@ -167,6 +208,11 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	
 	@Override
 	public void tick() {
+		if (practiceNetworkManager != null)
+			practiceNetworkManager.tick();
+		if (practiceSession != null)
+			practiceSession.tick();
+		
 		cameraScaleFactor += (cameraScaleFactorTarget - cameraScaleFactor) * CAMERA_SCALE_EASING_FACTOR;
 
 		if (world != null) {

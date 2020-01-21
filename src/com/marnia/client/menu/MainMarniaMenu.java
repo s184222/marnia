@@ -36,9 +36,8 @@ public class MainMarniaMenu extends MarniaMenu {
 		
 		playButton = createButton(PRACTICE_TXT);
 		playButton.addButtonListener((owner) -> {
-			if (!fadeOutExit)  {
-				// TODO: make practice work.
-			}
+			if (!fadeOutExit)
+				app.connectToPractice();
 		});
 		buttonLayout.addComposition(playButton);
 		
