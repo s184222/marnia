@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.marnia.client.net.packet.C03EntityPositionPacket;
+import com.marnia.client.sound.SoundLoader;
 import com.marnia.server.GameplaySession;
 import com.marnia.server.world.ServerMarniaWorld;
 import com.marnia.world.MarniaWorld;
@@ -60,6 +61,9 @@ public class PlayerEntity extends Entity {
 
 	public void pickup(KeyEntity keyEntity) {
 		keyIdentifiers.add(keyEntity.identifier);
+		
+		if (!world.isServer())
+			SoundLoader.playSound(SoundLoader.COLLECT_SOUND_ID, 0.5f);
 	}
 
 	public void loseKey(KeyEntity keyEntity) {

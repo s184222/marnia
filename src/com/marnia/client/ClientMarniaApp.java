@@ -24,6 +24,7 @@ import com.marnia.client.menu.LobbyMarniaMenu;
 import com.marnia.client.menu.MainMarniaMenu;
 import com.marnia.client.net.ClientGameplayNetworkManager;
 import com.marnia.client.net.ClientLobbyArea;
+import com.marnia.client.sound.SoundLoader;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.IController;
 import com.marnia.entity.PlayerColor;
@@ -107,6 +108,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 
 		try {
 			textureLoader.loadTextures();
+			SoundLoader.loadSounds();
 		} catch (IOException e) {
 			e.printStackTrace();
 			stopRunning();
