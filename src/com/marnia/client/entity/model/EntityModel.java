@@ -6,6 +6,7 @@ import com.g4mesoft.world.phys.AABB;
 import com.marnia.client.util.CameraUtil;
 import com.marnia.entity.Entity;
 import com.marnia.graphics.Animation;
+import com.marnia.world.WorldTheme;
 
 public abstract class EntityModel<E extends Entity> {
 
@@ -15,6 +16,9 @@ public abstract class EntityModel<E extends Entity> {
 		this.entity = entity;
 	}
 
+	public void onThemeChanged(WorldTheme theme) {
+	}
+	
 	public abstract void tick();
 
 	public abstract void render(IRenderer2D renderer, float dt, DynamicCamera camera);

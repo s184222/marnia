@@ -6,6 +6,7 @@ import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.client.net.packet.C04KeyCollectedPacket;
 import com.marnia.client.net.packet.C05DoorUnlockedPacket;
 import com.marnia.client.net.packet.C06RemoveEntityPacket;
+import com.marnia.client.net.packet.C08WorldThemePacket;
 import com.marnia.net.packet.INetworkHandler;
 
 public interface IClientNetworkHandler extends INetworkHandler {
@@ -21,5 +22,7 @@ public interface IClientNetworkHandler extends INetworkHandler {
 	public void onDoorUnlockedPacket(C05DoorUnlockedPacket doorUnlockedPacket);
 
 	public void onRemoveEntityPacket(C06RemoveEntityPacket removeEntityPacket);
+
+	public void onWorldThemePacket(C08WorldThemePacket worldThemePacket);
 
 }

@@ -15,6 +15,7 @@ import com.marnia.world.tile.Tile;
 
 public abstract class MarniaWorld {
 
+	private WorldTheme theme;
 	protected final WorldStorage storage;
 
 	protected final List<Entity> entities;
@@ -27,7 +28,9 @@ public abstract class MarniaWorld {
 
 	public final Random random;
 	
-	public MarniaWorld() {
+	public MarniaWorld(WorldTheme theme) {
+		this.theme = theme;
+		
 		storage = new WorldStorage(0, 0);
 	
 		entities = new ArrayList<Entity>();
@@ -154,6 +157,14 @@ public abstract class MarniaWorld {
 		entitiesToAdd.clear();
 		entitiesToRemove.clear();
 		identifierToEntity.clear();
+	}
+
+	public void setTheme(WorldTheme theme) {
+		this.theme = theme;
+	}
+	
+	public WorldTheme getTheme() {
+		return theme;
 	}
 	
 	public List<Entity> getEntities() {

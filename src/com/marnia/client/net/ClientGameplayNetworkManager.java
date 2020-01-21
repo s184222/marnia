@@ -11,6 +11,7 @@ import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.client.net.packet.C04KeyCollectedPacket;
 import com.marnia.client.net.packet.C05DoorUnlockedPacket;
 import com.marnia.client.net.packet.C06RemoveEntityPacket;
+import com.marnia.client.net.packet.C08WorldThemePacket;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.DoorEntity;
 import com.marnia.entity.Entity;
@@ -117,6 +118,11 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 		Entity entity = world.getEntity(removeEntityPacket.getEntityIdentifier());
 		if (entity != null)
 			world.removeEntity(entity);
+	}
+
+	@Override
+	public void onWorldThemePacket(C08WorldThemePacket worldThemePacket) {
+		app.getWorld().setTheme(worldThemePacket.getTheme());
 	}
 	
 	@Override

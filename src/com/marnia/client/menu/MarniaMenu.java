@@ -1,5 +1,7 @@
 package com.marnia.client.menu;
 
+import java.util.Random;
+
 import com.g4mesoft.composition.LinearComposition;
 import com.g4mesoft.composition.text.ButtonComposition;
 import com.g4mesoft.graphic.GColor;
@@ -7,6 +9,8 @@ import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.Vec2i;
 import com.marnia.client.ClientMarniaApp;
 import com.marnia.graphics.Texture;
+import com.marnia.graphics.TextureTheme;
+import com.marnia.world.WorldTheme;
 
 public abstract class MarniaMenu extends LinearComposition {
 
@@ -29,7 +33,9 @@ public abstract class MarniaMenu extends LinearComposition {
 	public MarniaMenu(ClientMarniaApp app) {
 		this.app = app;
 		
-		background = app.getTextureLoader().getMenuBackground();
+		WorldTheme theme = WorldTheme.getRandomTheme(new Random());
+		TextureTheme textures = app.getTextureLoader().getTheme(theme);
+		background = textures.getMenuBackground();
 	}
 	
 	protected ButtonComposition createButton(String text) {

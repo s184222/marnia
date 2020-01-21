@@ -26,7 +26,7 @@ public enum PlayerColor {
 	}
 	
 	public static PlayerColor fromIndex(int index) {
-		return COLORS[index];
+		return (index < 0 || index >= COLORS.length) ? null : COLORS[index];
 	}
 	
 	static {

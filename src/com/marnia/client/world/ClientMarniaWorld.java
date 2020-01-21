@@ -22,10 +22,12 @@ import com.marnia.entity.GhostEntity;
 import com.marnia.entity.KeyEntity;
 import com.marnia.entity.PlayerEntity;
 import com.marnia.graphics.Texture;
+import com.marnia.graphics.TextureTheme;
 import com.marnia.graphics.TileSheet;
 import com.marnia.util.SpriteHelper;
 import com.marnia.world.MarniaWorld;
 import com.marnia.world.WorldStorage;
+import com.marnia.world.WorldTheme;
 import com.marnia.world.tile.Tile;
 
 public class ClientMarniaWorld extends MarniaWorld {
@@ -42,9 +44,11 @@ public class ClientMarniaWorld extends MarniaWorld {
 	private final EntityModelRegistry entityModelRegistry;
 	private final Map<UUID, EntityModel<?>> entityModels;
 	
-	private final ParallaxedWorldTexture[] backgroundLayers;
+	private ParallaxedWorldTexture[] backgroundLayers;
 	
 	public ClientMarniaWorld(ClientMarniaApp app) {
+		super(WorldTheme.PLAINS);
+		
 		this.app = app;
 		
 		spriteData = new int[storage.getWidth() * storage.getHeight()];
@@ -52,14 +56,10 @@ public class ClientMarniaWorld extends MarniaWorld {
 		entityModelRegistry = new EntityModelRegistry();
 		entityModels = new LinkedHashMap<UUID, EntityModel<?>>();
 
-		Texture[] backgrounds = app.getTextureLoader().getWorldBackgrounds();
-		backgroundLayers = new ParallaxedWorldTexture[backgrounds.length];
-		for (int i = 0; i < backgrounds.length; i++) {
-			float parallaxing = LAYER_PARALLAXING_FACTOR * (i + 1);
-			backgroundLayers[i] = new ParallaxedWorldTexture(this, backgrounds[i], parallaxing);
-		}
+		backgroundLayers = new ParallaxedWorldTexture[0];
 		
 		registerEntityModels();
+		initParallaxing();
 	}
 
 	private void registerEntityModels() {
@@ -161,7 +161,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 		int x1 = MathUtils.min(getWidth() - 1, (int)(xOffset + viewWidth + 0.5f));
 		int y1 = MathUtils.min(getHeight() - 1, (int)(yOffset + viewHeight + 0.5f));
 
-		TileSheet sheet = app.getTextureLoader().getWorldTileSheet();
+		TileSheet sheet = getTextureTheme().getWorldTileSheet();
 		for (int xt = x0; xt <= x1; xt++) {
 			for (int yt = y0; yt <= y1; yt++) {
 				if (getTile(xt, yt) != Tile.AIR_TILE) {
@@ -180,6 +180,31 @@ public class ClientMarniaWorld extends MarniaWorld {
 		}
 	}
 	
+	private void initParallaxing() {
+		Texture[] backgrounds = getTextureTheme().getWorldBackgrounds();
+		backgroundLayers = new ParallaxedWorldTexture[backgrounds.length];
+		for (int i = 0; i < backgrounds.length; i++) {
+			float parallaxing = LAYER_PARALLAXING_FACTOR * (i + 1);
+			backgroundLayers[i] = new ParallaxedWorldTexture(this, backgrounds[i], parallaxing);
+		}
+		
+	}
+	
+	@Override
+	public void setTheme(WorldTheme theme) {
+		super.setTheme(theme);
+		
+		initParallaxing();
+		
+		for (EntityModel<?> entityModel : entityModels.values())
+			entityModel.onThemeChanged(theme);
+	}
+	
+	public TextureTheme getTextureTheme() {
+		return app.getTextureLoader().getTheme(getTheme());
+	}
+
+	@Override
 	public void clearWorld() {
 		super.clearWorld();
 		

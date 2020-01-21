@@ -10,17 +10,10 @@ import javax.imageio.ImageIO;
 
 import com.g4mesoft.graphic.filter.FastGaussianBlurPixelFilter;
 import com.marnia.entity.PlayerColor;
+import com.marnia.world.WorldTheme;
 
 public class TextureLoader {
 
-	private static final String WORLD_SHEET_PATH = "/textures/desert/tilesheet.png";
-	private static final int WORLD_SHEET_TW = 128;
-	private static final int WORLD_SHEET_TH = 128;
-
-	private static final String COMPOSED_WORLD_BACKGROUND_PATH = "/textures/desert/background.png";
-	private static final String WORLD_BACKGROUNDS_PATH = "/textures/desert/background_%d.png";
-	private static final int NUM_WORLD_BACKGROUNDS = 6;
-	
 	private static final String PLAYER_IDLE_SHEET_PATH = "/textures/player/idle_%s.png";
 	private static final int PLAYER_IDLE_SHEET_TW = 144;
 	private static final int PLAYER_IDLE_SHEET_TH = 155;
@@ -49,12 +42,6 @@ public class TextureLoader {
 	private static final int DOOR_SHEET_TW = 70;
 	private static final int DOOR_SHEET_TH = 110;
 
-	private static final int   MENU_BACKGROUND_SCALE  = 2;
-	private static final float MENU_BLUR_RADIUS       = 5.0f;
-	
-	private TileSheet worldTileSheet;
-	private Texture[] worldBackgrounds;
-
 	private TileSheet[] playerIdleTileSheet;
 	private TileSheet[] playerBlinkTileSheet;
 	private TileSheet[] playerJumpTileSheet;
@@ -64,17 +51,12 @@ public class TextureLoader {
 	private TileSheet keyTileSheet;
 	private TileSheet doorTileSheet;
 	
-	private Texture menuBackground;
+	private TextureTheme[] textureThemes;
 
 	public TextureLoader() {
 	}
 
 	public void loadTextures() throws IOException {
-		worldTileSheet = readTileSheet(WORLD_SHEET_PATH, WORLD_SHEET_TW, WORLD_SHEET_TH);
-		worldBackgrounds = new Texture[NUM_WORLD_BACKGROUNDS];
-		for (int i = 0; i < NUM_WORLD_BACKGROUNDS; i++)
-			worldBackgrounds[i] = readTexture(String.format(WORLD_BACKGROUNDS_PATH, i));
-
 		playerIdleTileSheet = readPlayerTileSheets(PLAYER_IDLE_SHEET_PATH, PLAYER_IDLE_SHEET_TW, PLAYER_IDLE_SHEET_TH);
 		playerBlinkTileSheet = readPlayerTileSheets(PLAYER_BLINK_SHEET_PATH, PLAYER_BLINK_SHEET_TW, PLAYER_BLINK_SHEET_TH);
 		playerJumpTileSheet = readPlayerTileSheets(PLAYER_JUMP_SHEET_PATH, PLAYER_JUMP_SHEET_TW, PLAYER_JUMP_SHEET_TH);
@@ -84,12 +66,16 @@ public class TextureLoader {
 		keyTileSheet = readTileSheet(KEY_SHEET_PATH, KEY_SHEET_TW, KEY_SHEET_TH);
 		
 		doorTileSheet = readTileSheet(DOOR_SHEET_PATH, DOOR_SHEET_TW, DOOR_SHEET_TH);
-		
-		Texture composedWorldBackground = readTexture(COMPOSED_WORLD_BACKGROUND_PATH);
-		menuBackground = blurTexture(composedWorldBackground, MENU_BACKGROUND_SCALE, MENU_BLUR_RADIUS);
+	
+		textureThemes = new TextureTheme[WorldTheme.values().length];
+		for (WorldTheme theme : WorldTheme.values()) {
+			TextureTheme textureTheme = new TextureTheme(theme);
+			textureTheme.loadTextures();
+			textureThemes[theme.getIndex()] = textureTheme;
+		}
 	}
 	
-	private Texture blurTexture(Texture original, int scale, float radius) {
+	static Texture blurTexture(Texture original, int scale, float radius) {
 		int width = original.getWidth() / scale;
 		int height = original.getHeight() / scale;
 		Image si = original.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -110,7 +96,7 @@ public class TextureLoader {
 		return new Texture(bi);
 	}
 	
-	private TileSheet[] readPlayerTileSheets(String basePath, int tileWidth, int tileHeight) throws IOException {
+	static TileSheet[] readPlayerTileSheets(String basePath, int tileWidth, int tileHeight) throws IOException {
 		TileSheet[] tileSheets = new TileSheet[PlayerColor.values().length];
 		for (PlayerColor color : PlayerColor.values()) {
 			String path = String.format(basePath, color.getName());
@@ -119,20 +105,12 @@ public class TextureLoader {
 		return tileSheets;
 	}
 
-	private TileSheet readTileSheet(String path, int tileWidth, int tileHeight) throws IOException {
+	static TileSheet readTileSheet(String path, int tileWidth, int tileHeight) throws IOException {
 		return new TileSheet(readTexture(path), tileWidth, tileHeight);
 	}
 
-	private Texture readTexture(String path) throws IOException {
+	static Texture readTexture(String path) throws IOException {
 		return new Texture(ImageIO.read(TextureLoader.class.getResource(path)));
-	}
-
-	public TileSheet getWorldTileSheet() {
-		return worldTileSheet;
-	}
-
-	public Texture[] getWorldBackgrounds() {
-		return worldBackgrounds;
 	}
 
 	public TileSheet getPlayerIdleTileSheet(PlayerColor color) {
@@ -163,7 +141,7 @@ public class TextureLoader {
 		return doorTileSheet;
 	}
 	
-	public Texture getMenuBackground() {
-		return menuBackground;
+	public TextureTheme getTheme(WorldTheme theme) {
+		return textureThemes[theme.getIndex()];
 	}
 }
