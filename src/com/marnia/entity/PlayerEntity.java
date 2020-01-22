@@ -34,7 +34,7 @@ public class PlayerEntity extends Entity {
 		super.tick();
 
 		if (world.isServer()) {
-			if (pos.y >= world.getHeight()) {
+			if (isInWater() || pos.y >= world.getHeight()) {
 				deathTimer++;
 
 				if (deathTimer >= DEATH_TIME)
