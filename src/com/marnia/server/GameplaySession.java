@@ -22,6 +22,7 @@ import com.marnia.server.net.IServerNetworkHandler;
 import com.marnia.server.net.ServerGameplayNetworkManager;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
 import com.marnia.server.net.packet.S07EnterDoorPacket;
+import com.marnia.server.net.packet.S10PlayerDeathPacket;
 import com.marnia.server.world.ServerMarniaWorld;
 import com.marnia.server.world.gen.WorldEntityInfo;
 import com.marnia.server.world.gen.WorldFile;
@@ -35,6 +36,8 @@ public class GameplaySession implements IServerNetworkHandler {
 		"/worlds/world2.csv",
 		"/worlds/world3.csv"
 	};
+	
+	private static final float MAX_DEATH_DIST = 5.0f;
 	
 	private final ServerGameplayNetworkManager networkManager;
 	private final List<GameplayProfile> profiles;
@@ -199,6 +202,25 @@ public class GameplaySession implements IServerNetworkHandler {
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	public void onPlayerDeathPacket(UUID senderIdentifier, S10PlayerDeathPacket playerDeathPacket) {
+		ServerMarniaWorld world = getPlayerWorld(senderIdentifier);
+		if (world == null)
+			return;
+		
+		Entity playerEntity = world.getEntity(senderIdentifier);
+		Entity causeEntity = world.getEntity(playerDeathPacket.getCauseIdentifier());
+		if (playerEntity instanceof PlayerEntity && causeEntity != null) {
+			PlayerEntity player = (PlayerEntity)playerEntity;
+			float distX = player.getCenterX() - causeEntity.getCenterX();
+			float distY = player.getCenterY() - causeEntity.getCenterY();
+			float distSqr = distX * distX + distY * distY;
+			
+			if (distSqr < MAX_DEATH_DIST * MAX_DEATH_DIST)
+				player.respawnAtCheckpoint();
 		}
 	}
 }

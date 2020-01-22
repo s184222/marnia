@@ -16,6 +16,7 @@ import com.marnia.client.net.packet.C09WorldDecorationPacket;
 import com.marnia.net.PacketRegistry;
 import com.marnia.server.net.packet.S02PlayerPositionPacket;
 import com.marnia.server.net.packet.S07EnterDoorPacket;
+import com.marnia.server.net.packet.S10PlayerDeathPacket;
 
 public abstract class MarniaApp extends Application {
 
@@ -49,6 +50,7 @@ public abstract class MarniaApp extends Application {
 		registry.addPacketType(S07EnterDoorPacket.class, 7, S07EnterDoorPacket::new);
 		registry.addPacketType(C08WorldThemePacket.class, 8, C08WorldThemePacket::new);
 		registry.addPacketType(C09WorldDecorationPacket.class, 9, C09WorldDecorationPacket::new);
+		registry.addPacketType(S10PlayerDeathPacket.class, 10, S10PlayerDeathPacket::new);
 		
 		setDebug(false);
 	}
