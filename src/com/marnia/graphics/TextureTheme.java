@@ -2,6 +2,7 @@ package com.marnia.graphics;
 
 import java.io.IOException;
 
+import com.marnia.decorations.DecorationType;
 import com.marnia.world.WorldTheme;
 
 public class TextureTheme {
@@ -14,6 +15,8 @@ public class TextureTheme {
 	private static final String WORLD_BACKGROUNDS_PATH = "/textures/%s/background_%d.png";
 	private static final int NUM_WORLD_BACKGROUNDS = 6;
 	
+	private static final String WORLD_DECORATIONS_PATH = "/textures/%s/decorations/%s.png";
+	
 	private static final int   MENU_BACKGROUND_SCALE  = 2;
 	private static final float MENU_BLUR_RADIUS       = 5.0f;
 	
@@ -21,6 +24,7 @@ public class TextureTheme {
 	
 	private TileSheet worldTileSheet;
 	private Texture[] worldBackgrounds;
+	private Texture[] worldDecorations;
 	
 	private Texture menuBackground;
 	
@@ -35,7 +39,13 @@ public class TextureTheme {
 		worldBackgrounds = new Texture[NUM_WORLD_BACKGROUNDS];
 		for (int i = 0; i < NUM_WORLD_BACKGROUNDS; i++) {
 			String path = String.format(WORLD_BACKGROUNDS_PATH, theme.getName(), i);
-			worldBackgrounds[i] = TextureLoader. readTexture(path);
+			worldBackgrounds[i] = TextureLoader.readTexture(path);
+		}
+
+		worldDecorations = new Texture[DecorationType.values().length];
+		for (DecorationType type : DecorationType.values()) {
+			String path = String.format(WORLD_DECORATIONS_PATH, theme.getName(), type.getName());
+			worldDecorations[type.getIndex()] = TextureLoader.readTexture(path);
 		}
 		
 		String backgroundPath = String.format(COMPOSED_WORLD_BACKGROUND_PATH, theme.getName());
@@ -49,6 +59,10 @@ public class TextureTheme {
 
 	public Texture[] getWorldBackgrounds() {
 		return worldBackgrounds;
+	}
+	
+	public Texture getDecorationTexture(DecorationType type) {
+		return worldDecorations[type.getIndex()];
 	}
 	
 	public Texture getMenuBackground() {

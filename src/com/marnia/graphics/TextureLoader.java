@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -110,7 +111,10 @@ public class TextureLoader {
 	}
 
 	static Texture readTexture(String path) throws IOException {
-		return new Texture(ImageIO.read(TextureLoader.class.getResource(path)));
+		URL url = TextureLoader.class.getResource(path);
+		if (url == null)
+			throw new IOException("Image not found: " + path);
+		return new Texture(ImageIO.read(url));
 	}
 
 	public TileSheet getPlayerIdleTileSheet(PlayerColor color) {

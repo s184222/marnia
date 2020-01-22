@@ -12,7 +12,9 @@ import com.marnia.client.net.packet.C04KeyCollectedPacket;
 import com.marnia.client.net.packet.C05DoorUnlockedPacket;
 import com.marnia.client.net.packet.C06RemoveEntityPacket;
 import com.marnia.client.net.packet.C08WorldThemePacket;
+import com.marnia.client.net.packet.C09WorldDecorationPacket;
 import com.marnia.client.world.ClientMarniaWorld;
+import com.marnia.decorations.Decoration;
 import com.marnia.entity.DoorEntity;
 import com.marnia.entity.Entity;
 import com.marnia.entity.KeyEntity;
@@ -123,6 +125,12 @@ public class ClientGameplayNetworkManager extends GameplayNetworkManager<IClient
 	@Override
 	public void onWorldThemePacket(C08WorldThemePacket worldThemePacket) {
 		app.getWorld().setTheme(worldThemePacket.getTheme());
+	}
+	
+	@Override
+	public void onWorldDecorationPacket(C09WorldDecorationPacket worldDecorationPacket) {
+		app.getWorld().addDecoration(new Decoration(worldDecorationPacket.getType(), 
+				worldDecorationPacket.getX(), worldDecorationPacket.getY()));
 	}
 	
 	@Override

@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.marnia.decorations.Decoration;
+import com.marnia.decorations.DecorationType;
 import com.marnia.entity.registry.EntityContainer;
 import com.marnia.entity.registry.EntityRegistry;
 import com.marnia.entity.registry.IEntityProvider;
@@ -48,7 +50,8 @@ public final class WorldLoader {
 
 		WorldStorage storage = new WorldStorage(width, height);
 		List<WorldEntityInfo> entityInfos = new ArrayList<WorldEntityInfo>();
-
+		List<Decoration> decorations = new ArrayList<Decoration>();
+		
 		for(int yt = 0; yt < height; yt++) {
 			String[] cells = rows.get(yt).split(Character.toString(SEPARATOR_CHAR), -1);
 			if (cells.length != width)
@@ -59,7 +62,7 @@ public final class WorldLoader {
 				if(!cell.isEmpty()){
 					if (cell.indexOf(ENTITY_SPLITTER_CHAR) >= 0) {
 						String[] args = cell.split(Character.toString(ENTITY_SPLITTER_CHAR), -1);
-						if (args.length != 2) {
+						if (args.length != 2 && args.length != 3) {
 							throw new IOException("Invalid entity encoding '" + cell + 
 									"' at (row, column): (" + xt + ", " + yt + ")");
 						}
@@ -68,6 +71,8 @@ public final class WorldLoader {
 							decodeTile(storage, xt, yt, args[0]);
 						if (!args[1].isEmpty())
 							decodeEntity(entityInfos, xt, yt, args[1]);
+						if (args.length == 3 && !args[2].isEmpty())
+							decodeDecoration(decorations, xt, yt, args[2]);
 					} else {
 						decodeTile(storage, xt, yt, cell);
 					}
@@ -75,9 +80,17 @@ public final class WorldLoader {
 			}
 		}
 
-		return new WorldFile(storage, entityInfos);
+		return new WorldFile(storage, entityInfos, decorations);
 	}
 
+	private static void decodeDecoration(List<Decoration> decorations, int xt, int yt, String decorationArg) throws IOException {
+		int decorationId = decodeInt(xt, yt, decorationArg);
+		DecorationType type = DecorationType.fromIndex(decorationId);
+		if (type == null)
+			throw new IOException("Invalid decoration id at (column, row): (" + xt + ", " + yt + ")");
+		decorations.add(new Decoration(type, xt + 0.5f, yt + 1.0f));
+	}
+	
 	private static void decodeEntity(List<WorldEntityInfo> entityInfos, int xt, int yt, String entityArg) throws IOException {
 		int entityId = decodeInt(xt, yt, entityArg);
 		if (entityId == EntityRegistry.PLAYER_PROVIDER_ID)

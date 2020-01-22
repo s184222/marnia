@@ -36,7 +36,8 @@ public abstract class EntityModel<E extends Entity> {
 		int w = animation.getFrameWidth() * h / animation.getFrameHeight();
 		int xp = CameraUtil.getPixelX(ix + (hitbox.x1 - hitbox.x0) * 0.5f, camera, dt) - w / 2;
 
-		animation.render(renderer, dt, xp, yp, w, h, flipX);
+		if (xp + w >= 0 && xp < renderer.getWidth() && yp + h >= 0 && yp < renderer.getHeight())
+			animation.render(renderer, dt, xp, yp, w, h, flipX);
 	}
 	
 	public E getEntity() {

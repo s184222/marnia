@@ -11,6 +11,7 @@ import java.util.UUID;
 import com.marnia.client.net.IClientNetworkHandler;
 import com.marnia.client.net.packet.C03EntityPositionPacket;
 import com.marnia.client.net.packet.C05DoorUnlockedPacket;
+import com.marnia.decorations.Decoration;
 import com.marnia.entity.DoorEntity;
 import com.marnia.entity.Entity;
 import com.marnia.entity.KeyEntity;
@@ -81,7 +82,9 @@ public class GameplaySession implements IServerNetworkHandler {
 		EntityRegistry registry = EntityRegistry.getInstance();
 		for (WorldEntityInfo entityInfo : worldFile.getEntityInfos())
 			world.addEntity(registry.getEntity(entityInfo.getTypeId(), world, entityInfo.getContainer(), true));
-	
+		for (Decoration decoration : worldFile.getDecorations())
+			world.addDecoration(decoration);
+		
 		return true;
 	}
 

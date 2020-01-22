@@ -6,6 +6,8 @@ import com.marnia.client.net.packet.C00SwitchWorldPacket;
 import com.marnia.client.net.packet.C01AddEntityPacket;
 import com.marnia.client.net.packet.C06RemoveEntityPacket;
 import com.marnia.client.net.packet.C08WorldThemePacket;
+import com.marnia.client.net.packet.C09WorldDecorationPacket;
+import com.marnia.decorations.Decoration;
 import com.marnia.entity.Entity;
 import com.marnia.server.GameplaySession;
 import com.marnia.world.MarniaWorld;
@@ -47,6 +49,8 @@ public class ServerMarniaWorld extends MarniaWorld {
 		
 		for (Entity entity : entities)
 			session.sendPacket(new C01AddEntityPacket(entity), identifier);
+		for (Decoration decoration : decorations)
+			session.sendPacket(new C09WorldDecorationPacket(decoration), identifier);
 	}
 
 	@Override
@@ -54,6 +58,13 @@ public class ServerMarniaWorld extends MarniaWorld {
 		super.setTheme(theme);
 		
 		session.sendPacketToAll(new C08WorldThemePacket(theme), this);
+	}
+	
+	@Override
+	public void addDecoration(Decoration decoration) {
+		super.addDecoration(decoration);
+		
+		session.sendPacketToAll(new C09WorldDecorationPacket(decoration), this);
 	}
 	
 	public GameplaySession getSession() {

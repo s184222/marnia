@@ -16,6 +16,8 @@ import com.marnia.client.entity.model.GhostEntityModel;
 import com.marnia.client.entity.model.KeyEntityModel;
 import com.marnia.client.entity.model.PlayerEntityModel;
 import com.marnia.client.util.CameraUtil;
+import com.marnia.decorations.Decoration;
+import com.marnia.decorations.DecorationType;
 import com.marnia.entity.DoorEntity;
 import com.marnia.entity.Entity;
 import com.marnia.entity.GhostEntity;
@@ -134,15 +136,36 @@ public class ClientMarniaWorld extends MarniaWorld {
 		renderer.clear();
 		
 		renderBackground(renderer, dt, camera);
+		renderDecorations(renderer, dt, camera);
 		renderEntities(renderer, dt, camera);
 		renderTiles(renderer, dt, camera);
 	}
-
+	
 	private void renderBackground(IRenderer2D renderer, float dt, DynamicCamera camera) {
 		for (ParallaxedWorldTexture layer : backgroundLayers)
 			layer.render(renderer, dt, camera);
 	}
 
+	public void renderDecorations(IRenderer2D renderer, float dt, DynamicCamera camera) {
+		TextureTheme textureTheme = getTextureTheme();
+		int dw = renderer.getWidth();
+		int dh = renderer.getHeight();
+		
+		for (Decoration decoration : decorations) {
+			DecorationType type = decoration.getType();
+			Texture texture = textureTheme.getDecorationTexture(type);
+			
+			int h = CameraUtil.getScaledSize(type.getHeight(), camera, dt);
+			int yp = CameraUtil.getPixelY(decoration.getY(), camera, dt) - h;
+			
+			int w = texture.getWidth() * h / texture.getHeight();
+			int xp = CameraUtil.getPixelX(decoration.getX(), camera, dt) - w / 2;
+		
+			if (yp + h >= 0 && yp < dh && xp + w >= 0 && xp < dw)
+				texture.render(renderer, xp, yp, w, h);
+		}
+	}
+	
 	private void renderEntities(IRenderer2D renderer, float dt, DynamicCamera camera) {
 		for (EntityModel<?> entityModel : entityModels.values())
 			entityModel.render(renderer, dt, camera);

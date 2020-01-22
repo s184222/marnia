@@ -18,6 +18,7 @@ import com.g4mesoft.graphic.DisplayMode;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.input.key.KeyInput;
 import com.g4mesoft.input.key.KeySingleInput;
+import com.g4mesoft.sound.processor.AudioSource;
 import com.marnia.MarniaApp;
 import com.marnia.client.entity.ClientController;
 import com.marnia.client.menu.LobbyMarniaMenu;
@@ -70,6 +71,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 	private KeyInput fullscreenKey;
 
 	private TextureLoader textureLoader;
+	private AudioSource ambience;
 	
 	public ClientMarniaApp() {
 		super(new DisplayConfig(TITLE, 720, 454, 100, 100, 
@@ -195,6 +197,11 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		
 		lobbySpace = gameplaySpace = null;
 		
+		if (ambience != null) {
+			ambience.stop();
+			ambience = null;
+		}
+		
 		connected = false;
 	}
 	
@@ -301,8 +308,9 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 		networkManager.start();
 		
 		world = new ClientMarniaWorld(this);
-	
 		player = null;
+
+		ambience = SoundLoader.playForever(SoundLoader.BACKGROUND_SOUND_ID, 1.0f);
 	}
 
 	public void setPlayerEntity(PlayerEntity player) {

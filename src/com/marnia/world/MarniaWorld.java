@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.g4mesoft.world.phys.AABB;
+import com.marnia.decorations.Decoration;
 import com.marnia.entity.Entity;
 import com.marnia.world.tile.Tile;
 
@@ -23,6 +24,8 @@ public abstract class MarniaWorld {
 	private final List<Entity> entitiesToAdd;
 	
 	protected final Map<UUID, Entity> identifierToEntity;
+	
+	protected final List<Decoration> decorations;
 	
 	private boolean updatingEntities;
 
@@ -38,6 +41,8 @@ public abstract class MarniaWorld {
 		entitiesToAdd = new ArrayList<Entity>();
 		
 		identifierToEntity = new LinkedHashMap<UUID, Entity>();
+		
+		decorations = new ArrayList<Decoration>();
 	
 		random = new Random();
 	}
@@ -157,6 +162,7 @@ public abstract class MarniaWorld {
 		entitiesToAdd.clear();
 		entitiesToRemove.clear();
 		identifierToEntity.clear();
+		decorations.clear();
 	}
 
 	public void setTheme(WorldTheme theme) {
@@ -165,6 +171,14 @@ public abstract class MarniaWorld {
 	
 	public WorldTheme getTheme() {
 		return theme;
+	}
+	
+	public void addDecoration(Decoration decoration) {
+		decorations.add(decoration);
+	}
+
+	public List<Decoration> getDecorations() {
+		return Collections.unmodifiableList(decorations);
 	}
 	
 	public List<Entity> getEntities() {
