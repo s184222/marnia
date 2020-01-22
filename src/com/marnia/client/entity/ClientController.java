@@ -54,7 +54,7 @@ public class ClientController extends BasicController {
         
 		if (openDoor.isClicked()) {
 			Entity closestEntity = entity.world.getClosestEntity(entity);
-			if (closestEntity instanceof DoorEntity) {
+			if (closestEntity instanceof DoorEntity && closestEntity.getHitbox().collides(entity.getHitbox())) {
 				DoorEntity doorEntity = (DoorEntity)closestEntity;
 				if (doorEntity.isUnlocked() || !((PlayerEntity)entity).getKeyIdentifiers().isEmpty())
 					networkManager.sendPacket(new S07EnterDoorPacket(doorEntity));

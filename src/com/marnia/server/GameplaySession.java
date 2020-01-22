@@ -175,23 +175,25 @@ public class GameplaySession implements IServerNetworkHandler {
 			DoorEntity door = (DoorEntity)doorEntity;
 			PlayerEntity player = (PlayerEntity)playerEntity;
 
-			if (!door.isUnlocked()) {
-				Iterator<UUID> keyIdentifiers = player.getKeyIdentifiers().iterator();
-				if (keyIdentifiers.hasNext()) {
-					Entity keyEntity = world.getEntity(keyIdentifiers.next());
-					if (keyEntity instanceof KeyEntity) {
-						world.removeEntity(keyEntity);
-						door.setUnlocked(true);
-						
-						sendPacketToAll(new C05DoorUnlockedPacket(door), world);
+			if (door.getHitbox().collides(player.getHitbox())) {
+				if (!door.isUnlocked()) {
+					Iterator<UUID> keyIdentifiers = player.getKeyIdentifiers().iterator();
+					if (keyIdentifiers.hasNext()) {
+						Entity keyEntity = world.getEntity(keyIdentifiers.next());
+						if (keyEntity instanceof KeyEntity) {
+							world.removeEntity(keyEntity);
+							door.setUnlocked(true);
+							
+							sendPacketToAll(new C05DoorUnlockedPacket(door), world);
+						}
 					}
-				}
-			} else {
-				int index = world.getWorldIndex();
-				if (index < worlds.length) {
-					GameplayProfile profile = getProfile(player.getIdentifier());
-					if (profile != null)
-						switchProfileWorld(profile, index + 1);
+				} else {
+					int index = world.getWorldIndex();
+					if (index + 1 < worlds.length) {
+						GameplayProfile profile = getProfile(player.getIdentifier());
+						if (profile != null)
+							switchProfileWorld(profile, index + 1);
+					}
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 package com.marnia.client.sound;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.sound.sampled.LineUnavailableException;
 
@@ -21,8 +22,16 @@ public final class SoundLoader {
 	}
 	
 	private static int readSound(String path) throws IOException {
-		return SoundManager.getInstance().loadSound(
-				SoundLoader.class.getResourceAsStream(path));
+		InputStream is = SoundLoader.class.getResourceAsStream(path);
+		if (is == null)
+			throw new IOException("Sound file not found: " + path);
+		
+		int id = SoundManager.getInstance().loadSound(is);
+		try {
+			SoundManager.getInstance().preparePermanantSoundThread(id);
+		} catch (LineUnavailableException e) {
+		}
+		return id;
 	}
 	
 	public static void playSound(int id, float volume, float pitch) {
