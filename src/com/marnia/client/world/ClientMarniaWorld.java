@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.g4mesoft.camera.DynamicCamera;
-import com.g4mesoft.graphic.GColor;
 import com.g4mesoft.graphic.IRenderer2D;
 import com.g4mesoft.math.MathUtils;
 import com.marnia.client.ClientMarniaApp;
@@ -36,8 +35,6 @@ public class ClientMarniaWorld extends MarniaWorld {
 
 	private static final float MAX_VIEW_ABOVE = 10.0f;
 	private static final float LAYER_PARALLAXING_FACTOR = 0.025f;
-	
-	private static final GColor SKY_COLOR = new GColor(0xDDF8FF);
 	
 	private final ClientMarniaApp app;
 	
@@ -132,7 +129,7 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		renderer.setColor(SKY_COLOR);
+		renderer.setColor(getTheme().getSkyColor());
 		renderer.clear();
 		
 		renderBackground(renderer, dt, camera);

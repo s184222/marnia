@@ -2,20 +2,24 @@ package com.marnia.world;
 
 import java.util.Random;
 
+import com.g4mesoft.graphic.GColor;
+
 public enum WorldTheme {
 
-	PLAINS(0, "normal"),
-	WINTER(1, "winter"),
-	DESERT(2, "desert");
+	PLAINS(0, "normal", new GColor(0xDDF8FF)),
+	WINTER(1, "winter", new GColor(0x234282)),
+	DESERT(2, "desert", new GColor(0xB8DCFE));
 	
 	private static final WorldTheme[] THEMES;
 	
 	private final int index;
 	private final String name;
+	private final GColor skyColor;
 	
-	private WorldTheme(int index, String name) {
+	private WorldTheme(int index, String name, GColor skyColor) {
 		this.index = index;
 		this.name = name;
+		this.skyColor = skyColor;
 	}
 	
 	public int getIndex() {
@@ -24,6 +28,10 @@ public enum WorldTheme {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public GColor getSkyColor() {
+		return skyColor;
 	}
 
 	public static WorldTheme getRandomTheme(Random random) {
