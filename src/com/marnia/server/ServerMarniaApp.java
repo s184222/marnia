@@ -18,7 +18,7 @@ import com.marnia.server.net.ServerLobbyArea;
 
 public class ServerMarniaApp extends MarniaApp implements ILobbyEventListener {
 
-	private static final String ADDRESS = "127.0.0.1";
+	private static final String ADDRESS = "192.168.1.12";
 	private static final String PORT = "42069";
 	
 	private static final long MAX_WAIT_TIME = 5L * 1000L;

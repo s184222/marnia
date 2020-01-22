@@ -4,6 +4,7 @@ import com.g4mesoft.camera.DynamicCamera;
 import com.g4mesoft.input.key.KeyInput;
 import com.marnia.client.ClientMarniaApp;
 import com.marnia.client.net.ClientGameplayNetworkManager;
+import com.marnia.client.sound.SoundLoader;
 import com.marnia.client.world.ClientMarniaWorld;
 import com.marnia.entity.BasicController;
 import com.marnia.entity.DoorEntity;
@@ -68,6 +69,11 @@ public class ClientController extends BasicController {
 			jumpTimer = entity.isOnGround() ? MAX_JUMP_TIME : 1;
 			canDoubleJump = entity.isOnGround();
 			entity.vel.y = -1.25f;
+			
+			if (entity.isOnGround()) {
+				float pitch = 1.0f + entity.world.random.nextFloat() * 0.1f;
+				SoundLoader.playSound(SoundLoader.JUMP_SOUND_ID, 1.0f, pitch);
+			}
 		} else if (!jump.isPressed() || entity.hitVerticalHitbox()) {
 			jumpTimer = 0;
 		}

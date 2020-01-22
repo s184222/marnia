@@ -38,6 +38,7 @@ public class GameplaySession implements IServerNetworkHandler {
 	};
 	
 	private static final float MAX_DEATH_DIST = 5.0f;
+	private static final float CLOSE_RANGE_DIST = 20.0f;
 	
 	private final ServerGameplayNetworkManager networkManager;
 	private final List<GameplayProfile> profiles;
@@ -136,6 +137,21 @@ public class GameplaySession implements IServerNetworkHandler {
 			UUID identifier = profile.getIdentifier();
 			if(getPlayerWorld(identifier) == world && !identifier.equals(excludeIdentifier))
 				networkManager.sendPacket(packet, profile.getIdentifier());
+		}
+	}
+	
+	public void sendPacketCloseRange(C03EntityPositionPacket packet, MarniaWorld world, float x, float y) {
+		for (GameplayProfile profile : profiles) {
+			UUID identifier = profile.getIdentifier();
+			if(getPlayerWorld(identifier) == world) {
+				Entity playerEntity = world.getEntity(identifier);
+				if (playerEntity != null) {
+					float distX = playerEntity.getCenterX() - x;
+					float distY = playerEntity.getCenterY() - y;
+					if (distX * distX + distY * distY < CLOSE_RANGE_DIST * CLOSE_RANGE_DIST)
+						networkManager.sendPacket(packet, profile.getIdentifier());
+				}
+			}
 		}
 	}
 

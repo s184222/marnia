@@ -39,10 +39,12 @@ public class GameplayReceiverThread<H extends INetworkHandler> extends GameplayN
 		
 		if (packetTypeInfo == null)
 			return false;
+
 		
 		UUID senderIdentifier = (UUID)packetTypeInfo[1];
 		int packetType = ((Integer)packetTypeInfo[2]).intValue();
 		handlePacket(senderIdentifier, packetType);
+		
 		
 		return true;
 	}

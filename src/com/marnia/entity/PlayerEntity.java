@@ -63,7 +63,7 @@ public class PlayerEntity extends Entity {
 		keyIdentifiers.add(keyEntity.identifier);
 		
 		if (!world.isServer())
-			SoundLoader.playSound(SoundLoader.COLLECT_SOUND_ID, 0.5f);
+			SoundLoader.playSound(SoundLoader.COLLECT_SOUND_ID, 1.0f);
 	}
 
 	public void loseKey(KeyEntity keyEntity) {
