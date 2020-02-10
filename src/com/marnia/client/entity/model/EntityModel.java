@@ -10,6 +10,8 @@ import com.marnia.world.WorldTheme;
 
 public abstract class EntityModel<E extends Entity> {
 
+	private static final float IN_BOUNDS_SIZE = 1.0f;
+	
 	protected final E entity;
 
 	public EntityModel(E entity) {
@@ -42,5 +44,11 @@ public abstract class EntityModel<E extends Entity> {
 	
 	public E getEntity() {
 		return entity;
+	}
+
+	public boolean isInBounds(DynamicCamera camera, float dt) {
+		float cx = entity.getCenterX();
+		float cy = entity.getCenterY();
+		return CameraUtil.isRectInBounds(cx, cy, IN_BOUNDS_SIZE, camera, dt);
 	}
 }

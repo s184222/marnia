@@ -129,9 +129,6 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 
 	public void render(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		renderer.setColor(getTheme().getSkyColor());
-		renderer.clear();
-		
 		renderBackground(renderer, dt, camera);
 		renderDecorations(renderer, dt, camera);
 		renderEntities(renderer, dt, camera);
@@ -139,6 +136,14 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 	
 	private void renderBackground(IRenderer2D renderer, float dt, DynamicCamera camera) {
+		// The camera can go above the world, so the parallaxed
+		// background might not be covering the entirety of the
+		// visible viewport. Render solid background color here.
+		if (camera.getYOffset() < 0.0f) {
+			renderer.setColor(getTheme().getSkyColor());
+			renderer.clear();
+		}
+
 		for (ParallaxedWorldTexture layer : backgroundLayers)
 			layer.render(renderer, dt, camera);
 	}
@@ -164,8 +169,10 @@ public class ClientMarniaWorld extends MarniaWorld {
 	}
 	
 	private void renderEntities(IRenderer2D renderer, float dt, DynamicCamera camera) {
-		for (EntityModel<?> entityModel : entityModels.values())
-			entityModel.render(renderer, dt, camera);
+		for (EntityModel<?> entityModel : entityModels.values()) {
+			if (entityModel.isInBounds(camera, dt))
+				entityModel.render(renderer, dt, camera);
+		}
 	}
 	
 	private void renderTiles(IRenderer2D renderer, float dt, DynamicCamera camera) {

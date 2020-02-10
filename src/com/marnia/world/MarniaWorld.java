@@ -58,7 +58,7 @@ public abstract class MarniaWorld {
 	public boolean isAir(int xt, int yt) {
 		return getTile(xt, yt) == Tile.AIR_TILE;
 	}
-
+	
 	public void tick() {
 		updatingEntities = true;
 		for (Entity entity : entities)

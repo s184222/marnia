@@ -19,4 +19,12 @@ public final class CameraUtil {
 	public static int getScaledSize(float size, DynamicCamera camera, float dt) {
 		return MathUtils.round(size * camera.getScale(dt) + MathUtils.EPSILON);
 	}
+
+	public static boolean isRectInBounds(float xc, float yc, float size, DynamicCamera camera, float dt) {
+		int xp = getPixelX(xc, camera, dt);
+		int yp = getPixelY(yc, camera, dt);
+		int s = getScaledSize(size, camera, dt) / 2;
+		return xp + s >= 0 && xp - s < camera.getScreenWidth() &&
+		       yp + s >= 0 && yp - s < camera.getScreenHeight();
+	}
 }

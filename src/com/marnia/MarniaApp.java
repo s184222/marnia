@@ -52,7 +52,7 @@ public abstract class MarniaApp extends Application {
 		registry.addPacketType(C09WorldDecorationPacket.class, 9, C09WorldDecorationPacket::new);
 		registry.addPacketType(S10PlayerDeathPacket.class, 10, S10PlayerDeathPacket::new);
 		
-		setDebug(false);
+		setDebug(true);
 	}
 
 	public String getGateAddress(String address, String port) {

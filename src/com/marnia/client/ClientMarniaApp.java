@@ -117,7 +117,7 @@ public class ClientMarniaApp extends MarniaApp implements ILobbyEventListener {
 			return;
 		}
 
-		setMinimumFps(120.0);
+		setMinimumFps(60.0);
 
 		setRootComposition(new MainMarniaMenu(this));
 	}
